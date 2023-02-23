@@ -68,7 +68,7 @@
                                                 <div class="panel-content">
                                                     <div class="d-flex flex-column align-items-center justify-content-center">
                                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                                            <img id="imgavatar" src="{{ asset({{ $data_user->avatar }}) }}" class="img-thumbnail rounded-circle shadow-2" alt="" style="width: 90px; height: 90px">
+                                                            <img id="imgavatar" src="{{ asset($data_user->avatar) }}" class="img-thumbnail rounded-circle shadow-2" alt="" style="width: 90px; height: 90px">
                                                             <h5 class="mb-0 fw-700 text-center mt-3 mb-3">
                                                                 Foto Anda
                                                             </h5>
@@ -87,7 +87,7 @@
                                                 <div class="panel-content">
                                                     <div class="d-flex flex-column align-items-center justify-content-center">
                                                         <div class="d-flex flex-column align-items-center justify-content-center">
-                                                            <img id="imglogo" src="{{ asset('img/logo-big.png') }}" class="img-thumbnail rounded-circle shadow-2" alt="" style="width: 90px; height: 90px">
+                                                            <img id="imglogo" src="{{ asset($data_user->logo) }}" class="img-thumbnail rounded-circle shadow-2" alt="" style="width: 90px; height: 90px">
                                                             <h5 class="mb-0 fw-700 text-center mt-3 mb-3">
                                                                 Logo Perusahaan
                                                             </h5>
