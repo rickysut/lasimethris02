@@ -16,9 +16,13 @@ use App\Http\Requests\MassDestroyPullriphRequest;
 use App\Models\Pengajuan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Http\Controllers\Api\HelperController;
+use App\Http\Controllers\Traits\SimeviTrait;
 
 class CommitmentController extends Controller
 {
+    use SimeviTrait;
     /**
      * Display a listing of the resource.
      *
@@ -208,37 +212,7 @@ class CommitmentController extends Controller
         return back()->with('message', 'Sukses mengunggah file..'); 
     }
 
-    protected function pull($npwp, $nomor)
-    {   
-        try {
-            $options = array(
-                'soap_version' => SOAP_1_1,
-                'exceptions' => true,
-                'trace' => 1,
-                'cache_wsdl' => WSDL_CACHE_MEMORY,
-                'connection_timeout' => 25,
-                'style' => SOAP_RPC,
-                'use' => SOAP_ENCODED,
-            );
     
-            $client = new \SoapClient('http://riph.pertanian.go.id/api.php/simethris?wsdl', $options);
-            $parameter = array(
-                'user' => 'simethris',
-                'pass' => 'wsriphsimethris',
-                'npwp' => $npwp,
-                'nomor' =>  $nomor
-            );
-            $response = $client->__soapCall('get_riph', $parameter);
-        } catch (\Exception $e) {
-
-            Log::error('Soap Exception: ' . $e->getMessage());
-            throw new \Exception('Problem with SOAP call');
-        }
-        $res = json_decode(json_encode((array)simplexml_load_string($response)),true);
-       
-        return $res;
-    }
-
     /**
      * Display the specified resource.
      *
@@ -257,11 +231,35 @@ class CommitmentController extends Controller
         $pullData = $this->pull($npwp, $pullRiph->no_ijin);
         } else $pullData = null;
         
+
+        $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+
+
+        
+        //Log::info($pullData);
+        $data_poktan = [];
+        foreach ( $pullData['riph']['wajib_tanam']['kelompoktani']['loop'] as $poktan )
+        {
+            $name = trim($poktan['nama_kelompok'], ' ');
+            
+            $name = Str::upper($name);
+            if ($this->chekFromItem($data_poktan, $name )== 0)
+            {
+                // $kabupaten = $this->getAPIKabupaten($access_token, $poktan['id_kabupaten']);
+                // dd($kabupaten);
+                $data_poktan = array_merge( $data_poktan, array( array(
+                    'id_kab' => $poktan['id_kabupaten'], 
+                    'id_kec' => $poktan['id_kecamatan'] , 
+                    'id_kel' => $poktan['id_kelurahan'],
+                    'nama_kelompok' => $name,
+                    'nama_pimpinan' => (is_string($poktan['nama_pimpinan']) ?  $poktan['nama_pimpinan'] : ''))));
+            }
+        }
         $module_name = 'Proses RIPH' ;
         $page_title = 'Data RIPH';
         $page_heading = 'Data RIPH' ;
         $heading_class = 'fal fa-file-invoice';
-        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pullRiph', 'pullData', 'pengajuan'));
+        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pullRiph', 'pullData', 'pengajuan', 'data_poktan'));
     }
 
     /**

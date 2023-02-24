@@ -3,86 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
+use App\Http\Controllers\Traits\SimeviTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+
 
 class ProfileController extends Controller
 {
 
-    public function getAPIAccessToken($username, $pass){
-        $response = Http::asForm()->post(config('app.simevi_url').'getToken', [
-            'username' => $username,
-            'password' => $pass
-        ]);
-
-        $access_token = $response->json('access_token');
-        return $access_token;
-    }
-
-    public function getAPIProvinsiAll($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'provinsis');
-
-        
-        return $response->json();
-    }
-
-    public function getAPIKabupatenAll($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatens');
-
-        
-        return $response->json();
-    }
-
-    public function getAPIKabupatenProp($token, $provinsi){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatenwithprop/'.$provinsi);
-
-        
-        return $response->json();
-    }
-
-    public function getAPIKecamatanAll($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatans');
-
-        
-        return $response->json();
-    }
-
-    public function getAPIKecamatanKab($token, $kabupaten){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatanwithkab/'.$kabupaten);
-
-        
-        return $response->json();
-    }
-
-    public function getAPIDesaAll($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desas');
-
-        
-        return $response->json();
-    }
-
-    public function getAPIDesaKec($token, $kecamatan){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desawithkec/'.$kecamatan);
-
-        
-        return $response->json();
-    }
+    use SimeviTrait;
 
 
     /**

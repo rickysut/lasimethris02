@@ -3,252 +3,234 @@
 @include('partials.breadcrumb')
 @include('partials.subheader')
 @can('commitment_show')
-    
-    @if (!empty($error))
-        <div class="" data-title="System Alert" data-intro="Ini adalah Panel yang berisi informasi atau pemberitahuan penting untuk Anda." data-step="1">@include('partials.sysalert')</div>
-    @endif
-
+    {{-- {{ dd($data_poktan) }} --}}
     <div class="row">
         <!-- Left Panel -->
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel" id="panel-1">
-                        <div class="panel-hdr">
-                            <h2>
-                                Data <span class="fw-300"><i>Basic</i></span>
-                            </h2>
-                            <div class="panel-toolbar">
-                                <a class="btn btn-primary  waves-effect waves-themed btn-sm mr-2" href="{{ url()->previous() }}">
-                                    {{ trans('global.back') }}
-                                </a>
-                            </div>
-                            <div class="panel-toolbar">
-                                @include('partials.globaltoolbar')
-                            </div>
-                        </div>
-                        <div class="panel-container show">
-                            <div class="panel-content">
-                                <ul class="list-group mb-3" style="word-break:break-word;">
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Perusahaan/Lembaga</span>
-                                            <h6 class="fw-500 my-0">{{ $pullRiph->nama }}</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Nomor RIPH</span>
-                                            <h6 class="fw-500 my-0">{{ $pullRiph->no_ijin }}</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Tanggal Terbit</span>
-                                            <h6 class="fw-500 my-0">{{ date('d/m/Y', strtotime($pullRiph->tgl_ijin)) }}</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Volume RIPH</span>
-                                            <h6 class="fw-500 my-0">{{ number_format($pullRiph->volume_riph,2,',', '.') }} ton</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Vol. Wajib Produksi</span>
-                                            <h6 class="fw-500 my-0">{{ number_format( $pullRiph->volume_produksi,2,',', '.') }} ton</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Luas. Wajib Tanam</span>
-                                            <h6 class="fw-500 my-0">{{ number_format($pullRiph->luas_wajib_tanam,2,',', '.') }} ha</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Status dokumen</span>
-                                            <h6 class="fw-500 my-0">
-                                            @switch($pullRiph->status)
-                                                @case(1)
-                                                    <div class="row">
-                                                        <div class="col-md-12 my-1">
-                                                            Menunggu Review Verifikasi 
-                                                        </div>
-                                                        <div class="col-md-12 my-1">
-                                                            No Dokumen: <a href="@if ($pengajuan[0]) {{ route('admin.task.pengajuan.show', $pengajuan[0]->id) }} @else # @endif" ><i class="fal fa-arrow-alt-right"></i>&nbsp;{{ $pullRiph->no_doc }}</a>
-                                                        </div>   
-                                                    </div>
-                                                    
-                                                    @break
-                                                @case(2)
-                                                    <div class="row">
-                                                        <div class="col-md-12 my-1">
-                                                            Sudah Diverifikasi
-                                                        </div>
-                                                        <div class="col-md-12 my-1">
-                                                            <a href="#" class="btn btn-sm btn-success" data-toggle="tooltip"><i class="fas fa-badge-check"></i> Ajukan SKL</a>
-                                                        </div>        
-                                                    </div>
-                                                    
-                                                    @break
-                                                @case(3)
-                                                    Pengajuan SKL
-                                                    @break
-                                                @case(4)
-                                                    Review SKL
-                                                    @break
-                                                @case(5)
-                                                    SKL Sudah Terbit
-                                                    @break
-                                                @default
-                                                    <div class="row">
-                                                        <div class="col-md-12 my-1">
-                                                            Belum diajukan Verifikasi Oleh Importir
-                                                        </div>
-                                                        <div class="col-md-12 my-1">
-                                                            <a href="#" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#verifikasiModal"><i class="fas fa-badge-check"></i> Ajukan Verifikasi</a>
-                                                        </div>        
-                                                    </div>
-                                                    
-                                            @endswitch 
-                                            
-                                            </h6>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+        <div class="col-md-4">
+            <div class="panel" id="panel-1">
+                <div class="panel-hdr">
+                    <h2>
+                        Data <span class="fw-300"><i>Basic</i></span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        
+                    </div>
+                    <div class="panel-toolbar">
+                        @include('partials.globaltoolbar')
                     </div>
                 </div>
-            
-                <div class="col-md-4">
-                    <div class="panel" id="panel-2">
-                        <div class="panel-hdr">
-                            <h2>
-                                DATA <span class="fw-300"><i>Pembenihan</i></span>
-                            </h2>
-                            <div class="panel-toolbar">
-                                @include('partials.globaltoolbar')
-                            </div>
-                        </div>
-                        <div class="panel-container show">
-                            <div class="panel-content">
-                                <ul class="list-group mb-3">
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Kebutuhan Benih</span>
-                                            <h6 class="fw-500 my-0">@if ($pullData){{  number_format($pullData['riph']['wajib_tanam']['kebutuhan_benih'],2,',', '.') }}@endif ton</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Stok Mandiri</span>
-                                            <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['stok_mandiri'],2,',', '.') }}@endif  ton</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Beli dari Penangkar</span>
-                                            <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['beli_penangkar'],2,',', '.') }} @endif ton</h6>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel" id="panel-3">
-                        <div class="panel-hdr">
-                            <h2>
-                                DATA <span class="fw-300"><i>Pengendalian</i></span>
-                            </h2>
-                            <div class="panel-toolbar">
-                                @include('partials.globaltoolbar')
-                            </div>
-                        </div>
-                        <div class="panel-container show">
-                            <div class="panel-content">
-                                <ul class="list-group mb-3">
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Pupuk Organik</span>
-                                            <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['kebutuhan_pupuk']['pupuk_organik'],2,',', '.') }}@endif kg</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Nitrogen Phosfor Kalium (NPK)</span>
-                                            <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['kebutuhan_pupuk']['npk'],2,',', '.') }}@endif kg</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Dolomit</span>
-                                            <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['kebutuhan_pupuk']['dolomit'],2,',', '.') }}@endif kg</h6>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Zwavelzure Amonium (ZA)</span>
-                                            <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['kebutuhan_pupuk']['za'],2,',', '.') }}@endif kg</h6>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel" id="panel-4">
-                        <div class="panel-hdr">
-                            <h2>
-                                DATA <span class="fw-300"><i>Lainnya</i></span>
-                            </h2>
-                            <div class="panel-toolbar">
-                                @include('partials.globaltoolbar')
-                            </div>
-                        </div>
-                        <div class="panel-container show">
-                            <div class="panel-content">
-                                <ul class="list-group mb-3">
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
-                                            <span class="text-muted">Saprodi Lainnya</span>
-                                            <div class="d-flex justify-content-between">
-                                                @isset($pullData['riph']['wajib_tanam']['mulsa'])
-                                                    <h6 class="fw-500 my-0">Mulsa:&nbsp;</h6>
-                                                    <h6 class="fw-500 my-0">{{ number_format($pullData['riph']['wajib_tanam']['mulsa'],2,',', '.') }} kg</h6>    
-                                                @endisset
-                                                
-                                                
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <ul class="list-group mb-3" style="word-break:break-word;">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Perusahaan/Lembaga</span>
+                                    <h6 class="fw-500 my-0">{{ $pullRiph->nama }}</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Nomor RIPH</span>
+                                    <h6 class="fw-500 my-0">{{ $pullRiph->no_ijin }}</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Tanggal Terbit</span>
+                                    <h6 class="fw-500 my-0">{{ date('d/m/Y', strtotime($pullRiph->tgl_ijin)) }}</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Volume RIPH</span>
+                                    <h6 class="fw-500 my-0">{{ number_format($pullRiph->volume_riph,2,',', '.') }} ton </h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Vol. Wajib Produksi</span>
+                                    <h6 class="fw-500 my-0">{{ number_format( $pullRiph->volume_produksi,2,',', '.') }} ton</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Luas Wajib Tanam</span>           
+                                    <h6 class="fw-500 my-0">{{ number_format($pullRiph->luas_wajib_tanam,2,',', '.') }} ha</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Status dokumen</span>
+                                    <h6 class="fw-500 my-0">
+                                    @switch($pullRiph->status)
+                                        @case(1)
+                                            <div class="row">
+                                                <div class="col-md-12 my-1">
+                                                    Menunggu Review Verifikasi 
+                                                </div>
+                                                <div class="col-md-12 my-1">
+                                                    No Dokumen: <a href="@if ($pengajuan[0]) {{ route('admin.task.pengajuan.show', $pengajuan[0]->id) }} @else # @endif" ><i class="fal fa-arrow-alt-right"></i>&nbsp;{{ $pullRiph->no_doc }}</a>
+                                                </div>   
                                             </div>
-                                        </div>
-                                    </li>
-                                    @isset($pullData['riph']['wajib_tanam']['bagi-hasil'])
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <div>
                                             
-                                            <span class="text-muted">Bagi Hasil</span>
-                                            <h6 class="fw-500 my-0">{{ $pullData['riph']['wajib_tanam']['bagi-hasil'] }}</h6>
+                                            @break
+                                        @case(2)
+                                            <div class="row">
+                                                <div class="col-md-12 my-1">
+                                                    Sudah Diverifikasi
+                                                </div>
+                                                <div class="col-md-12 my-1">
+                                                    <a href="#" class="btn btn-sm btn-success" data-toggle="tooltip"><i class="fas fa-badge-check"></i> Ajukan SKL</a>
+                                                </div>        
+                                            </div>
                                             
-                                        </div>
-                                    </li>
-                                    @endisset
-                                </ul>
-                            </div>
-                        </div>
+                                            @break
+                                        @case(3)
+                                            Pengajuan SKL
+                                            @break
+                                        @case(4)
+                                            Review SKL
+                                            @break
+                                        @case(5)
+                                            SKL Sudah Terbit
+                                            @break
+                                        @default
+                                            <div class="row">
+                                                <div class="col-md-12 my-1">
+                                                    Belum diajukan Verifikasi Oleh Importir
+                                                </div>
+                                                <div class="col-md-12 my-1">
+                                                    <a href="#" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#verifikasiModal"><i class="fas fa-badge-check"></i> Ajukan Verifikasi</a>
+                                                </div>        
+                                            </div>
+                                            
+                                    @endswitch 
+                                    
+                                    </h6>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="panel" id="panel-2">
+                <div class="panel-hdr">
+                    <h2>
+                        DATA <span class="fw-300"><i>Pembenihan</i></span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        @include('partials.globaltoolbar')
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Kebutuhan Benih</span>
+                                    <h6 class="fw-500 my-0">@if ($pullData){{  number_format($pullData['riph']['wajib_tanam']['kebutuhan_benih'],2,',', '.') }}@endif ton</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Stok Mandiri</span>
+                                    <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['stok_mandiri'],2,',', '.') }}@endif  ton</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Beli dari Penangkar</span>
+                                    <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['beli_penangkar'],2,',', '.') }} @endif ton</h6>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="panel" id="panel-3">
+                <div class="panel-hdr">
+                    <h2>
+                        DATA <span class="fw-300"><i>Pengendalian</i></span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        @include('partials.globaltoolbar')
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Pupuk Organik</span>
+                                    <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['kebutuhan_pupuk']['pupuk_organik'],2,',', '.') }}@endif kg</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Nitrogen Phosfor Kalium (NPK)</span>
+                                    <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['kebutuhan_pupuk']['npk'],2,',', '.') }}@endif kg</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Dolomit</span>
+                                    <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['kebutuhan_pupuk']['dolomit'],2,',', '.') }}@endif kg</h6>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Zwavelzure Amonium (ZA)</span>
+                                    <h6 class="fw-500 my-0">@if ($pullData){{ number_format($pullData['riph']['wajib_tanam']['kebutuhan_pupuk']['za'],2,',', '.') }}@endif kg</h6>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="panel" id="panel-4">
+                <div class="panel-hdr">
+                    <h2>
+                        DATA <span class="fw-300"><i>Lainnya</i></span>
+                    </h2>
+                    <div class="panel-toolbar">
+                        @include('partials.globaltoolbar')
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content">
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    <span class="text-muted">Saprodi Lainnya</span>
+                                    <div class="d-flex justify-content-between">
+                                        @isset($pullData['riph']['wajib_tanam']['mulsa'])
+                                            <h6 class="fw-500 my-0">Mulsa:&nbsp;</h6>
+                                            <h6 class="fw-500 my-0">{{ number_format($pullData['riph']['wajib_tanam']['mulsa'],2,',', '.') }} kg</h6>    
+                                        @endisset
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </li>
+                            @isset($pullData['riph']['wajib_tanam']['bagi-hasil'])
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div>
+                                    
+                                    <span class="text-muted">Bagi Hasil</span>
+                                    <h6 class="fw-500 my-0">{{ $pullData['riph']['wajib_tanam']['bagi-hasil'] }}</h6>
+                                    
+                                </div>
+                            </li>
+                            @endisset
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- right Panel -->
-        
-        <div class="col-md-12" show>
-            @isset($pullData['riph']['wajib_tanam']['kelompoktani']['pool'])
-            <div class="panel" id="panel-6">
+        <div class="col-md-8">
+            <div class="panel" id="panel-5">
                 <div class="panel-hdr">
                     <h2>
                         Daftar <span class="fw-300"><i>Kelompoktani Mitra & PKS</i></span>
@@ -282,47 +264,36 @@
                                     <th >Kelurahan</th>
                                     <th >Nama</th>
                                     <th >Pimpinan</th>
-                                    <th >Petani</th>
-                                    <th >Luas lahan</th>
+                                    <th>PKS</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ( $pullData['riph']['wajib_tanam']['kelompoktani']['loop'] as $poktan )
+                                @isset($data_poktan)
+                                @foreach ( $data_poktan as $poktan )
+                                
                                     <tr>
-                                        <td>{{ $poktan['id_kabupaten'] }}</td>
-                                        <td>{{ $poktan['id_kecamatan'] }}</td>
-                                        <td>{{ $poktan['id_kelurahan'] }}</td>
+                                        <td>{{ $poktan['id_kab'] }}</td>
+                                        <td>{{ $poktan['id_kec'] }}</td>
+                                        <td>{{ $poktan['id_kel'] }}</td>
                                         <td>{{ $poktan['nama_kelompok'] }}</td>
-                                        <td>{{ $poktan['nama_pimpinan'] }}</td>
-                                        <td>{{ $poktan['nama_petani'] }}</td>
-                                        <td>{{  number_format($poktan['luas_lahan'],2,',', '.') }}</td>
-                                        
-                                        
+                                        <td>{{ (is_string($poktan['nama_pimpinan']) ?  $poktan['nama_pimpinan'] : '') }}</td>
+                                        <td class="text-center">
+                                            <div class="justify-content-center">
+                                                {{-- create button only when there are no data available --}}
+                                                <a class="text-info mr-1" href="#" role="button" data-toggle="tooltip" data-original-title="buat Rencana Tanam/PKS" data-offset="0,10"><i class="fal fa-plus-circle"></i></a>
+                                            </div>
+                                        </td>
                                     </tr>    
                                 @endforeach
+                                @endisset
                             </tbody>
                         </table>
-                        <div class="row">
-                        </div>
+                        
                     </div>
-                    <div class="panel-content">
-                        <h6>Keterangan Status</h6>
-                        <div class="col-12">
-                            <div class="row small">
-                                <a><i class="fas fa-exclamation-triangle text-danger mr-1"></i>: Peringatan bahwa TIDAK DITEMUKAN DATA isian apapun untuk baris ini.</a>
-                            </div>
-                            <div class="row small">
-                                <a><i class="fas fa-exclamation-triangle text-warning mr-1"></i>: Peringatan bahwa HANYA sebagian data yang terisi untuk baris ini.</a>
-                            </div>
-                            <div class="row small">
-                                <a><i class="fas fa-check text-success mr-1"></i>: Sistem menyatakan bahwa data telah terisi.</a>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
-            @endisset
-            @isset($pullData['riph']['wajib_tanam']['datapenangkar']['pool'])
+
             <div class="panel" id="panel-6">
                 <div class="panel-hdr">
                     <h2>
@@ -362,21 +333,30 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>API Penangkar</td>
-                                    <td>API</td>
-                                    <td>API</td>
-                                    <td>API</td>
-                                    <td>API</td>
-                                    <td>API</td>
-                                    <td></td>
-                                </tr>
+                                @isset($pullData['riph']['wajib_tanam']['datapenangkar']['loop'])
+                                @foreach ($pullData['riph']['wajib_tanam']['datapenangkar']['loop'] as $penakar )
+                                    <tr>
+                                        <td>{{ $penakar['penakar'] }}</td>
+                                        <td>{{ $penakar['varietas'] }}</td>
+                                        <td>{{ $penakar['alamat'] }}</td>
+                                        <td>{{ $penakar['pimpinan'] }}</td>
+                                        <td>{{ $penakar['no_kontak'] }}</td>
+                                        <td>{{ $penakar['ketersediaan'] }}</td>
+                                        <td class="text-center">
+                                            <div class="justify-content-center">
+                                                {{-- create button only when there are no data available --}}
+                                                <a class="text-info mr-1" href="#" role="button" data-toggle="tooltip" data-original-title="buat Rencana Tanam/PKS" data-offset="0,10"><i class="fal fa-plus-circle"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>    
+                                @endforeach
+                                @endisset
+                                
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            @endisset
             
         </div>
         
