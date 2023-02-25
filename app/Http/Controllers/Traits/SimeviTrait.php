@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits;
 use \SpreadsheetReader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 trait SimeviTrait
 {
@@ -111,30 +112,12 @@ trait SimeviTrait
     public function pull($npwp, $nomor)
     {   
         try {
-            $options = array(
-                'soap_version' => SOAP_1_1,
-                'exceptions' => true,
-                'trace' => 1,
-                'cache_wsdl' => WSDL_CACHE_MEMORY,
-                'connection_timeout' => 25,
-                'style' => SOAP_RPC,
-                'use' => SOAP_ENCODED,
-            );
-    
-            $client = new \SoapClient('http://riph.pertanian.go.id/api.php/simethris?wsdl', $options);
-            $parameter = array(
-                'user' => 'simethris',
-                'pass' => 'wsriphsimethris',
-                'npwp' => $npwp,
-                'nomor' =>  $nomor
-            );
-            $response = $client->__soapCall('get_riph', $parameter);
+            $pathjson = Storage::disk('public')->url('uploads/'.$npwp);
+            $res = json_decode(file_get_contents($pathjson . '/'.$nomor.'.json'), true);
         } catch (\Exception $e) {
-
-            Log::error('Soap Exception: ' . $e->getMessage());
-            throw new \Exception('Problem with SOAP call');
+            Log::error('Load JSON Exception: ' . $e->getMessage());
+            throw new \Exception('Problem with json file');
         }
-        $res = json_decode(json_encode((array)simplexml_load_string($response)),true);
         return $res;
     }
 

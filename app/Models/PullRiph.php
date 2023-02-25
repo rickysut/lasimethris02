@@ -35,7 +35,8 @@ class PullRiph extends Model
         'formRta',
         'formRpo',
         'formLa',
-        'no_doc'
+        'no_doc',
+        'datariph'
     ];
 
     protected $dates = [

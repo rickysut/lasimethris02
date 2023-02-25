@@ -13,4 +13,19 @@ class Poktan extends Model
     use SoftDeletes;
     use Auditable;
     
+    public $table = 'poktans';
+
+    protected $fillable = [
+        'no_riph',
+        'id_kabupaten',
+        'id_kecamatan',
+        'id_kelurahan',
+        'nama_kelompok',
+        'nama_pimpinan',
+        'hp_pimpinan',
+        'nama_petani',
+        'ktp_petani',
+        'luas_lahan',
+        'periode_tanam'
+    ];
 }

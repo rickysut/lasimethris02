@@ -191,7 +191,7 @@ class CommitmentController extends Controller
                 // dd($pengajuan);
                 $userFiles += array('no_doc' => $pengajuan->no_doc);
                 PullRiph::updateOrCreate(
-                    ['npwp' => $realnpwp],
+                    ['npwp' => $realnpwp, 'no_ijin' => $request->get('no_ijin')],
                     $userFiles
                 ); 
                 
@@ -226,33 +226,41 @@ class CommitmentController extends Controller
         $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
         if (!empty($npwp))
         {
-        $npwp = str_replace('.', '', $npwp);
-        $npwp = str_replace('-', '', $npwp);
-        $pullData = $this->pull($npwp, $pullRiph->no_ijin);
-        } else $pullData = null;
+            $npwp = str_replace('.', '', $npwp);
+            $npwp = str_replace('-', '', $npwp);
+            $nomor = str_replace('.', '', $pullRiph->no_ijin);
+            $nomor = str_replace('/', '', $nomor);
+            $pullData = $this->pull($npwp, $nomor);
+        } else 
+            $pullData = null;
         
 
         $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
 
-
-        
         //Log::info($pullData);
         $data_poktan = [];
-        foreach ( $pullData['riph']['wajib_tanam']['kelompoktani']['loop'] as $poktan )
-        {
-            $name = trim($poktan['nama_kelompok'], ' ');
-            
-            $name = Str::upper($name);
-            if ($this->chekFromItem($data_poktan, $name )== 0)
+        if ($pullData){
+            foreach ( $pullData['riph']['wajib_tanam']['kelompoktani']['loop'] as $poktan )
             {
-                // $kabupaten = $this->getAPIKabupaten($access_token, $poktan['id_kabupaten']);
-                // dd($kabupaten);
-                $data_poktan = array_merge( $data_poktan, array( array(
-                    'id_kab' => $poktan['id_kabupaten'], 
-                    'id_kec' => $poktan['id_kecamatan'] , 
-                    'id_kel' => $poktan['id_kelurahan'],
-                    'nama_kelompok' => $name,
-                    'nama_pimpinan' => (is_string($poktan['nama_pimpinan']) ?  $poktan['nama_pimpinan'] : ''))));
+                $name = trim($poktan['nama_kelompok'], ' ');
+                $name = Str::upper($name);
+                if ($this->chekFromItem($data_poktan, $name )== 0)
+                {
+                    // $kabupaten = $this->getAPIKabupaten($access_token, $poktan['id_kabupaten']);
+                    $data_poktan = array_merge( $data_poktan, array( array(
+                        'id_kab' => $poktan['id_kabupaten'], 
+                        'id_kec' => $poktan['id_kecamatan'] , 
+                        'id_kel' => $poktan['id_kelurahan'],
+                        'nama_kelompok' => $name,
+                        'nama_pimpinan' => (is_string($poktan['nama_pimpinan']) ?  $poktan['nama_pimpinan'] : ''),
+                        'hp_pimpinan' => (is_string($poktan['hp_pimpinan']) ?  $poktan['hp_pimpinan'] : '-'),
+                        'jum_petani' => 1,
+                        'luas' => $poktan['luas_lahan']
+                    )));
+                        
+                } else {
+                    
+                }
             }
         }
         $module_name = 'Proses RIPH' ;

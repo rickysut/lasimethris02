@@ -286,10 +286,8 @@
 			},
 			responsible: {
 				required: true
-			},
-			username: {
-				required: true
-			},
+			}
+			
 			},
 			messages:{
 				correct: {
@@ -297,10 +295,8 @@
                     },
                 responsible: {
                         required: "!"
-                    },
-				username: {
-						required: "Harus diisi"
-				}
+                    }
+				
 			}
 		})
 

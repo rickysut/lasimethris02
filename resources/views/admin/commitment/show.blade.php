@@ -259,12 +259,13 @@
                         <table id="dt-keltan" class="table table-sm table-bordered table-hover table-striped w-100">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th >Kabupaten</th>
-                                    <th >Kecamatan</th>
-                                    <th >Kelurahan</th>
-                                    <th >Nama</th>
-                                    <th >Pimpinan</th>
-                                    <th>PKS</th>
+                                    <th>Kelompok tani</th>
+                                    <th>Pimpinan</th>
+                                    <th>No. hp</th>
+                                    <th>Jumlah Petani</th>
+                                    <th>Kecamatan</th>
+                                    <th>Luas (Ha)</th>
+                                    <th>Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -272,11 +273,12 @@
                                 @foreach ( $data_poktan as $poktan )
                                 
                                     <tr>
-                                        <td>{{ $poktan['id_kab'] }}</td>
-                                        <td>{{ $poktan['id_kec'] }}</td>
-                                        <td>{{ $poktan['id_kel'] }}</td>
                                         <td>{{ $poktan['nama_kelompok'] }}</td>
                                         <td>{{ (is_string($poktan['nama_pimpinan']) ?  $poktan['nama_pimpinan'] : '') }}</td>
+                                        <td>{{ (is_string($poktan['hp_pimpinan']) ?  $poktan['hp_pimpinan'] : '') }}</td>
+                                        <td>{{ $poktan['jum_petani'] }}</td>
+                                        <td>{{ $poktan['id_kec'] }}</td>
+                                        <td>{{ $poktan['luas'] }}</td>
                                         <td class="text-center">
                                             <div class="justify-content-center">
                                                 {{-- create button only when there are no data available --}}
@@ -354,6 +356,41 @@
                                 
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-6" hidden>
+                <div class="alert alert-warning border-0 mb-0">
+                    <div class="d-flex align-item-center">
+                        <div class="alert-icon">
+                            <div class="icon-stack icon-stack-sm mr-3 flex-shrink-0">
+                                <i class="base base-7 icon-stack-3x opacity-100 color-warning-400"></i>
+                                <i class="base base-7 icon-stack-2x opacity-100 color-warning-800"></i>
+                                <i class="fa fa-ban icon-stack-1x opacity-100 color-white"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 help-block">
+                            <span>
+                                <strong>Lakukan Pengajuan</strong>
+                                Verifikasi maupun Surat Keterangan Lunas hanya jika Anda telah
+                                <strong>melengkapi seluruh syarat yang diwajibkan. </strong>
+                            </span>
+                            <span>Tombol <a class="badge btn-warning text-dark">Ajukan Verifikasi</a> untuk mengajukan proses verifikasi lapangan maupun verifikasi data online. </span>
+                            <span>Tombol <a class="badge btn-success text-white">Ajukan SKL</a> untuk mengajukan Penerbitan Surat Keterangan Lunas.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-container show">
+                    <div class="panel-content justify-content-center text-center">
+                        <div class="row d-flex">
+                            <div class="col-md-6 my-1">
+                                <a href="#" class="btn btn-sm btn-warning btn-block" data-toggle="tooltip" data-offset="0,10" data-original-title="Ajukan Verifikasi"><i class="fas fa-badge-check"></i> Ajukan Verifikasi</a>
+                            </div>
+                            <div class="col-md-6 my-1">
+                                <a href="#" class="btn btn-sm btn-success btn-block" data-toggle="tooltip" data-offset="0,10" data-original-title="Ajukan Keterangan Lunas"><i class="fas fa-award"></i> Ajukan SKL</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
