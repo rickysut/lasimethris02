@@ -278,8 +278,8 @@
                 </li>
             @endcan
 
-
-            @can('verifikasi_access')
+            {{-- permohonan --}}
+            @can('permohonan_access')
                 <li
                     class="{{ request()->is('admin/task/pengajuan*') || request()->is('admin/task/skl*') ? 'active open' : '' }} ">
                     <a href="#" title="Verifikasi & SKL"
@@ -300,7 +300,7 @@
                                 </a>
                             </li>
                         @endcan
-                        @can('skl_access')
+                        @can('skl_access')  
                             <li
                                 class="c-sidebar-nav-item {{ request()->is('admin/task/skl') || request()->is('admin/task/skl/*') ? 'active' : '' }}">
                                 <a href="{{ route('admin.task.skl.index') }}" title="Skl"
@@ -316,7 +316,7 @@
                 </li>
             @endcan
 
-            {{-- berkas --}}
+            {{-- pengelolaan berkas --}}
             @can('folder_access')
                 <li
                     class="{{ request()->is('admin/task/berkas*') || request()->is('admin/task/galeri*') || request()->is('admin/task/template*') ? 'active open' : '' }} ">
@@ -474,7 +474,7 @@
                         <a href="{{ route('admin.task.template') }}"
                             data-filter-tags="{{ strtolower(trans('cruds.mastertemplate.title_lang')) }}">
                             <i class="fal fa-file-upload c-sidebar-nav-icon"></i>{{ trans('cruds.mastertemplate.title_lang') }}
-                        </a>x
+                        </a>
                     </li>
                 @endcan
 
