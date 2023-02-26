@@ -267,7 +267,7 @@ class CommitmentController extends Controller
         $page_title = 'Data RIPH';
         $page_heading = 'Data RIPH' ;
         $heading_class = 'fal fa-file-invoice';
-        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pullRiph', 'pullData', 'pengajuan', 'data_poktan'));
+        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'id', 'pullRiph', 'pullData', 'pengajuan', 'data_poktan'));
     }
 
     /**

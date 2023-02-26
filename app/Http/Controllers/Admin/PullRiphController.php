@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use  App\Models\Poktan;
 
 class PullRiphController extends Controller
 {
@@ -117,7 +118,7 @@ class PullRiphController extends Controller
         
 
         $riph = PullRiph::updateOrCreate(
-            ['npwp' => $request->get('npwp'), 'no_ijin' => $request->get('no_ijin') ],
+            [ 'npwp' => $request->get('npwp'), 'no_ijin' => $request->get('no_ijin') ],
             [
                 'keterangan'    => $request->get('keterangan'),
                 'nama'          => $request->get('nama'),
@@ -133,7 +134,35 @@ class PullRiphController extends Controller
         );
         $dtjson = json_decode($datariph);
         if ($riph){
-            
+            //dd($dtjson->riph->wajib_tanam->kelompoktani->loop);
+            foreach ( $dtjson->riph->wajib_tanam->kelompoktani->loop as $poktan )
+            {
+                $nama = trim($poktan->nama_kelompok, ' ');
+                $ktp = preg_replace('/[^0-9\p{Latin}\pP\p{Sc}@\s]+/u', '', $poktan->ktp_petani);
+                $ktp  = trim($ktp , "\u{00a0}");
+                $ktp = trim($ktp , "\u{00c2}");
+                $ktp = trim($ktp , " ");
+                Poktan::updateOrCreate(
+                    [
+                        'no_riph' => $noijin, 
+                        'ktp_petani' => $ktp,
+                        'nama_kelompok' => strtoupper($nama) , 
+                        'nama_pimpinan' => (is_string($poktan->nama_pimpinan) ? trim($poktan->nama_pimpinan, ' ') :'')  
+                        
+                    ],
+                    [
+                        'id_kabupaten' => trim($poktan->id_kabupaten,' ') ,
+                        'id_kecamatan' => trim($poktan->id_kecamatan, ' ') ,
+                        'id_kelurahan' => trim($poktan->id_kelurahan, ' ') ,
+                        // 'nama_kelompok' => strtoupper($nama) , 
+                        // 'nama_pimpinan' => (is_string($poktan->nama_pimpinan) ? trim($poktan->nama_pimpinan, ' ') :'') , 
+                        'hp_pimpinan'   => (is_string($poktan->hp_pimpinan) ? trim($poktan->hp_pimpinan, ' ') : '') ,
+                        'nama_petani'  => trim($poktan->nama_petani,' ') ,
+                        'luas_lahan'   => trim($poktan->luas_lahan, ' ') ,
+                        'periode_tanam' => trim($poktan->periode_tanam, ' ')
+                    ]
+                );    
+            }
         }
         
         return back()->with('message', "Sukses menyimpan data RIPH, lihat daftarnya di menu Komitmen ");  
@@ -143,3 +172,5 @@ class PullRiphController extends Controller
 
     
 }
+
+

@@ -251,6 +251,9 @@
                         <div class="flex-1 help-block">
                             <span>Berikut ini adalah daftar Kelompoktani Binaan yang telah Anda pilih sebelumnya pada form Komitmen Baru.</span>
                         </div>
+                        <div class="flex-2">
+                            <span><a href="{{ route('admin.task.kelompoktani.show', [$id]) }}" class="btn btn-primary">Detail</a></span>
+                        </div>
                     </div>
                 </div>
                 <div class="panel-container show">
@@ -265,7 +268,7 @@
                                     <th>Jumlah Petani</th>
                                     <th>Kecamatan</th>
                                     <th>Luas (Ha)</th>
-                                    <th>Tindakan</th>
+                                    {{-- <th>Tindakan</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -279,12 +282,11 @@
                                         <td>{{ $poktan['jum_petani'] }}</td>
                                         <td>{{ $poktan['id_kec'] }}</td>
                                         <td>{{ $poktan['luas'] }}</td>
-                                        <td class="text-center">
+                                        {{-- <td class="text-center">
                                             <div class="justify-content-center">
-                                                {{-- create button only when there are no data available --}}
                                                 <a class="text-info mr-1" href="#" role="button" data-toggle="tooltip" data-original-title="buat Rencana Tanam/PKS" data-offset="0,10"><i class="fal fa-plus-circle"></i></a>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                     </tr>    
                                 @endforeach
                                 @endisset
