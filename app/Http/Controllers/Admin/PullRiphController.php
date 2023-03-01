@@ -135,6 +135,7 @@ class PullRiphController extends Controller
         $dtjson = json_decode($datariph);
         if ($riph){
             //dd($dtjson->riph->wajib_tanam->kelompoktani->loop);
+            Poktan::where('no_riph',$noijin )->delete();
             foreach ( $dtjson->riph->wajib_tanam->kelompoktani->loop as $poktan )
             {
                 $nama = trim($poktan->nama_kelompok, ' ');

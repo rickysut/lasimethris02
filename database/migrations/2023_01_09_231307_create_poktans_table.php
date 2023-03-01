@@ -1,13 +1,11 @@
 <?php
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    use SoftDeletes;
     /**
      * Run the migrations.
      *
@@ -30,7 +28,6 @@ return new class extends Migration
             $table->double('luas_lahan')->nullable();
             $table->string('periode_tanam')->nullable();
             $table->timestamps();
-            $table->softDeletes();
             $table->foreign('no_riph')
                 ->references('no_ijin')
                 ->on('pull_riphs')
