@@ -17,6 +17,7 @@ class Poktan extends Model
 
     protected $fillable = [
         'no_riph',
+        'id_petani',
         'id_kabupaten',
         'id_kecamatan',
         'id_kelurahan',

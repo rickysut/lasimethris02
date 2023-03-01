@@ -18,6 +18,7 @@ return new class extends Migration
         Schema::create('poktans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('no_riph');
+            $table->string('id_petani');
             $table->string('id_kabupaten')->nullable();
             $table->string('id_kecamatan')->nullable();
             $table->string('id_kelurahan')->nullable();

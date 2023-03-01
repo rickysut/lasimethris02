@@ -142,22 +142,23 @@ class PullRiphController extends Controller
                 $ktp  = trim($ktp , "\u{00a0}");
                 $ktp = trim($ktp , "\u{00c2}");
                 $ktp = trim($ktp , " ");
+                $idpetani = trim($poktan->id_petani, ' ');
                 Poktan::updateOrCreate(
                     [
                         'no_riph' => $noijin, 
-                        'ktp_petani' => $ktp,
-                        'nama_kelompok' => strtoupper($nama) , 
-                        'nama_pimpinan' => (is_string($poktan->nama_pimpinan) ? trim($poktan->nama_pimpinan, ' ') :'')  
+                        'id_petani' => $idpetani
+                          
                         
                     ],
                     [
                         'id_kabupaten' => trim($poktan->id_kabupaten,' ') ,
                         'id_kecamatan' => trim($poktan->id_kecamatan, ' ') ,
-                        'id_kelurahan' => trim($poktan->id_kelurahan, ' ') ,
-                        // 'nama_kelompok' => strtoupper($nama) , 
-                        // 'nama_pimpinan' => (is_string($poktan->nama_pimpinan) ? trim($poktan->nama_pimpinan, ' ') :'') , 
+                        'id_kelurahan' => (is_string($poktan->id_kelurahan) ? trim($poktan->id_kelurahan, ' '): '') ,
+                        'nama_kelompok' => strtoupper($nama) , 
+                        'nama_pimpinan' => (is_string($poktan->nama_pimpinan) ? trim($poktan->nama_pimpinan, ' ') :'') , 
                         'hp_pimpinan'   => (is_string($poktan->hp_pimpinan) ? trim($poktan->hp_pimpinan, ' ') : '') ,
                         'nama_petani'  => trim($poktan->nama_petani,' ') ,
+                        'ktp_petani' => $ktp,
                         'luas_lahan'   => trim($poktan->luas_lahan, ' ') ,
                         'periode_tanam' => trim($poktan->periode_tanam, ' ')
                     ]
