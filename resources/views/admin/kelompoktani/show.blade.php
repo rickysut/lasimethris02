@@ -2,116 +2,55 @@
 @section('content')
 @include('partials.breadcrumb')
 {{-- @include('partials.subheader') --}}
-@can('kelompoktani_show')
-    
-    <div class="row">
-        <!-- Left Panel -->
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel" id="panel-1">
-                        <div class="panel-hdr">
-                            <h2>
-                                DETAIL <span class="fw-300"><i>KELOMPOKTANI</i></span>
-                            </h2>
-                            <div class="panel-toolbar">
-                                <a class="btn btn-xs btn-primary mr-2" href="{{ url()->previous() }}">
-                                    {{ trans('global.back_to_list') }}
-                                </a>
-                            </div>
-                            <div class="panel-toolbar">
-                                @include('partials.globaltoolbar')
-                            </div>
-                        </div>
-                        <div class="panel-container show">
-                            <div class="panel-content">
-                                <div class="form-group row">
-                                    <div class="col-lg-6">
-                                        <div>
-                                            <span class="text-muted">Kelompok Tani</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->nama_poktan }}</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div>
-                                            <span class="text-muted">ID Simluhtan</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->no_poktan }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-md-12">
-                                        <div>
-                                            <span class="text-muted">Alamat</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->alamat }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-md-6">
-                                        <div>
-                                            <span class="text-muted">Provinsi</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->provinsi }}</h6>
-                                        </div>    
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div>
-                                            <span class="text-muted">Kabupaten</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->kabupaten }}</h6>
-                                        </div>    
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-md-6">
-                                        <div>
-                                            <span class="text-muted">Kecamatan</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->kecamatan }}</h6>
-                                        </div>    
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div>
-                                            <span class="text-muted">Desa</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->desa }}</h6>
-                                        </div>    
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="form-group row">
-                                    <div class="col-lg-6">
-                                        <div>
-                                            <span class="text-muted">Pimpinan</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->pimpinan }}</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div>
-                                            <span class="text-muted">No. HP</span>
-                                            <h6 class="fw-500 my-0">{{ $poktan->no_hp }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-lg-6">
-                                        <div>
-                                            <span class="text-muted">Jumlah Anggota</span>
-                                            <h6 class="fw-500 my-0">{{ number_format($poktan->jumlah_anggota,0,',', '.') }} orang</h6>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div>
-                                            <span class="text-muted">Luas. Lahan</span>
-                                            <h6 class="fw-500 my-0">{{ number_format($poktan->luas_lahan,2,',', '.') }} ha</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<style>
+    tr.group,
+    tr.group:hover {
+        background-color: #e9bfbf !important;
+    }
+</style>
+@can('poktan_show')
+<div class="row">
+    <div class="col-md-12">
+        <div id="panel-1" class="panel" data-title="Panel Data" data-intro="Panel ini berisi data-data" data-step="2">
+            <div class="panel-hdr">
+                <h2>
+                    Detail Kelompoktani - No. RIPH = {{ $realno }}
+                </h2>
+                <div class="panel-toolbar">
+                    <a class="btn btn-xs btn-primary mr-1 ml-1" href="{{ route('admin.task.kelompoktani.create') }}"><i class="fal fa-plus mr-1"></i>Kelompoktani</a>
+                    @include('partials.globaltoolbar')
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="table">
+                        <div class="table dataTables_wrapper dt-bootstrap4">
+                            <table class="table table-sm table-bordered table-striped table-hover ajaxTable datatable datatable-Kelompoktani w-100">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        {{-- <th>No. RIPH</th> --}}
+                                        {{-- <th>Kabupaten</th> --}}
+                                        <th>Kecamatan</th>
+                                        {{-- <th>Kelurahan</th> --}}
+                                        <th>Nama Kelompok</th>
+                                        <th>Pimpinan</th>
+                                        <th>HP. Pimpinan</th>
+                                        <th>Nama Petani</th>
+                                        <th>KTP Petani</th>
+                                        <th>Luas Lahan (ha)</th>
+                                        <th>Periode tanam</th>
+                                        <th style="width: 120px">Aksi</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
     
     
 @endcan
@@ -121,6 +60,157 @@
 <!-- start script for this page -->
 @section('scripts')
 @parent
+<script>
+	
+	$(function () 
+	{
 
+        $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+            toastr.options.timeOut = 10000;
+            toastr.options = {
+                positionClass: 'toast-top-full-width'
+            };
+
+            toastr.error( 'Gagal mengambil data');
+        };
+
+		let dtButtons = $.extend(true, [
+            {
+                    extend: 'pdfHtml5',
+                    text: 'PDF',
+                    titleAttr: 'Generate PDF',
+                    className: 'btn-outline-danger btn-sm mr-1'
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: 'Excel',
+                    titleAttr: 'Generate Excel',
+                    className: 'btn-outline-success btn-sm mr-1'
+                },
+                {
+                    extend: 'csvHtml5',
+                    text: 'CSV',
+                    titleAttr: 'Generate CSV',
+                    className: 'btn-outline-primary btn-sm mr-1'
+                },
+                {
+                    extend: 'copyHtml5',
+                    text: 'Copy',
+                    titleAttr: 'Copy to clipboard',
+                    className: 'btn-outline-primary btn-sm mr-1'
+                },
+                {
+                    extend: 'print',
+                    text: 'Print',
+                    titleAttr: 'Print Table',
+                    className: 'btn-outline-primary btn-sm'
+                }
+        ], $.fn.dataTable.defaults.buttons)
+        @can('poktan_delete')
+            let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
+            let deleteButton = {
+                text: deleteButtonTrans,
+                url: "{{ route('admin.task.kelompoktani.massDestroy') }}",
+                className: 'btn-danger  waves-effect waves-themed  mr-1', 
+                action: function (e, dt, node, config) {
+                var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
+                    return entry.id
+                });
+
+                if (ids.length === 0) {
+                    alert('{{ trans('global.datatables.zero_selected') }}')
+
+                    return
+                }
+
+                if (confirm('{{ trans('global.areYouSure') }}')) {
+                    $.ajax({
+                    headers: {'x-csrf-token': _token},
+                    method: 'POST',
+                    url: config.url,
+                    data: { ids: ids, _method: 'DELETE' }})
+                    .done(function () { location.reload() })
+                }
+                }
+            }
+            dtButtons.push(deleteButton)
+        @endcan
+        let dtOverrideGlobals = {
+            buttons: dtButtons,
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            retrieve: true,
+            aaSorting: [],
+            columnDefs: [  {
+                                orderable: false,
+                                className: 'select-checkbox',
+                                targets: 0
+                            },{
+                                orderable: false,
+                                searchable: false,
+                                targets: -1
+                            }
+                        ],
+            select: {
+                        style:    'multi+shift',
+                        selector: 'td:first-child'
+            },
+            dom: 
+					"<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 d-flex'B><'col-sm-12 col-md-2 d-flex justify-content-end'f>>" +
+					"<'row'<'col-sm-12 col-md-12'tr>>" +
+					"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
+            
+            ajax: "{{ route('admin.task.kelompoktani.show', [$nomor]) }}",
+            columns: [
+                { data: 'placeholder', name: 'placeholder' ,orderable: false},
+                // { data: 'id', name: 'id',  },
+                // { data: 'no_riph', name: 'no_riph' },
+                // { data: 'id_kabupaten', name: 'id_kabupaten' },
+                { data: 'id_kecamatan', name: 'id_kecamatan' },
+                // { data: 'id_kelurahan', name: 'id_kelurahan' },
+                { data: 'nama_kelompok', name: 'nama_kelompok' , visible: false},
+                { data: 'nama_pimpinan', name: 'nama_pimpinan' , visible: false},
+                { data: 'hp_pimpinan', name: 'hp_pimpinan' , visible: false},
+                { data: 'nama_petani', name: 'nama_petani' },
+                { data: 'ktp_petani', name: 'ktp_petani' },
+                { data: 'luas_lahan', name: 'luas_lahan', class: 'text-right' },
+                { data: 'periode_tanam', name: 'periode_tanam' },
+                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center', orderable: false}
+            ],
+            orderCellsTop: true,
+            order: [[ 2, 'asc' ]],
+            displayLength: 25,
+            drawCallback: function (settings) {
+                var api = this.api();
+                var rows = api.rows({ page: 'current' }).nodes();
+                var last = null;
+                
+                api
+                    .column(2, { page: 'current' })
+                    .data()
+                    .each(function (group, i) {
+                        if (last !== group) {
+                            $(rows)
+                                .eq(i)
+                                .before('<tr class="group"><td></td><td colspan="6"><strong>' + group  + ' - ' + rows.data()[i].nama_pimpinan +  ' (' + rows.data()[i].hp_pimpinan + ')' +'</strong></td></tr>');
+    
+                            last = group;
+                        }
+                    });
+            },
+        };
+        let table = $('.datatable-Kelompoktani').DataTable(dtOverrideGlobals);
+        $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
+            $($.fn.dataTable.tables(true)).DataTable()
+                .columns.adjust();
+        });
+        
+        
+        
+    });
+        
+
+</script>
 
 @endsection

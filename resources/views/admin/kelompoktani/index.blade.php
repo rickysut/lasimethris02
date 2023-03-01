@@ -2,7 +2,7 @@
 @section('content')
 @include('partials.breadcrumb')
 {{-- @include('partials.subheader') --}}
-@can('kelompoktani_access')
+@can('poktan_access')
 
 <div class="row">
     <div class="col-md-12">
@@ -12,7 +12,7 @@
                     Daftar <span class="fw-300"><i>Kelompoktani</i></span>
                 </h2>
                 <div class="panel-toolbar">
-                    <a class="btn btn-xs btn-primary mr-1 ml-1" href="{{ route('admin.task.kelompoktani.create') }}"><i class="fal fa-plus mr-1"></i>Kelompoktani</a>
+                    {{-- <a class="btn btn-xs btn-primary mr-1 ml-1" href="{{ route('admin.task.kelompoktani.create') }}"><i class="fal fa-plus mr-1"></i>Kelompoktani</a> --}}
                     @include('partials.globaltoolbar')
                 </div>
             </div>
@@ -24,13 +24,17 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th></th>
-                                        <th>Kelompoktani</th>
-                                        <th>Provinsi</th>
-                                        <th>Kabupaten</th>
+                                        <th>No. RIPH</th>
+                                        {{-- <th>Kabupaten</th> --}}
                                         <th>Kecamatan</th>
-                                        <th>Desa</th>
-                                        <th>Jumlah Anggota</th>
+                                        {{-- <th>Kelurahan</th> --}}
+                                        <th>Nama Kelompok</th>
+                                        <th>Pimpinan</th>
+                                        <th>HP. Pimpinan</th>
+                                        <th>Nama Petani</th>
+                                        <th>KTP Petani</th>
                                         <th>Luas Lahan (ha)</th>
+                                        <th>Periode tanam</th>
                                         <th style="width: 120px">Aksi</th>
                                     </tr>
                                 </thead>
@@ -51,7 +55,7 @@
 	
 	$(function () 
 	{
-
+        
         $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
             toastr.options.timeOut = 10000;
             toastr.options = {
@@ -62,38 +66,15 @@
         };
 
 		let dtButtons = $.extend(true, [
-            {
-                    extend: 'pdfHtml5',
-                    text: 'PDF',
-                    titleAttr: 'Generate PDF',
-                    className: 'btn-outline-danger btn-sm mr-1'
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: 'Excel',
-                    titleAttr: 'Generate Excel',
-                    className: 'btn-outline-success btn-sm mr-1'
-                },
-                {
-                    extend: 'csvHtml5',
-                    text: 'CSV',
-                    titleAttr: 'Generate CSV',
-                    className: 'btn-outline-primary btn-sm mr-1'
-                },
-                {
-                    extend: 'copyHtml5',
-                    text: 'Copy',
-                    titleAttr: 'Copy to clipboard',
-                    className: 'btn-outline-primary btn-sm mr-1'
-                },
-                {
-                    extend: 'print',
-                    text: 'Print',
-                    titleAttr: 'Print Table',
-                    className: 'btn-outline-primary btn-sm'
-                }
+        {
+            extend: 'excelHtml5',
+            text: 'Excel',
+            titleAttr: 'Generate Excel',
+            className: 'btn-outline-success btn-sm mr-1'
+        }
+            
         ], $.fn.dataTable.defaults.buttons)
-        @can('kelompoktani_delete')
+        @can('poktan_delete')
             let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
             let deleteButton = {
                 text: deleteButtonTrans,
@@ -125,17 +106,14 @@
         let dtOverrideGlobals = {
             buttons: dtButtons,
             processing: true,
-            serverSide: true,
+            serverSide: false,
+            responsive: true,
             retrieve: true,
             aaSorting: [],
             columnDefs: [  {
                                 orderable: false,
                                 className: 'select-checkbox',
                                 targets: 0
-                            },{
-                                orderable: false,
-                                searchable: false,
-                                targets: -1
                             }
                         ],
             select: {
@@ -147,28 +125,72 @@
 					"<'row'<'col-sm-12 col-md-12'tr>>" +
 					"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
             
-            ajax: "{{ route('admin.task.kelompoktani.index') }}",
+            ajax: "{{ route('admin.task.kelompoktani') }}",
             columns: [
-                { data: 'placeholder', name: 'placeholder' },
+                { data: 'placeholder', name: 'placeholder', orderable: false },
                 // { data: 'id', name: 'id',  },
-                { data: 'nama_poktan', name: 'nama_poktan' },
-                { data: 'provinsi', name: 'provinsi' },
-                { data: 'kabupaten', name: 'kabupaten' },
-                { data: 'kecamatan', name: 'kecamatan' },
-                { data: 'desa', name: 'desa' },
-                { data: 'jumlah_anggota', name: 'jumlah_anggota', class: 'text-right' },
+                { data: 'no_riph', name: 'no_riph', visible: false },
+                // { data: 'id_kabupaten', name: 'id_kabupaten' },
+                { data: 'id_kecamatan', name: 'id_kecamatan' },
+                // { data: 'id_kelurahan', name: 'id_kelurahan' },
+                { data: 'nama_kelompok', name: 'nama_kelompok' },
+                { data: 'nama_pimpinan', name: 'nama_pimpinan' },
+                { data: 'hp_pimpinan', name: 'hp_pimpinan' },
+                { data: 'nama_petani', name: 'nama_petani' },
+                { data: 'ktp_petani', name: 'ktp_petani' },
                 { data: 'luas_lahan', name: 'luas_lahan', class: 'text-right' },
-                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
+                { data: 'periode_tanam', name: 'periode_tanam' },
+                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' , orderable: false }
             ],
             orderCellsTop: true,
             order: [[ 1, 'asc' ]],
-            pageLength: 15,
+            displayLength: 25,
+            // rowGroup: {
+            //     dataSrc: 'no_riph'
+            // }
+            drawCallback: function (settings) {
+                var api = this.api();
+                
+                var nomor = "";
+                if (api.order()[0][0] === 1) {
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+                    api
+                        .column(1, { page: 'current' })
+                        .data()
+                        .each(function (group, i) {
+                            if (last !== group) {
+                                console.log(group);
+                                nomor = group.replace('.', '');
+                                nomor = nomor.replace(/\//g,'');
+                                
+                                urlView = "{{ route('admin.task.kelompoktani.show', ':no' ) }}";
+                                urlEdit = "{{ route('admin.task.kelompoktani.edit', ':no') }}";
+                                urlView = urlView.replace(':no', nomor);
+                                urlEdit = urlEdit.replace(':no', nomor);
+
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td></td><td colspan="8"><strong>' + group  +'</strong></td><td class="text-center">'+
+                                        '<a class="btn btn-xs btn-primary " data-toggle="tooltip" title data-original-title="Lihat Rincian" href='+urlView+'>'+
+                                        '    <i class="fal fa-search-plus"></i></a>'+
+                                        '<a class="btn btn-xs btn-info" data-toggle="tooltip" title data-original-title="Perbaharui Data" href='+urlEdit+'>'+
+                                        '<i class="fal fa-edit"></i></a>'+
+                                        '</td></tr>');
+        
+                                last = group;
+                            }
+                        });
+                }
+            },
         };
         let table = $('.datatable-Kelompoktani').DataTable(dtOverrideGlobals);
         $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
             $($.fn.dataTable.tables(true)).DataTable()
                 .columns.adjust();
         });
+
+        
         
         
         

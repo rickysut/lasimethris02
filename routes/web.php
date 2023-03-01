@@ -90,8 +90,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::delete('pengajuan/destroy', 'PengajuanController@massDestroy')->name('pengajuan.massDestroy');
 
         // kelompoktani
-        Route::resource('kelompoktani', 'KelompoktaniController');
+        Route::get('kelompoktani', 'KelompoktaniController@index')->name('kelompoktani');
+        Route::get('kelompoktani/{noriph}/edit', 'KelompoktaniController@edit')->name('kelompoktani.edit');
+        Route::get('kelompoktani/create', 'KelompoktaniController@create')->name('kelompoktani.create');
+        Route::get('kelompoktani/{noriph}', 'KelompoktaniController@show')->name('kelompoktani.show');
         Route::delete('kelompoktanimd', 'KelompoktaniController@massDestroy')->name('kelompoktani.massDestroy');
+
+        // daftar pks
+        Route::resource('pks', 'PksController');
+        Route::delete('pksmd', 'PksController@massDestroy')->name('pks.massDestroy');
+
 
         Route::resource('skl', 'SklController');
         

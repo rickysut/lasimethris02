@@ -252,7 +252,7 @@
                             <span>Berikut ini adalah daftar Kelompoktani Binaan yang telah Anda pilih sebelumnya pada form Komitmen Baru.</span>
                         </div>
                         <div class="flex-2">
-                            <span><a href="{{ route('admin.task.kelompoktani.show', [$id]) }}" class="btn btn-primary">Detail</a></span>
+                            <span><a href="{{ route('admin.task.kelompoktani.show', [$nomor]) }}" class="btn btn-primary">Detail</a></span>
                         </div>
                     </div>
                 </div>
@@ -268,25 +268,20 @@
                                     <th>Jumlah Petani</th>
                                     <th>Kecamatan</th>
                                     <th>Luas (Ha)</th>
-                                    {{-- <th>Tindakan</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
-                                @isset($data_poktan)
-                                @foreach ( $data_poktan as $poktan )
+                                @isset($poktans)
+                                @foreach ( $poktans as $poktan )
                                 
                                     <tr>
-                                        <td>{{ $poktan['nama_kelompok'] }}</td>
-                                        <td>{{ (is_string($poktan['nama_pimpinan']) ?  $poktan['nama_pimpinan'] : '') }}</td>
-                                        <td>{{ (is_string($poktan['hp_pimpinan']) ?  $poktan['hp_pimpinan'] : '') }}</td>
-                                        <td>{{ $poktan['jum_petani'] }}</td>
-                                        <td>{{ $poktan['id_kec'] }}</td>
-                                        <td>{{ $poktan['luas'] }}</td>
-                                        {{-- <td class="text-center">
-                                            <div class="justify-content-center">
-                                                <a class="text-info mr-1" href="#" role="button" data-toggle="tooltip" data-original-title="buat Rencana Tanam/PKS" data-offset="0,10"><i class="fal fa-plus-circle"></i></a>
-                                            </div>
-                                        </td> --}}
+                                        <td>{{ $poktan->nama_kelompok }}</td>
+                                        <td>{{ $poktan->nama_pimpinan }}</td>
+                                        <td>{{ $poktan->hp_pimpinan }}</td>
+                                        <td style="text-align: center;">{{ $poktan->jum_petani }}</td>
+                                        <td>{{ $poktan->id_kecamatan }}</td>
+                                        <td style="text-align: center;">{{ $poktan->luas }}</td>
+                                        
                                     </tr>    
                                 @endforeach
                                 @endisset

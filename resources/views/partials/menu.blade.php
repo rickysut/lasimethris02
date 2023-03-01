@@ -242,8 +242,8 @@
             {{-- user task --}}
             @can('user_task_access')
                 <li class="nav-title">{{ __('PROSES RIPH')}}</li>
-                <li>
-                    @can('pull_access')
+                
+                @can('pull_access')
                     <li class="c-sidebar-nav-item {{ request()->is('admin/task/pull') ? 'active' : '' }}">
                         <a href="{{ route('admin.task.pull') }}"
                             data-filter-tags="{{ strtolower(trans('cruds.pullSync.title_lang')) }}">
@@ -265,23 +265,44 @@
                     </li>
                 @endcan
                 @can('kelompoktani_access')
-                    <li class="c-sidebar-nav-item {{ request()->is('admin/kelompoktani') ? 'active' : '' }}">
-                        <a href="{{ route('admin.task.kelompoktani.index') }}"
+                    <li class="{{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/kelompoktani/*') || request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active open' : '' }}">
+                        <a href="#" title="Kelompok tani"
                             data-filter-tags="{{ strtolower(trans('cruds.kelompoktani.title_lang')) }}">
-                            <i class="fa-fw fal fa-users c-sidebar-nav-icon">
-
-                            </i>
-                            {{ trans('cruds.kelompoktani.title_lang') }}
+                            <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+                            <span class="nav-link-text"
+                            data-i18n="nav.administation_sub1">{{ trans('cruds.kelompoktani.title_lang') }}</span>
+                            
                         </a>
+                        <ul>
+                            @can('poktan_access')
+                            <li
+                                class="c-sidebar-nav-item {{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/kelompoktani/*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.task.kelompoktani') }}" title="Daftar poktan"
+                                    data-filter-tags="{{ strtolower(trans('cruds.daftarpoktan.title_lang')) }}">
+                                    <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+                                    {{ trans('cruds.daftarpoktan.title_lang') }}
+                                </a>
+                            </li>
+                            @endcan    
+                            @can('pks_access')
+                            <li
+                                class="c-sidebar-nav-item {{ request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.task.pks.index') }}" title="Daftar PKS"
+                                    data-filter-tags="{{ strtolower(trans('cruds.daftarpks.title_lang')) }}">
+                                    <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+                                    {{ trans('cruds.daftarpks.title_lang') }}
+                                </a>
+                            </li>
+                            @endcan     
+                        </ul>
                     </li>
                 @endcan
-                </li>
+                
             @endcan
 
             {{-- permohonan --}}
             @can('permohonan_access')
-                <li
-                    class="{{ request()->is('admin/task/pengajuan*') || request()->is('admin/task/skl*') ? 'active open' : '' }} ">
+                <li class="{{ request()->is('admin/task/pengajuan*') || request()->is('admin/task/skl*') ? 'active open' : '' }} ">
                     <a href="#" title="Verifikasi & SKL"
                         data-filter-tags="{{ strtolower(trans('cruds.verifikasi.title_lang')) }}">
                         <i class="fa-fw fal fa-ballot"></i>

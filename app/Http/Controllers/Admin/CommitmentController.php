@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Api\HelperController;
 use App\Http\Controllers\Traits\SimeviTrait;
+use App\Models\Poktan;
 
 class CommitmentController extends Controller
 {
@@ -240,34 +241,21 @@ class CommitmentController extends Controller
         //Log::info($pullData);
         $data_poktan = [];
         if ($pullData){
-            foreach ( $pullData['riph']['wajib_tanam']['kelompoktani']['loop'] as $poktan )
-            {
-                $name = trim($poktan['nama_kelompok'], ' ');
-                $name = Str::upper($name);
-                if ($this->chekFromItem($data_poktan, $name )== 0)
-                {
-                    // $kabupaten = $this->getAPIKabupaten($access_token, $poktan['id_kabupaten']);
-                    $data_poktan = array_merge( $data_poktan, array( array(
-                        'id_kab' => $poktan['id_kabupaten'], 
-                        'id_kec' => $poktan['id_kecamatan'] , 
-                        'id_kel' => $poktan['id_kelurahan'],
-                        'nama_kelompok' => $name,
-                        'nama_pimpinan' => (is_string($poktan['nama_pimpinan']) ?  $poktan['nama_pimpinan'] : ''),
-                        'hp_pimpinan' => (is_string($poktan['hp_pimpinan']) ?  $poktan['hp_pimpinan'] : '-'),
-                        'jum_petani' => 1,
-                        'luas' => $poktan['luas_lahan']
-                    )));
-                        
-                } else {
-                    
-                }
-            }
+
+            $query = 'select no_riph, id_kecamatan, nama_kelompok, nama_pimpinan, hp_pimpinan, count(nama_petani) as jum_petani, round(SUM(luas_lahan),2) as luas from poktans
+            where no_riph = "' . $pullRiph->no_ijin . '"' .
+            ' GROUP BY nama_kelompok';
+
+            $poktans = DB::select(DB::raw($query));
+            
+            // dd ($poktans);
+            
         }
         $module_name = 'Proses RIPH' ;
         $page_title = 'Data RIPH';
         $page_heading = 'Data RIPH' ;
         $heading_class = 'fal fa-file-invoice';
-        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'id', 'pullRiph', 'pullData', 'pengajuan', 'data_poktan'));
+        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pullRiph', 'pullData', 'pengajuan', 'poktans', 'nomor'));
     }
 
     /**
