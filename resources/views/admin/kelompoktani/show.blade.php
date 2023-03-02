@@ -5,7 +5,7 @@
 <style>
     tr.group,
     tr.group:hover {
-        background-color: #e9bfbf !important;
+        background-color: #bdeef9 !important;
     }
 </style>
 @can('poktan_show')
@@ -76,35 +76,12 @@
 
 		let dtButtons = $.extend(true, [
             {
-                    extend: 'pdfHtml5',
-                    text: 'PDF',
-                    titleAttr: 'Generate PDF',
-                    className: 'btn-outline-danger btn-sm mr-1'
-                },
-                {
-                    extend: 'excelHtml5',
-                    text: 'Excel',
-                    titleAttr: 'Generate Excel',
-                    className: 'btn-outline-success btn-sm mr-1'
-                },
-                {
-                    extend: 'csvHtml5',
-                    text: 'CSV',
-                    titleAttr: 'Generate CSV',
-                    className: 'btn-outline-primary btn-sm mr-1'
-                },
-                {
-                    extend: 'copyHtml5',
-                    text: 'Copy',
-                    titleAttr: 'Copy to clipboard',
-                    className: 'btn-outline-primary btn-sm mr-1'
-                },
-                {
-                    extend: 'print',
-                    text: 'Print',
-                    titleAttr: 'Print Table',
-                    className: 'btn-outline-primary btn-sm'
-                }
+                extend: 'excelHtml5',
+                text: 'Excel',
+                titleAttr: 'Generate Excel',
+                className: 'btn-outline-success btn-sm mr-1'
+            }
+            
         ], $.fn.dataTable.defaults.buttons)
         @can('poktan_delete')
             let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
@@ -138,13 +115,15 @@
         let dtOverrideGlobals = {
             buttons: dtButtons,
             processing: true,
-            serverSide: true,
+            serverSide: false,
             responsive: true,
             retrieve: true,
             aaSorting: [],
             columnDefs: [  {
                                 orderable: false,
+                                @can('poktan_delete')
                                 className: 'select-checkbox',
+                                @endcan
                                 targets: 0
                             },{
                                 orderable: false,
@@ -183,22 +162,38 @@
             displayLength: 25,
             drawCallback: function (settings) {
                 var api = this.api();
-                var rows = api.rows({ page: 'current' }).nodes();
-                var last = null;
-                
-                api
-                    .column(2, { page: 'current' })
-                    .data()
-                    .each(function (group, i) {
-                        if (last !== group) {
-                            $(rows)
-                                .eq(i)
-                                .before('<tr class="group"><td></td><td colspan="6"><strong>' + group  + ' - ' + rows.data()[i].nama_pimpinan +  ' (' + rows.data()[i].hp_pimpinan + ')' +'</strong></td></tr>');
-    
-                            last = group;
+                var nomor = "";
+                if (api.order()[0][0] === 2) {
+                    var rows = api.rows({ page: 'all' }).nodes();
+                    var last = null;
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                            return typeof i === 'string' ?
+                                i.replace(/,/g, '.')*1 : typeof i === 'number' ? i : 0;
+                        };
+                    total=[];
+                    api.column(2, { page: 'all' })
+                        .data()
+                        .each(function (group, i) {
+                            nomor = group;
+                            if(typeof total[nomor] != 'undefined'){
+                                total[nomor]=total[nomor]+intVal(api.column(7).data()[i]);
+                            }else{
+                                total[nomor]=intVal(api.column(7).data()[i]);
+                            }
+                            if (last !== group) {
+                                $(rows)
+                                    .eq(i)
+                                    .before('<tr class="group"><td></td><td colspan="3"><strong>' + group  + ' - ' + rows.data()[i].nama_pimpinan +  ' (' + rows.data()[i].hp_pimpinan + ')' +'</strong></td>'+
+                                        '<td class="'+nomor+' text-right "></td>><td colspan="2"></td></tr>');
+                                last = group;
+                            }
+                        });
+                        for(var key in total) {
+                            $("."+key).html(Math.round((total[key] + Number.EPSILON) * 100) / 100);
                         }
-                    });
-            },
+                }
+            }
         };
         let table = $('.datatable-Kelompoktani').DataTable(dtOverrideGlobals);
         $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){

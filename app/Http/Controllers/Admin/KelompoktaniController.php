@@ -214,7 +214,7 @@ class KelompoktaniController extends Controller
                 return $row->ktp_petani ? $row->ktp_petani : 0;
             });
             $table->editColumn('luas_lahan', function ($row) {
-                return $row->luas_lahan ? number_format($row->luas_lahan, 2, ',', '.') : 0;
+                return $row->luas_lahan ? number_format($row->luas_lahan, 2, '.', ',') : 0;
             });
             $table->editColumn('periode_tanam', function ($row) {
                 return $row->periode_tanam ? $row->periode_tanam : '';
@@ -380,7 +380,7 @@ class KelompoktaniController extends Controller
                 return $row->ktp_petani ? $row->ktp_petani : 0;
             });
             $table->editColumn('luas_lahan', function ($row) {
-                return $row->luas_lahan ? number_format($row->luas_lahan, 2, ',', '.') : 0;
+                return $row->luas_lahan ? number_format($row->luas_lahan, 2, '.', ',') : 0;
             });
             $table->editColumn('periode_tanam', function ($row) {
                 return $row->periode_tanam ? $row->periode_tanam : '';

@@ -236,7 +236,7 @@ class CommitmentController extends Controller
             $pullData = null;
         
 
-        $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+        //$access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
 
         //Log::info($pullData);
         $data_poktan = [];

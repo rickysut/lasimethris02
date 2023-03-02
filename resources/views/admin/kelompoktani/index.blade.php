@@ -2,8 +2,13 @@
 @section('content')
 @include('partials.breadcrumb')
 {{-- @include('partials.subheader') --}}
+<style>
+    tr.group,
+    tr.group:hover {
+        background-color: #bdeef9 !important;
+    }
+</style>
 @can('poktan_access')
-
 <div class="row">
     <div class="col-md-12">
         <div id="panel-1" class="panel" data-title="Panel Data" data-intro="Panel ini berisi data-data" data-step="2">
@@ -112,8 +117,10 @@
             aaSorting: [],
             columnDefs: [  {
                                 orderable: false,
+                                @can('poktan_delete')
                                 className: 'select-checkbox',
-                                targets: 0
+                                @endcan
+                                targets: 0,
                             }
                         ],
             select: {
@@ -145,25 +152,33 @@
             orderCellsTop: true,
             order: [[ 1, 'asc' ]],
             displayLength: 25,
-            // rowGroup: {
-            //     dataSrc: 'no_riph'
-            // }
+            
             drawCallback: function (settings) {
                 var api = this.api();
                 
                 var nomor = "";
                 if (api.order()[0][0] === 1) {
-                    var rows = api.rows({ page: 'current' }).nodes();
+                    var rows = api.rows({ page: 'all' }).nodes();
                     var last = null;
-                    api
-                        .column(1, { page: 'current' })
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function ( i ) {
+                        return typeof i === 'string' ?
+                            i.replace(/,/g, '.')*1 : typeof i === 'number' ? i : 0;
+                    };
+                    total=[];
+                    api.column(1, { page: 'all' })
                         .data()
                         .each(function (group, i) {
+                            nomor = group.replace('.', '');
+                            nomor = nomor.replace(/\//g,'');
+                            if(typeof total[nomor] != 'undefined'){
+                                // console.log(intVal(api.column(8).data()[i]));
+                                total[nomor]=total[nomor]+intVal(api.column(8).data()[i]);
+                            }else{
+                                total[nomor]=intVal(api.column(8).data()[i]);
+                            }
                             if (last !== group) {
-                                console.log(group);
-                                nomor = group.replace('.', '');
-                                nomor = nomor.replace(/\//g,'');
-                                
+                                //console.log(group);
                                 urlView = "{{ route('admin.task.kelompoktani.show', ':no' ) }}";
                                 urlEdit = "{{ route('admin.task.kelompoktani.edit', ':no') }}";
                                 urlView = urlView.replace(':no', nomor);
@@ -171,7 +186,9 @@
 
                                 $(rows)
                                     .eq(i)
-                                    .before('<tr class="group"><td></td><td colspan="8"><strong>' + group  +'</strong></td><td class="text-center">'+
+                                    .before('<tr class="group"><td></td><td colspan="6"><strong>' + group  +'</strong></td>'+
+                                        '<td class="'+nomor+' text-right "></td>><td></td>'+
+                                        '<td class="text-center">'+
                                         '<a class="btn btn-xs btn-primary " data-toggle="tooltip" title data-original-title="Lihat Rincian" href='+urlView+'>'+
                                         '    <i class="fal fa-search-plus"></i></a>'+
                                         '<a class="btn btn-xs btn-info" data-toggle="tooltip" title data-original-title="Perbaharui Data" href='+urlEdit+'>'+
@@ -181,8 +198,11 @@
                                 last = group;
                             }
                         });
+                        for(var key in total) {
+                            $("."+key).html(Math.round((total[key] + Number.EPSILON) * 100) / 100);
+                        }
                 }
-            },
+            }
         };
         let table = $('.datatable-Kelompoktani').DataTable(dtOverrideGlobals);
         $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
