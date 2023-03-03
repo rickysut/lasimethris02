@@ -16,7 +16,6 @@ Route::get('/home', function () {
     }
 
     return redirect()->route('admin.home');
-    
 });
 
 
@@ -48,13 +47,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     Route::get('global-search', 'GlobalSearchController@search')->name('globalSearch');
 
-    Route::get('profile', 'ProfileController@index')->name('profile.show'); 
-    Route::post('profile', 'ProfileController@store')->name('profile.store'); 
+    Route::get('profile', 'ProfileController@index')->name('profile.show');
+    Route::post('profile', 'ProfileController@store')->name('profile.store');
 
     //posts
     Route::put('posts/{post}/restore', 'PostsController@restore')->name('posts.restore');
     Route::resource('posts', 'PostsController');
-    
+    Route::get('allblogs', 'PostsController@allblogs')->name('allblogs');
+    Route::post('posts/{post}/star', 'StarredPostController@star')->name('posts.star');
+    Route::delete('posts/{post}/unstar', 'StarredPostController@unstar')->name('posts.unstar');
+
+    //posts categories
+    Route::resource('categories', 'CategoryController');
+
     //messenger
     Route::get('messenger', 'MessengerController@index')->name('messenger.index');
     Route::get('messenger/create', 'MessengerController@createTopic')->name('messenger.createTopic');
@@ -70,15 +75,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     //verifikasi
     Route::get('dir_check_b', 'MessengerController@showReply')->name('verifikasi.dir_check_b');
     Route::get('dir_check_c', 'MessengerController@showReply')->name('verifikasi.dir_check_c');
-    
+
     //user task
-    Route::group(['prefix' => 'task','as' => 'task.'], function () {
+    Route::group(['prefix' => 'task', 'as' => 'task.'], function () {
 
 
         Route::get('pull', 'PullRiphController@index')->name('pull');
         Route::get('getriph', 'PullRiphController@pull')->name('pull.getriph');
         Route::post('pull', 'PullRiphController@store')->name('pull.store');
-    
+
         Route::get('commitment', 'CommitmentController@index')->name('commitment');
         Route::get('commitment/{pullriph}', 'CommitmentController@show')->name('commitment.show');
         Route::delete('commitment/{pullriph}', 'CommitmentController@destroy')->name('commitment.destroy');
@@ -102,13 +107,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
 
         Route::resource('skl', 'SklController');
-        
+
         //berkas
         Route::get('berkas', 'BerkasController@indexberkas')->name('berkas');
-        
+
         //galeri
         Route::get('galeri', 'BerkasController@indexgaleri')->name('galeri');
-        
+
         //template
         Route::delete('template/destroy', 'BerkasController@massDestroy')->name('template.massDestroy');
         Route::get('template/create', 'BerkasController@createtemplate')->name('template.create');
@@ -120,13 +125,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::get('template', 'BerkasController@indextemplate')->name('template');
     });
 
-    
+
     Route::resource('riphAdmin', 'RiphAdminController');
 
     //skl-admin
     Route::resource('skl', 'AdminSKLController');
-            
-
 });
 
 Route::group(['prefix' => 'verification', 'as' => 'verification.', 'namespace' => 'Verifikator', 'middleware' => ['auth']], function () {
@@ -139,9 +142,9 @@ Route::group(['prefix' => 'verification', 'as' => 'verification.', 'namespace' =
 
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
-    
-    
-    
+
+
+
     // Change password
     if (file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php'))) {
         Route::get('password', 'ChangePasswordController@edit')->name('password.edit');

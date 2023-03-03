@@ -5,76 +5,79 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="card mb-g border shadow-0">
-                <div class="card-header p-0">
-                    <div class="p-3 d-flex flex-row">
-                        <div class="d-block flex-shrink-0">
-                            <img src="/img/avatars/farmer.png" class="img-fluid img-thumbnail" alt=""
-                                style="height:50px; width:100%;">
-                        </div>
-                        <div class="d-block ml-2">
-                            <span class="h6 font-weight-bold text-uppercase d-block m-0">
-                                <a href="javascript:void(0);">{{ $post->title }}</a>
-                            </span>
-                            <div>
-                                <span>Created by: </span>
-                                <a>{{ $post->user->name }}</a>
-                            </div>
-                        </div>
-                        <div class="d-block align-items-right ml-auto align-self-start mb-1">
-                            <div>
-                                <a class="badge btn-sm btn-primary text-white"
-                                    title="Kategori Artikel">{{ ($post->category->name ?? '') }}</a>
-                                @if (!empty($post->published_at))
-                                    <a class="badge btn-sm btn-success text-white"
-                                        title="telah dipublikasikan">Published</a>
-                                    <a href="javascript:void(0);" class="text-muted fs-xs font-italic">
-                                        Published at: {{ $post->published_at }}
-                                    </a>
-                                @else
-                                    <a class="badge btn-sm btn-warning text-white"
-                                        title="belum dipublikasikan">Unpublished</a>
-                                @endif
-                            </div>
-                            
-                        </div>
-
-                    </div>
-                </div>
-                <div class="panel-content mt-3">
-                    <div class="col">
-                        <div class="text-center mb-2">
-                            @if (is_null($post->img_cover))
-                                <div></div>
-                            @else
-                                <img src="{{ asset(old('img_cover', 'img/' . $post->img_cover)) }}" class="img-thumbnail"
-                                    alt="">
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body ">
-                    {!! $post->body !!}
-                </div>
-
-                <div class="card-footer">
-                    <div class="d-flex align-items-center">
-                        <!-- visible to Administrator/creator only-->
-
-                        @if (\Auth::user()->roleaccess == '1')
-                            <a href="{{ route('admin.posts.edit', $post->id) }}" class="badge btn-sm btn-danger mr-1"
-                                role="button" title="Ubah Artikel"><i class="fal fa-edit"></i>
-                                Edit</a>
-                        @endif
-                        <a href="{{ route('admin.posts.index') }}" class="badge btn-sm btn-info">Kembali</a>
-                        <!-- visible to everyone/reader -->
-                        <div class="custom-control custom-switch flex-shrink-0 ml-auto">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                            <label class="custom-control-label" for="customSwitch1">Tandai sudah dibaca</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="card">
+				<div class="card">
+					<div class="card-footer">
+						<div class="text-center mb-3 pt-3">
+							<h1 class="fs-xxl text-uppercase">{{ $post->title }}</h1>
+							<span class="text-xs">
+								<span class="text-muted">Posted by: </span>
+								<span class="fw-500">{{ $post->user->name }}</span> |
+								<span class="text-muted">{{ $post->created_at }}</span> |
+								<span class="fw-500">{{ $post->category->name }}</span> |
+								@if ($post->priority == 1)
+									<a href="javascript:void()" class="badge btn-sm btn-danger">
+										URGENT!!
+									</a> |
+								@elseif($post->priority == 2)
+									<a href="javascript:void()" class="badge btn-sm btn-warning">
+										High
+									</a> |
+								@elseif($post->priority == 3)
+									<a href="javascript:void()" class="badge btn-sm btn-info">
+										Moderate
+									</a> |
+								@elseif($post->priority == 4)
+									<a href="javascript:void()" class="badge btn-sm btn-success">
+										low
+									</a>
+								@else
+									<a href="javascript:void()" class="badge btn-sm btn-secondary">
+										No Priority
+									</a> |
+								@endif
+								500 <i class="fa fa-eye"></i> |
+								150 <i class="fa fa-star text-warning"></i>
+							</span>
+						</div>
+					</div>
+				</div>
+				@if (is_null($post->img_cover))
+					<span></span>
+				@else
+					<img src="{{ url('storage/img/post_img/' . $post->img_cover) }}" class="card-img-top"
+						alt="Card image cap">
+				@endif
+				<div class="card-body p-5" style="text-align:justify">
+					@if (is_null($post->exerpt))
+					@else
+					<div class="panel-tag mb-3">
+						<i class="fs-xl text-monospace">"{{ $post->exerpt }}"</i>
+					</div>
+					@endif
+					{!! $post->body !!}
+				</div>
+				<div class="card-footer d-flex flex-row justify-content-center p-5">
+					<span class="mr-1">Give Star to this Post:</span>
+					<span>
+						@auth
+							@if(Auth::user()->starred->contains($post->id))
+								<form action="{{ route('admin.posts.unstar', $post->id) }}" method="POST">
+								@csrf
+								@method('DELETE')
+								<button type="submit" class="btn btn-outline-warning btn-icon border-0 btn-xs"><i class="fs-lg fas fa-star"></i></button>
+								</form>
+							@else
+								<form action="{{ route('admin.posts.star', $post->id) }}" method="POST">
+								@csrf
+								<button type="submit" class="btn btn-outline-warning btn-icon border-0 btn-xs"><i class="fs-lg fal fa-star"></i></button>
+								</form>
+							@endif
+						@endauth
+					</span>
+					
+				</div>
+			</div>
         </div>
     </div>
 @endsection
