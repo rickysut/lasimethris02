@@ -58,6 +58,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('posts/{post}/unstar', 'StarredPostController@unstar')->name('posts.unstar');
 
     //posts categories
+    Route::resource('categories', 'CategoryController');
 
     //messenger
     Route::get('messenger', 'MessengerController@index')->name('messenger.index');

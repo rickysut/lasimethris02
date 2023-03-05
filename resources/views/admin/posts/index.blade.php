@@ -168,7 +168,7 @@
                         </div>
                         <div class="ml-2">
                             <span class="text-muted fw-500">
-                                <a href="javascript:void()">{{$category->name}}</a>
+                                <a href="{{ route('admin.categories.show', $category->id) }}">{{$category->name}}</a>
                             </span>
                         </div>
                     </div>
