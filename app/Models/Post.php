@@ -27,6 +27,11 @@ class Post extends Model
         'body',
         'img_cover',
         'tags',
+        'is_active',
+        'visibility',
+        'priority',
+        'exerpt',
+        'tags',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -58,4 +63,20 @@ class Post extends Model
         return Post::whereNotNull('published_at')->count();
     }
 
+    //new update
+
+    public function readposts()
+    {
+        return $this->hasMany(Readpost::class);
+    }
+
+    public function starredpost()
+    {
+        return $this->hasMany(StarredPost::class);
+    }
+
+    public function starredCount()
+    {
+        return $this->hasMany('App\Models\StarredPost', 'post_id')->count();
+    }
 }

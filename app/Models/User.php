@@ -29,7 +29,7 @@ class User extends Authenticatable
         '3' => 'Pelaku Usaha V2',
     ];
 
-    
+
 
     public $table = 'users';
 
@@ -60,13 +60,13 @@ class User extends Authenticatable
 
     public static function getUserById($id)
     {
-        $user = User::where(function ($query) use($id) {
+        $user = User::where(function ($query) use ($id) {
             $query
                 ->where('id', $id);
-            })
+        })
             ->with('data_user')
             ->get();
-        
+
         return $user;
     }
 
@@ -102,7 +102,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function post(){
+    public function post()
+    {
         return $this->hasMany(Post::class);
     }
 
@@ -111,9 +112,16 @@ class User extends Authenticatable
         return $this->hasOne(DataUser::class);
     }
 
-    
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+
+    //new update from branch
+    public function starred()
+    {
+        return $this->belongsToMany('App\Models\Post', 'starred_posts', 'user_id', 'post_id');
     }
 }
