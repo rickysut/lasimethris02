@@ -54,7 +54,7 @@
 					<i class="subheader-icon fal fa-ballot-check mr-1"></i>
 					<span>
 						<i class="fw-300 mr-1">All Posts in</i>
-						{{$category->name}} Category
+						<span style="color: {{$category->hexcolor}};">{{$category->name}}</span> Category
 					</span>
 				</h2>
 				<div class="panel-toolbar">
