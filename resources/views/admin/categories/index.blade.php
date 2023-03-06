@@ -191,7 +191,7 @@
 								<span aria-hidden="true"><i class="fal fa-times"></i></span>
 							</button>
 						</div>
-						<form method="POST" action="{{ route('admin.categories.update', [$category->id]) }}" enctype="multipart/form-data">
+						<form method="POST" action="{{ route('admin.categories.store')}}" enctype="multipart/form-data">
 							@csrf
 							<div class="modal-body">
 								<div class="form-group">
