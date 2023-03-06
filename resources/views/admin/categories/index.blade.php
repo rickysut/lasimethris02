@@ -186,12 +186,12 @@
 				<div class="modal-dialog modal-dialog-right modal-sm">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title h4">New Category</h5>
+							<h5 class="modal-title h4">Edit Category</h5>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true"><i class="fal fa-times"></i></span>
 							</button>
 						</div>
-						<form method="POST" action="{{ route('admin.categories.update', [$category->id]) }}" enctype="multipart/form-data">
+						<form method="POST" action="{{ route('admin.categories.store')}}" enctype="multipart/form-data">
 							@csrf
 							<div class="modal-body">
 								<div class="form-group">
