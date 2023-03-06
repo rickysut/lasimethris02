@@ -17,7 +17,9 @@
                     Detail Kelompoktani - No. RIPH = {{ $realno }}
                 </h2>
                 <div class="panel-toolbar">
-                    <a class="btn btn-xs btn-primary mr-1 ml-1" href="{{ route('admin.task.kelompoktani.create') }}"><i class="fal fa-plus mr-1"></i>Kelompoktani</a>
+                    @can('poktan_create')
+                        <a class="btn btn-xs btn-primary mr-1 ml-1" href="{{ route('admin.task.kelompoktani.create') }}"><i class="fal fa-plus mr-1"></i>Kelompoktani</a>
+                    @endcan
                     @include('partials.globaltoolbar')
                 </div>
             </div>
@@ -40,7 +42,7 @@
                                         <th>KTP Petani</th>
                                         <th>Luas Lahan (ha)</th>
                                         <th>Periode tanam</th>
-                                        <th style="width: 120px">Aksi</th>
+                                        {{-- <th style="width: 120px">Aksi</th> --}}
                                     </tr>
                                 </thead>
                             </table>
@@ -155,7 +157,7 @@
                 { data: 'ktp_petani', name: 'ktp_petani' },
                 { data: 'luas_lahan', name: 'luas_lahan', class: 'text-right' },
                 { data: 'periode_tanam', name: 'periode_tanam' },
-                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center', orderable: false}
+                // { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center', orderable: false}
             ],
             orderCellsTop: true,
             order: [[ 2, 'asc' ]],

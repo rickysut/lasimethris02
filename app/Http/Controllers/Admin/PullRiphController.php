@@ -146,6 +146,7 @@ class PullRiphController extends Controller
                 $idpetani = trim($poktan->id_petani, ' ');
                 Poktan::updateOrCreate(
                     [
+                        'npwp' => $request->get('npwp'), 
                         'no_riph' => $noijin, 
                         'id_petani' => $idpetani
                           

@@ -76,6 +76,7 @@
 								</tr>
 							</thead>
 							<tbody>
+								{{-- {{ dd($categories) }} --}}
 								@foreach ($categories as $category)
 								<tr>
 									<td> 

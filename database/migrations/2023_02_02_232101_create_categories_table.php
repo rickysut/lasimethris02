@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamp('deleted_at');
             $table->string('hexcolor', 8);
             $table->string('textcolor', 8);
         });

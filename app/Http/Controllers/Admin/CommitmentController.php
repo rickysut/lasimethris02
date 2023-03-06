@@ -225,6 +225,7 @@ class CommitmentController extends Controller
         $pullRiph = PullRiph::findOrFail($id);
         $pengajuan = Pengajuan::where('no_doc', $pullRiph->no_doc)->get();
         $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
+        $nomor = '';
         if (!empty($npwp))
         {
             $npwp = str_replace('.', '', $npwp);
@@ -240,6 +241,7 @@ class CommitmentController extends Controller
 
         //Log::info($pullData);
         $data_poktan = [];
+        $poktans = null;
         if ($pullData){
 
             $query = 'select no_riph, id_kecamatan, nama_kelompok, nama_pimpinan, hp_pimpinan, count(nama_petani) as jum_petani, round(SUM(luas_lahan),2) as luas from poktans

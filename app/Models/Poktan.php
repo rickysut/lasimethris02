@@ -15,6 +15,7 @@ class Poktan extends Model
     public $table = 'poktans';
 
     protected $fillable = [
+        'npwp',
         'no_riph',
         'id_petani',
         'id_kabupaten',

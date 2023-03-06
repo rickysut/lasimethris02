@@ -31,12 +31,12 @@ class CategoryController extends Controller
 		$page_heading = 'Categories List'; //this will be the page heading.
 		$heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
 
-		$categories = Category::withCount('post')->get();
+		// $categories = Category::withCount('post')->get();
 		// dd($request);
 
-		// $categories = Category::all();
+		$categories = Category::all();
 		// $category = Category::with('post')->get();
-
+		// dd($categories);
 		return view('admin.categories.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories'));
 	}
 
