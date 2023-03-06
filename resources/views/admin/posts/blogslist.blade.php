@@ -80,7 +80,6 @@
                         <div class="table-responsive">
                             <table id="templateFeed" class="table table-sm table-hover table-striped table-bordered  dt-feeds w-100">
                                 <thead class="thead-dark">
-                
                                     <th hidden>created at</th>
                                     <th style="width: 50%">Title</th>
                                     <th>Status</th>
@@ -149,98 +148,7 @@
     </div>
 
     @if (\Auth::user()->roleaccess == '1')
-        <div class="row">
-            <div class="col-12">
-                <div id="panel-1" class="panel">
-                    <div class="panel-hdr">
-                        <h2>
-                            <i class="subheader-icon fal fa-ballot-check mr-1"></i>Artike| 
-                            <span class="fw-300"><i>Berita</i></span>
-                        </h2>
-                        <div class="panel-toolbar">
-                            @can('feeds_create')
-                            <a href="{{ route('admin.posts.create') }}"
-                                class="mr-1 btn btn-primary btn-xs"><i class="fal fa-plus mr-1"></i>
-                                Artikel Baru
-                            </a>
-                            @endcan
-                            @include('partials.globaltoolbar')
-                        </div>
-                    </div>
-                    <div class="panel-container show">
-                        <div class="panel-content">
-                            <div class="table-responsive">
-                                <table id="templateFeed" class="table table-sm table-hover table-striped table-bordered  dt-feeds w-100">
-                                    <thead class="thead-dark">
-                    
-                                        <th hidden>created at</th>
-                                        <th style="width: 50%">Title</th>
-                                        <th>Status</th>
-                                        <th class="text-center">Action</th>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($posts as $post)
-                                            <tr>
-                                                <td hidden>{{ $post->created_at }}</td>
-                                                <td>
-                                                    <a href="{{ route('admin.posts.show', $post->id) }}" class="fs-lg fw-500 mr-2">
-                                                        {{ $post->title }}
-                                                    </a>
-                                                    <div>
-                                                        <div class="text-muted fs-xs">
-                                                            created by:
-                                                            <span class="fw-700 mr-1 text-info">
-                                                                {{ $post->user->name }}
-                                                            </span>
-                                                            <span>on
-                                                                <i class="fal fa-calendar-day mr-1"></i>
-                                                                {{ $post->created_at }}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        @if (!empty($post->published_at))
-                                                            <a class="badge btn-sm btn-success text-white"
-                                                                title="telah dipublikasikan">Published</a>
-                                                        @else
-                                                            <a class="badge btn-sm btn-warning text-white"
-                                                                title="belum dipublikasikan">Unpublished</a>
-                                                        @endif
-                                                    </div>
-                                                </td>
-                                                <td class="d-flex align-items-center">
-                                                    @can('feeds_edit')
-                                                        <a href="{{ route('admin.posts.edit', $post->id) }}"
-                                                            class="badge btn-sm btn-info btn-icon mr-1" role="button"
-                                                            title="Ubah Artikel">
-                                                            <i class="fal fa-edit"></i>
-                                                        </a>
-                                                    @endcan
-                                                    @can('feeds_delete')
-                                                        <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="submit" class="btn btn-sm btn-danger btn-icon"
-                                                                title="hapus Artikel">
-                                                                <i class="fal fa-trash-alt"></i>
-                                                            </button>
-                                                        </form>
-                                                    @endcan
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     {{-- deleted articles --}}
-    
         <div class="row">
             <div class="col-md-12">
                 <div id="panel-1" class="panel">

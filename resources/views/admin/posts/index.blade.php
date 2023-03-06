@@ -178,13 +178,6 @@
         </div>
     </div>
 </div>
-
-    @if (\Auth::user()->roleaccess == '1')
-        
-    {{-- deleted articles --}}
-    
-        
-    @endif
 @endcan
 @endsection
 

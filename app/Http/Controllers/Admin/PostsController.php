@@ -186,7 +186,7 @@ class PostsController extends Controller
         if ($draft == 'on') {
             $post->published_at = Carbon::now();
         }
-        dd($post);
+        // dd($post);
         $post->save();
         return redirect()->route('admin.posts.index')
             ->with('success', 'Post created');

@@ -48,137 +48,141 @@
             </div>
         @else
         @endif
-        @if (\Auth::user()->roleaccess == '1')
-			<div class="panel" id="panel-1">
-				<div class="panel-hdr">
-					<h2>Category</h2>
-					<div class="panel-toolbar">
-						<button type="button"
-							class="btn btn-info btn-xs waves-effect waves-themed"
-							data-toggle="modal"
-							data-target=".new-example-modal-right-sm">
-							<i class="fal fa-plus-circle mr-1"></i>Add New Category
-						</button>
-					</div>
+		<div class="panel" id="panel-1">
+			<div class="panel-hdr">
+				<h2>Category</h2>
+				<div class="panel-toolbar">
+					@if (\Auth::user()->roleaccess == '1')
+					<button type="button"
+						class="btn btn-info btn-xs waves-effect waves-themed"
+						data-toggle="modal"
+						data-target=".new-example-modal-right-sm">
+						<i class="fal fa-plus-circle mr-1"></i>Add New Category
+					</button>
+					@endif
 				</div>
-				<div class="panel-container show">
-					<div class="panel-content">
-						<div>
-							<table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-								<thead class="bg-primary-600">
-									<tr>
-										<th>Title</th>
-										<th>Hex Color</th>
-										<th>Text Color</th>
-										<th>Posts</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach ($categories as $category)
-									<tr>
-										<td> {{$category->name}} </td>
-										<td>
-											<i class="fas fa-square border mr-1"
-												style="color: {{$category->hexcolor}};"></i>
-											{{$category->hexcolor}}
-										</td>
-										<td>
-											<i class="fas fa-square border mr-1"
-											style="color: {{$category->textcolor}};"></i>
-											{{$category->textcolor}}
-										</td>
-										<td>(0) Posts</td>
-										<td class="text-center">
-											<button type="submit" class="btn btn-sm btn-warning btn-icon"
-												data-toggle="modal"
-												data-target="#editCategory{{ $category->id }}"
-												title="Perbarui/Ubah Artikel">
-												<i class="fas fa-edit"></i>
-											</button>
-											<a href="{{ route('admin.categories.show', $category->id) }}"
-												class="btn btn-sm btn-primary btn-icon"
-												title="See All Posts with {{ $category->name }} Category">
-												<i class="fas fa-newspaper"></i>
-											</a>
-											<button type="submit" class="btn btn-sm btn-danger btn-icon"
-												title="Hapus Artikel">
-												<i class="fas fa-trash-alt"></i>
-											</button>
-										</td>
-										<!-- Edit Category Modal -->
-										<div class="modal fade edit-example-modal-right-sm"
-											tabindex="-1" role="dialog" aria-hidden="true"
-											id="editCategory{{ $category->id }}">
-											<div class="modal-dialog modal-dialog-right modal-sm">
-												<div class="modal-content">
-													<div class="modal-header">
-														<h5 class="modal-title h4">Edit Category</h5>
-														<button type="button" class="close"
-														data-dismiss="modal" aria-label="Close">
-															<span aria-hidden="true"><i class="fal fa-times"></i></span>
-														</button>
-													</div>
-													<form method="POST" action="{{ route('admin.categories.update', [$category->id]) }}" enctype="multipart/form-data">
-														@csrf
-														@method('PUT')
-														<div class="modal-body">
-															<div class="form-group">
-																<label for="category_name">Category Name</label>
-																<input type="text" name="category_name"
-																id="category_name" class="form-control"
-																placeholder="Category Name" aria-describedby="helpId"
-																value="{{ old('name', $category->name) }}">
-																<small id="helpId" class="text-muted">Category name</small>
-															</div>
-															<div class="form-group">
-																<label for="hexcolor">Category Color</label>
-																<div class="input-group" id="hexcolor">
-																	<input type="text" name="hexcolor"
-																		id="hexcolor" class="form-control"
-																		placeholder="Category Color" aria-describedby="helpId"
-																		value="{{ old('hexcolor', $category->hexcolor) }}">
-																	<span class="input-group-append form">
-																		<span class="input-group-text colorpicker-input-addon"><i></i></span>
-																	</span>
-																</div>
-																<small id="helpId" class="text-muted">Hex Color are used for category color.</small>
-															</div>
-															<div class="form-group">
-																<label for="textcolor">Category Text Color</label>
-																<div class="input-group" id="textcolor">
-																	<input type="text" name="textcolor"
-																		id="textcolor" class="form-control"
-																		placeholder="Category Color" aria-describedby="helpId"
-																		value="{{ old('textcolor', $category->textcolor) }}">
-																	<span class="input-group-append form">
-																		<span class="input-group-text colorpicker-input-addon"><i></i></span>
-																	</span>
-																</div>
-																<small id="helpId" class="text-muted">Text Color are used for category text color.</small>
-															</div>
-														</div>
-														<div class="modal-footer">
-															<button type="button" class="btn btn-secondary"
-																data-dismiss="modal">Close</button>
-															<button class="btn btn-primary"
-																type="submit">Save</button>
-														</div>
-													</form>
+			</div>
+			<div class="panel-container show">
+				<div class="panel-content">
+					<div>
+						<table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+							<thead class="bg-primary-600">
+								<tr>
+									<th>Title</th>
+									<th>Hex Color</th>
+									<th>Text Color</th>
+									<th>Posts</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach ($categories as $category)
+								<tr>
+									<td> 
+										<a href="{{ route('admin.categories.show', $category->id) }}" class="fw-700" style="color: {{($category->hexcolor)}} ;" title="See All Posts with {{ $category->name }} Category">{{$category->name}}</a>
+									</td>
+									<td>
+										<i class="fas fa-square border mr-1"
+											style="color: {{$category->hexcolor}};"></i>
+										{{$category->hexcolor}}
+									</td>
+									<td>
+										<i class="fas fa-square border mr-1"
+										style="color: {{$category->textcolor}};"></i>
+										{{$category->textcolor}}
+									</td>
+									<td>(0) Posts</td>
+									<td class="text-center">
+										<a href="{{ route('admin.categories.show', $category->id) }}"
+											class="btn btn-sm btn-primary btn-icon"
+											title="See All Posts with {{ $category->name }} Category">
+											<i class="fas fa-newspaper"></i>
+										</a>
+										@if (\Auth::user()->roleaccess == '1')
+										<button type="submit" class="btn btn-sm btn-warning btn-icon"
+											data-toggle="modal"
+											data-target="#editCategory{{ $category->id }}"
+											title="Perbarui/Ubah Artikel">
+											<i class="fas fa-edit"></i>
+										</button>
+										<button type="submit" class="btn btn-sm btn-danger btn-icon"
+											title="Hapus Artikel">
+											<i class="fas fa-trash-alt"></i>
+										</button>
+										@endif
+									</td>
+									<!-- Edit Category Modal -->
+									<div class="modal fade edit-example-modal-right-sm"
+										tabindex="-1" role="dialog" aria-hidden="true"
+										id="editCategory{{ $category->id }}">
+										<div class="modal-dialog modal-dialog-right modal-sm">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title h4">Edit Category</h5>
+													<button type="button" class="close"
+													data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true"><i class="fal fa-times"></i></span>
+													</button>
 												</div>
+												<form method="POST" action="{{ route('admin.categories.update', [$category->id]) }}" enctype="multipart/form-data">
+													@csrf
+													@method('PUT')
+													<div class="modal-body">
+														<div class="form-group">
+															<label for="category_name">Category Name</label>
+															<input type="text" name="category_name"
+															id="category_name" class="form-control"
+															placeholder="Category Name" aria-describedby="helpId"
+															value="{{ old('name', $category->name) }}">
+															<small id="helpId" class="text-muted">Category name</small>
+														</div>
+														<div class="form-group">
+															<label for="hexcolor">Category Color</label>
+															<div class="input-group" id="hexcolor">
+																<input type="text" name="hexcolor"
+																	id="hexcolor" class="form-control"
+																	placeholder="Category Color" aria-describedby="helpId"
+																	value="{{ old('hexcolor', $category->hexcolor) }}">
+																<span class="input-group-append form">
+																	<span class="input-group-text colorpicker-input-addon"><i></i></span>
+																</span>
+															</div>
+															<small id="helpId" class="text-muted">Hex Color are used for category color.</small>
+														</div>
+														<div class="form-group">
+															<label for="textcolor">Category Text Color</label>
+															<div class="input-group" id="textcolor">
+																<input type="text" name="textcolor"
+																	id="textcolor" class="form-control"
+																	placeholder="Category Color" aria-describedby="helpId"
+																	value="{{ old('textcolor', $category->textcolor) }}">
+																<span class="input-group-append form">
+																	<span class="input-group-text colorpicker-input-addon"><i></i></span>
+																</span>
+															</div>
+															<small id="helpId" class="text-muted">Text Color are used for category text color.</small>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary"
+															data-dismiss="modal">Close</button>
+														<button class="btn btn-primary"
+															type="submit">Save</button>
+													</div>
+												</form>
 											</div>
 										</div>
-									</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
+									</div>
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
-
-			<!-- New Category Modal -->
-			<div class="modal fade new-example-modal-right-sm" tabindex="-1" role="dialog" aria-hidden="true" id="newCategory">
+		</div>
+		<!-- New Category Modal -->
+		<div class="modal fade new-example-modal-right-sm" tabindex="-1" role="dialog" aria-hidden="true" id="newCategory">
 				<div class="modal-dialog modal-dialog-right modal-sm">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -236,7 +240,7 @@
 			</div>
 
 			
-        @endif
+        
     @endcan
 @endsection
 
