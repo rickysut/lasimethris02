@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Gate;
@@ -82,10 +83,12 @@ class CategoryController extends Controller
 	public function show($id)
 	{
 		$categories = Category::all();
-		$category = Category::findOrFail($id);
-		$posts = Post::where('category_id', $category->id)->get();
+		$category = Category::with('post')->findOrFail($id);
+		$posts = $category->post;
 
 		// dd($categoryName->name);
+		DB::connection()->enableQueryLog();
+		Log::info(DB::getQueryLog());
 		$module_name = 'Module Name'; //usually Model Name
 		$page_title = 'Categories'; //this will be the page title for browser
 		$page_heading = 'All Posts in Category'; //this will be the page heading.
