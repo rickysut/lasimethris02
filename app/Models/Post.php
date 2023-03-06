@@ -38,11 +38,6 @@ class Post extends Model
         'published_at',
     ];
 
-    public function posts()
-    {
-        return $this->belongsToMany(Post::class);
-    }
-
     public function user()
     {
         return $this->belongsTo('App\Models\User');
