@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use Gate;
@@ -18,120 +19,125 @@ use Gate;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        $module_name = 'Category'; //usually Model Name
-        $page_title = 'Categories'; //this will be the page title for browser
-        $page_heading = 'Categories List'; //this will be the page heading.
-        $heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index(Request $request)
+	{
+		$module_name = 'Category'; //usually Model Name
+		$page_title = 'Categories'; //this will be the page title for browser
+		$page_heading = 'Categories List'; //this will be the page heading.
+		$heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
 
-        $categories = Category::all();
-        $category = Category::with('post')->get();
+		$categories = Category::withCount('post')->get();
+		// dd($request);
 
-        return view('admin.categories.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories', 'category'));
-    }
+		// $categories = Category::all();
+		// $category = Category::with('post')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $module_name = 'Module Name'; //usually Model Name
-        $page_title = 'Page Title'; //this will be the page title for browser
-        $page_heading = 'Artikel/Berita'; //this will be the page heading.
-        $heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
+		return view('admin.categories.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories'));
+	}
 
-        return view('admin.categories.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories', 'category'));
-    }
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		$module_name = 'Module Name'; //usually Model Name
+		$page_title = 'Page Title'; //this will be the page title for browser
+		$page_heading = 'Artikel/Berita'; //this will be the page heading.
+		$heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $category = new Category();
-        $category->name = $request->input('category_name');
-        $category->hexcolor = $request->input('hexcolor');
-        $category->textcolor = $request->input('textcolor');
+		return view('admin.categories.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories', 'category'));
+	}
 
-        // dd($request->all());
-        $category->save();
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
+		$category = new Category();
+		$category->name = $request->input('category_name');
+		$category->hexcolor = $request->input('hexcolor');
+		$category->textcolor = $request->input('textcolor');
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully');
-    }
+		// dd($request->all());
+		$category->save();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $categories = Category::all();
-        $category = Category::findOrFail($id);
-        $posts = Post::where('category_id', $category->id)->get();
+		return redirect()->route('admin.categories.index')->with('success', 'Category saved successfully');
+	}
 
-        // dd($categoryName->name);
-        $module_name = 'Module Name'; //usually Model Name
-        $page_title = 'Categories'; //this will be the page title for browser
-        $page_heading = 'All Posts in Category'; //this will be the page heading.
-        $heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		$categories = Category::all();
+		$category = Category::with('post')->findOrFail($id);
+		$posts = $category->post;
 
-        return view('admin.categories.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories', 'category', 'posts'));
-    }
+		// dd($categoryName->name);
+		DB::connection()->enableQueryLog();
+		Log::info(DB::getQueryLog());
+		$module_name = 'Module Name'; //usually Model Name
+		$page_title = 'Categories'; //this will be the page title for browser
+		$page_heading = 'All Posts in Category'; //this will be the page heading.
+		$heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $module_name = 'Module Name'; //usually Model Name
-        $page_title = 'Page Title'; //this will be the page title for browser
-        $page_heading = 'Artikel/Berita'; //this will be the page heading.
-        $heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
-    }
+		return view('admin.categories.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories', 'category', 'posts'));
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Category $category)
-    {
-        $category->name = $request->input('category_name');
-        $category->hexcolor = $request->input('hexcolor');
-        $category->textcolor = $request->input('textcolor');
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id)
+	{
+		$module_name = 'Module Name'; //usually Model Name
+		$page_title = 'Page Title'; //this will be the page title for browser
+		$page_heading = 'Artikel/Berita'; //this will be the page heading.
+		$heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
+	}
 
-        // dd($request->all());
-        $category->update();
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, Category $category)
+	{
+		$category->name = $request->input('category_name');
+		$category->hexcolor = $request->input('hexcolor');
+		$category->textcolor = $request->input('textcolor');
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully');
-    }
+		// dd($request->all());
+		$category->update();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+		return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully');
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		//
+	}
 }

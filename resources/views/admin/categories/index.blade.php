@@ -91,7 +91,7 @@
 										style="color: {{$category->textcolor}};"></i>
 										{{$category->textcolor}}
 									</td>
-									<td>(0) Posts</td>
+									<td> {{$category->post_count}} posts</td>
 									<td class="text-center">
 										<a href="{{ route('admin.categories.show', $category->id) }}"
 											class="btn btn-sm btn-primary btn-icon"
