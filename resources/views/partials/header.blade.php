@@ -178,6 +178,16 @@
                     <span data-i18n="drpdwn.fullscreen">Layar Penuh</span>
                     <i class="float-right text-muted fw-n">F11</i>
                 </a>
+				@if (Auth::user()->roles->first()->id === 4)
+                    <a href="{{ route('admin.v2profile.show', Auth::user()->id) }}"
+                        class="dropdown-item">
+                        <span >Profile</span>
+                    </a>
+                @else
+                    <a href="{{ route('admin.profile.show') }}" class="dropdown-item">
+                        <span >Profile Normal</span>
+                    </a>
+                @endif
                 <a href="{{ route('admin.profile.show') }}" class="dropdown-item">
                     <span data-i18n="drpdwn.profile">Profile</span>
                 </a>
