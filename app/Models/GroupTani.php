@@ -6,21 +6,24 @@ use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Poktan extends Model
+class GroupTani extends Model
 {
     use HasFactory;
     use Auditable;
-    
-    public $table = 'poktans';
+
+    public $table = 'group_tanis';
 
     protected $fillable = [
+
         'npwp',
         'no_riph',
-        'id_petani',
         'id_poktan',
-        'nama_petani',
-        'ktp_petani',
-        'luas_lahan',
-        'periode_tanam'
+        'id_kabupaten',
+        'id_kecamatan',
+        'id_kelurahan',
+        'nama_kelompok',
+        'nama_pimpinan',
+        'hp_pimpinan'
     ];
+
 }

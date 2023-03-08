@@ -157,9 +157,10 @@ class KelompoktaniController extends Controller
         if ($request->ajax()) {
             $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
 
-            $query = 'select npwp, no_riph, id_kecamatan, nama_kelompok, nama_pimpinan, hp_pimpinan,  count(nama_petani) as jum_petani, round(SUM(luas_lahan),2) as luas from poktans
-            where npwp = "' . $npwp . '"
-            GROUP BY nama_kelompok';
+            $query = 'select g.no_riph, g.id_kecamatan, g.nama_kelompok, g.nama_pimpinan, g.hp_pimpinan, count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+            from poktans p, group_tanis g
+            where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan
+            GROUP BY g.nama_kelompok';
 
             
             $table = Datatables::of(DB::select(DB::raw($query)));

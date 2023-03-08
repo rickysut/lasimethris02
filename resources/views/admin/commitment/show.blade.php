@@ -332,15 +332,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @isset($pullData['riph']['wajib_tanam']['datapenangkar']['loop'])
-                                @foreach ($pullData['riph']['wajib_tanam']['datapenangkar']['loop'] as $penakar )
+                                
+                                @isset($pullData['riph']['wajib_tanam']['datapenangkar'])
+                                @foreach ($pullData['riph']['wajib_tanam']['datapenangkar'] as $penakar )
+                                    {{-- {{ dd($penakar['nama_penangkar']) }} --}}
                                     <tr>
-                                        <td>{{ $penakar['penakar'] }}</td>
-                                        <td>{{ $penakar['varietas'] }}</td>
-                                        <td>{{ $penakar['alamat'] }}</td>
-                                        <td>{{ $penakar['pimpinan'] }}</td>
-                                        <td>{{ $penakar['no_kontak'] }}</td>
-                                        <td>{{ $penakar['ketersediaan'] }}</td>
+                                        <td>{{ (is_string($penakar['nama_penangkar']) ? $penakar['nama_penangkar'] : '')  }}</td>
+                                        <td>{{ (is_string($penakar['varietas']) ? $penakar['varietas'] : '')  }}</td>
+                                        <td>{{ (is_string($penakar['alamat']) ? $penakar['alamat'] : '') }}</td>
+                                        <td>{{ (is_string($penakar['nama_pimpinan']) ? $penakar['nama_pimpinan'] : '') }}</td>
+                                        <td>{{ (is_string($penakar['hp_pimpinan']) ? $penakar['hp_pimpinan'] : '') }}</td>
+                                        <td>{{ (is_string($penakar['waktu']) ? $penakar['waktu'] : '') }}</td>
                                         <td class="text-center">
                                             <div class="justify-content-center">
                                                 {{-- create button only when there are no data available --}}
