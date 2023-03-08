@@ -34,8 +34,8 @@ class CategoryController extends Controller
 		// $categories = Category::withCount('post')->get();
 		// dd($request);
 
-		$categories = Category::all();
-		// $category = Category::with('post')->get();
+		// $categories = Category::all();
+		$categories = Category::withCount('post')->get();
 		// dd($categories);
 		return view('admin.categories.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories'));
 	}
