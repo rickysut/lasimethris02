@@ -265,7 +265,7 @@
                     </li>
                 @endcan
                 @can('kelompoktani_access')
-                    <li class="{{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/kelompoktani/*') || request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active open' : '' }}">
+                    <li class="{{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/masterpoktan') || request()->is('admin/task/kelompoktani/*') || request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active open' : '' }}">
                         <a href="#" title="Kelompok tani"
                             data-filter-tags="{{ strtolower(trans('cruds.kelompoktani.title_lang')) }}">
                             <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
@@ -276,12 +276,20 @@
                         <ul>
                             @can('poktan_access')
                             <li
-                                class="c-sidebar-nav-item {{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/kelompoktani/*') ? 'active' : '' }}">
+                                class="c-sidebar-nav-item {{ request()->is('admin/task/masterpoktan') || request()->is('admin/task/kelompoktani/*') ||   request()->is('admin/task/kelompoktani') || request()->is('admin/task/kelompoktani/*') ? 'active' : '' }}">
+                                @if (Auth::user()->roles[0]->title == 'user_v2')
+                                <a href="{{ route('admin.task.masterpoktan.index') }}" title="Daftar poktan"
+                                    data-filter-tags="{{ strtolower(trans('cruds.daftarpoktan.title_lang')) }}">
+                                    <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+                                    {{ trans('cruds.daftarpoktan.title_lang') }}
+                                </a>
+                                @else
                                 <a href="{{ route('admin.task.kelompoktani') }}" title="Daftar poktan"
                                     data-filter-tags="{{ strtolower(trans('cruds.daftarpoktan.title_lang')) }}">
                                     <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
                                     {{ trans('cruds.daftarpoktan.title_lang') }}
                                 </a>
+                                @endif
                             </li>
                             @endcan    
                             @can('pks_access')

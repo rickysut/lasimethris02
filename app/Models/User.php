@@ -112,6 +112,11 @@ class User extends Authenticatable
         return $this->hasOne(DataUser::class);
     }
 
+    public function masterkelompok()
+    {
+        return $this->hasMany(MasterKelompok::class);
+    }
+
 
     protected function serializeDate(DateTimeInterface $date)
     {
