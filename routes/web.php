@@ -100,6 +100,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::get('kelompoktani/create', 'KelompoktaniController@create')->name('kelompoktani.create');
         Route::get('kelompoktani/{noriph}', 'KelompoktaniController@show')->name('kelompoktani.show');
         Route::delete('kelompoktanimd', 'KelompoktaniController@massDestroy')->name('kelompoktani.massDestroy');
+        Route::get('petani/{id_poktan}', 'KelompoktaniController@showtani')->name('kelompoktani.showtani');
 
         // daftar pks
         Route::resource('pks', 'PksController');
