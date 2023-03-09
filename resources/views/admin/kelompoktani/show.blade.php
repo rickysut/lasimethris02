@@ -30,21 +30,17 @@
                             <table class="table table-sm table-bordered table-striped table-hover ajaxTable datatable datatable-Kelompoktani w-100">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th></th>
-                                        {{-- <th>No. RIPH</th> --}}
-                                        {{-- <th>Kabupaten</th> --}}
+                                        <th>No. RIPH</th>
                                         <th>Kecamatan</th>
-                                        {{-- <th>Kelurahan</th> --}}
                                         <th>Nama Kelompok</th>
                                         <th>Pimpinan</th>
                                         <th>HP. Pimpinan</th>
-                                        <th>Nama Petani</th>
-                                        <th>KTP Petani</th>
+                                        <th>Jumlah Petani</th>
                                         <th>Luas Lahan (ha)</th>
-                                        <th>Periode tanam</th>
-                                        {{-- <th style="width: 120px">Aksi</th> --}}
+                                        <th style="width: 120px">Aksi</th>
                                     </tr>
                                 </thead>
+                                
                             </table>
                         </div>
                     </div>
@@ -121,78 +117,70 @@
             responsive: true,
             retrieve: true,
             aaSorting: [],
-            columnDefs: [  {
-                                orderable: false,
-                                @can('poktan_delete')
-                                className: 'select-checkbox',
-                                @endcan
-                                targets: 0
-                            },{
-                                orderable: false,
-                                searchable: false,
-                                targets: -1
-                            }
-                        ],
-            select: {
-                        style:    'multi+shift',
-                        selector: 'td:first-child'
-            },
             dom: 
-					"<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 d-flex'B><'col-sm-12 col-md-2 d-flex justify-content-end'f>>" +
-					"<'row'<'col-sm-12 col-md-12'tr>>" +
-					"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
+                    "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 d-flex'B><'col-sm-12 col-md-2 d-flex justify-content-end'f>>" +
+                    "<'row'<'col-sm-12 col-md-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
+            
             
             ajax: "{{ route('admin.task.kelompoktani.show', [$nomor]) }}",
             columns: [
-                { data: 'placeholder', name: 'placeholder' ,orderable: false},
-                // { data: 'id', name: 'id',  },
-                // { data: 'no_riph', name: 'no_riph' },
-                // { data: 'id_kabupaten', name: 'id_kabupaten' },
-                { data: 'id_kecamatan', name: 'id_kecamatan' },
-                // { data: 'id_kelurahan', name: 'id_kelurahan' },
-                { data: 'nama_kelompok', name: 'nama_kelompok' , visible: false},
-                { data: 'nama_pimpinan', name: 'nama_pimpinan' , visible: false},
-                { data: 'hp_pimpinan', name: 'hp_pimpinan' , visible: false},
-                { data: 'nama_petani', name: 'nama_petani' },
-                { data: 'ktp_petani', name: 'ktp_petani' },
-                { data: 'luas_lahan', name: 'luas_lahan', class: 'text-right' },
-                { data: 'periode_tanam', name: 'periode_tanam' },
-                // { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center', orderable: false}
+                { data: 'no_riph', name: 'no_riph', visible: false },
+                { data: 'id_kecamatan', name: 'id_kecamatan', visible: true },
+                { data: 'nama_kelompok', name: 'nama_kelompok' , visible: true},
+                { data: 'nama_pimpinan', name: 'nama_pimpinan' , visible: true},
+                { data: 'hp_pimpinan', name: 'hp_pimpinan' , visible: true},
+                { data: 'jum_petani', name: 'jum_petani' },
+                { data: 'luas', name: 'luas', class: 'text-right' },
+                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' , orderable: false }
             ],
+            
             orderCellsTop: true,
-            order: [[ 2, 'asc' ]],
+            order: [[ 0, 'asc' ]],
             displayLength: 25,
             drawCallback: function (settings) {
                 var api = this.api();
+                
                 var nomor = "";
-                if (api.order()[0][0] === 2) {
+                if (api.order()[0][0] === 0) {
                     var rows = api.rows({ page: 'all' }).nodes();
                     var last = null;
                     // Remove the formatting to get integer data for summation
                     var intVal = function ( i ) {
-                            return typeof i === 'string' ?
-                                i.replace(/,/g, '.')*1 : typeof i === 'number' ? i : 0;
-                        };
+                        return typeof i === 'string' ?
+                            i.replace(/,/g, '.')*1 : typeof i === 'number' ? i : 0;
+                    };
                     total=[];
-                    api.column(2, { page: 'all' })
+                    api.column(0, { page: 'all' })
                         .data()
                         .each(function (group, i) {
-                            nomor = group;
+                            nomor = group.replace('.', '');
+                            nomor = nomor.replace(/\//g,'');
                             if(typeof total[nomor] != 'undefined'){
-                                total[nomor]=total[nomor]+intVal(api.column(7).data()[i]);
+                                total[nomor]=total[nomor]+intVal(api.column(6).data()[i]);
                             }else{
-                                total[nomor]=intVal(api.column(7).data()[i]);
+                                total[nomor]=intVal(api.column(6).data()[i]);
                             }
                             if (last !== group) {
+                                urlView = "{{ route('admin.task.kelompoktani.show', ':no' ) }}";
+                                urlEdit = "{{ route('admin.task.kelompoktani.edit', ':no') }}";
+                                urlView = urlView.replace(':no', nomor);
+                                urlEdit = urlEdit.replace(':no', nomor);
+
                                 $(rows)
                                     .eq(i)
-                                    .before('<tr class="group"><td></td><td colspan="3"><strong>' + group  + ' - ' + rows.data()[i].nama_pimpinan +  ' (' + rows.data()[i].hp_pimpinan + ')' +'</strong></td>'+
-                                        '<td class="'+nomor+' text-right "></td>><td colspan="2"></td></tr>');
+                                    .before('<tr class="group"><td colspan="5" class="text-center"><strong>' + group  +'</strong></td>'+
+                                        '<td class="'+nomor+' text-right "></td>'+
+                                        '<td class="text-center">'+
+                                        '<a class="btn btn-xs btn-primary " data-toggle="tooltip" title data-original-title="Lihat Rincian" href='+urlView+'>'+
+                                        '    <i class="fal fa-plus-circle"></i>&nbsp;PKS</a>'+
+                                        '</td></tr>');
+        
                                 last = group;
                             }
                         });
                         for(var key in total) {
-                            $("."+key).html(Math.round((total[key] + Number.EPSILON) * 100) / 100);
+                            $("."+key).html('<strong>'+Math.round((total[key] + Number.EPSILON) * 100) / 100 + '<strong>');
                         }
                 }
             }
