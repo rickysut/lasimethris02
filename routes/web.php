@@ -1,6 +1,7 @@
 <?php
 
-
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
 	return redirect()->route('login');
@@ -90,6 +91,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::post('commitment/unggah', 'CommitmentController@store')->name('commitment.store');
 		Route::delete('commitmentmd', 'CommitmentController@massDestroy')->name('commitment.massDestroy');
 
+		//commitment for backdate data (v2)
+		Route::resource('commitments', 'CommitmentBackdateController');
+
 		// pengajuan
 		Route::resource('pengajuan', 'PengajuanController');
 		Route::delete('pengajuan/destroy', 'PengajuanController@massDestroy')->name('pengajuan.massDestroy');
@@ -103,6 +107,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
 		//kelompok tani v2
 		Route::resource('masterpoktan', 'MasterpoktanController');
+		Route::resource('anggotapoktan', 'AnggotaPoktanController');
+		Route::resource('masterpenangkar', 'MasterPenangkarController');
 		// Route::get('masterpoktan', 'MasterpoktanController@index')->name('masterpoktan');
 
 		// daftar pks

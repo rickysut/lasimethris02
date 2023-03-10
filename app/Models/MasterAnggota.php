@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use \DateTimeInterface;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AnggotaKelompok extends Model
+class MasterAnggota extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public $table = 'anggota_kelompoks';
+    public $table = 'master_anggotas';
 
     protected $dates = [
         'created_at',
@@ -32,5 +32,10 @@ class AnggotaKelompok extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function masterkelompok()
+    {
+        return $this->belongsTo(MasterKelompok::class);
     }
 }

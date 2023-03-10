@@ -86,9 +86,6 @@ class CategoryController extends Controller
 		$category = Category::with('post')->findOrFail($id);
 		$posts = $category->post;
 
-		// dd($categoryName->name);
-		DB::connection()->enableQueryLog();
-		Log::info(DB::getQueryLog());
 		$module_name = 'Module Name'; //usually Model Name
 		$page_title = 'Categories'; //this will be the page title for browser
 		$page_heading = 'All Posts in Category'; //this will be the page heading.
@@ -103,13 +100,13 @@ class CategoryController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit($id)
-	{
-		$module_name = 'Module Name'; //usually Model Name
-		$page_title = 'Page Title'; //this will be the page title for browser
-		$page_heading = 'Artikel/Berita'; //this will be the page heading.
-		$heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
-	}
+	// public function edit($id)
+	// {
+	// 	$module_name = 'Module Name'; //usually Model Name
+	// 	$page_title = 'Page Title'; //this will be the page title for browser
+	// 	$page_heading = 'Artikel/Berita'; //this will be the page heading.
+	// 	$heading_class = 'fal fa-rss'; //this will be the leading icon for the page heading
+	// }
 
 	/**
 	 * Update the specified resource in storage.

@@ -265,12 +265,12 @@
                     </li>
                 @endcan
                 @can('kelompoktani_access')
-                    <li class="{{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/masterpoktan') || request()->is('admin/task/kelompoktani/*') || request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active open' : '' }}">
+                    <li class="{{ request()->is('admin/task/masterpenangkar') || request()->is('admin/task/kelompoktani') || request()->is('admin/task/masterpoktan') || request()->is('admin/task/kelompoktani/*') || request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active open' : '' }}">
                         <a href="#" title="Kelompok tani"
                             data-filter-tags="{{ strtolower(trans('cruds.kelompoktani.title_lang')) }}">
                             <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
                             <span class="nav-link-text"
-                            data-i18n="nav.administation_sub1">{{ trans('cruds.kelompoktani.title_lang') }}</span>
+                            data-i18n="nav.administation_sub1">{{ trans('cruds.kelompoktani.title_lang') }} dan Penangkar</span>
                             
                         </a>
                         <ul>
@@ -288,6 +288,16 @@
                                     data-filter-tags="{{ strtolower(trans('cruds.daftarpoktan.title_lang')) }}">
                                     <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
                                     {{ trans('cruds.daftarpoktan.title_lang') }}
+                                </a>
+                                @endif
+                            </li>
+                            <li
+                                class="c-sidebar-nav-item {{ request()->is('admin/task/masterpenangkar') || request()->is('admin/task/masterpenangkar/*') ||   request()->is('admin/task/masterpenangkar') || request()->is('admin/task/masterpenangkar/*') ? 'active' : '' }}">
+                                @if (Auth::user()->roles[0]->title == 'user_v2')
+                                <a href="{{ route('admin.task.masterpenangkar.index') }}" title="Daftar Penangkar Benih Bawang Putih Berlabel"
+                                    data-filter-tags="{{ strtolower(trans('cruds.daftarpoktan.title_lang')) }}">
+                                    <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+                                    Master Penangkar
                                 </a>
                                 @endif
                             </li>

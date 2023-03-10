@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('anggota_kelompoks', function (Blueprint $table) {
+        Schema::create('master_anggotas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('master_kelompok_id');
             $table->string('nama_petani')->nullable();
-            $table->string('nik_petani')->nullable();
+            $table->string('nik_petani')->unique()->nullable();
             $table->string('luas_lahan')->nullable();
             $table->string('periode_tanam')->nullable();
             $table->timestamps();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('anggota_kelompoks');
+        Schema::dropIfExists('master_anggotas');
     }
 };

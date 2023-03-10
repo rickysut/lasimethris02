@@ -17,7 +17,7 @@
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table id="datatable" class="table table-bordered table-hover table-striped w-100">
+					<table class="table table-hover table-striped" id="datatable">
 						<thead>
 							<th>Nama Kelompok</th>
 							<th>Pimpinan</th>
@@ -35,19 +35,15 @@
 								<td>{{$poktan->id_kabupaten}}</td>
 								<td>{{$poktan->id_kecamatan}} - {{$poktan->id_kelurahan}}</td>
 								<td>
-									<a href="{{ route('admin.task.masterpoktan.show', [$poktan->id]) }}" class="btn btn-icon btn-xs btn-danger">
+									<a href="" class="btn btn-icon btn-xs btn-danger">
 										<i class="fal fa-users"></i>
 									</a>
 									<button type="button" class="btn btn-icon btn-xs btn-primary" data-toggle="modal" data-target="#myEditModal{{$poktan->id}} ">
 										<i class="fal fa-edit"></i>
-									</button>
-									<form action="{{ route('admin.task.masterpoktan.destroy', $poktan->id) }}" method="POST" style="display: inline-block;">
-										@csrf
-										@method('DELETE')
-										<button type="submit" class="btn btn-icon btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">
-											<i class="fal fa-trash-alt"></i>
-										</button>
-									</form>
+									  </button>
+									<a href="" class="btn btn-icon btn-xs btn-danger">
+										<i class="fal fa-trash-alt"></i>
+									</a>
 								</td>
 								{{-- Modal Edit Poktan --}}
 								<div class="modal fade" id="myEditModal{{$poktan->id}}"
@@ -242,93 +238,36 @@
 @section('scripts')
 @parent
 <script>
-	$(document).ready(function()
-	{
+$(document).ready(function() {
+  // initialize datatable
+	$('#datatable').dataTable({
+		pagingType: 'full_numbers',
+		responsive: true,
+		lengthChange: false,
+		pageLength: 10,
+		order: [
+		[0, 'asc']
+		],
+		dom: // Add the modal button inside the 'B' option of the 'dom' string
+		"<'row'<'col-sm-12 col-md-2'fl><'col-sm-12 col-md-8 d-flex'><'col-sm-12 col-md-2 d-flex justify-content-end'B>>" +
+		"<'row'<'col-sm-12 col-md-12'tr>>" +
+		"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
+		buttons: [
+			{
+				text: '<i class="fal fa-plus mr-1"></i>Kelompok Tani baru',
+				className: 'btn btn-primary btn-xs',
+				action: function(e, dt, node, config) {
+				// find the modal element
+					var $modal = $('#myModal');
 
-		// initialize datatable
-		$('#datatable').dataTable(
-		{
-			responsive: true,
-			lengthChange: false,
-			dom:
-				/*	--- Layout Structure 
-					--- Options
-					l	-	length changing input control
-					f	-	filtering input
-					t	-	The table!
-					i	-	Table information summary
-					p	-	pagination control
-					r	-	processing display element
-					B	-	buttons
-					R	-	ColReorder
-					S	-	Select
-
-					--- Markup
-					< and >				- div element
-					<"class" and >		- div with a class
-					<"#id" and >		- div with an ID
-					<"#id.class" and >	- div with an ID and a class
-
-					--- Further reading
-					https://datatables.net/reference/option/dom
-					--------------------------------------
-				 */
-				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
-				"<'row'<'col-sm-12'tr>>" +
-				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-			buttons: [
-				/*{
-					extend:    'colvis',
-					text:      'Column Visibility',
-					titleAttr: 'Col visibility',
-					className: 'mr-sm-3'
-				},*/
-				{
-					extend: 'pdfHtml5',
-					text: '<i class="fa fa-file-pdf"></i>',
-					titleAttr: 'Generate PDF',
-					className: 'btn-outline-danger btn-sm btn-icon mr-1'
-				},
-				{
-					extend: 'excelHtml5',
-					text: '<i class="fa fa-file-excel"></i>',
-					titleAttr: 'Generate Excel',
-					className: 'btn-outline-success btn-sm btn-icon mr-1'
-				},
-				{
-					extend: 'csvHtml5',
-					text: '<i class="fal fa-file-csv"></i>',
-					titleAttr: 'Generate CSV',
-					className: 'btn-outline-primary btn-sm btn-icon mr-1'
-				},
-				{
-					extend: 'copyHtml5',
-					text: '<i class="fa fa-copy"></i>',
-					titleAttr: 'Copy to clipboard',
-					className: 'btn-outline-primary btn-sm btn-icon mr-1'
-				},
-				{
-					extend: 'print',
-					text: '<i class="fa fa-print"></i>',
-					titleAttr: 'Print Table',
-					className: 'btn-outline-primary btn-sm btn-icon mr-1'
-				},
-				{
-					text: '<i class="fa fa-user-plus mr-1"></i>',
-					titleAttr: 'Add Poktan Member',
-					className: 'btn btn-outline-warning btn-sm btn-icon ml-2',
-					action: function(e, dt, node, config) {
-					// find the modal element
-						var $modal = $('#myModal');
-
-						// trigger the modal's show method
-						$modal.modal('show');
-					}
+					// trigger the modal's show method
+					$modal.modal('show');
 				}
-			]
-		});
-
+			}
+		]
 	});
+});
+
 </script>
 
 @endsection

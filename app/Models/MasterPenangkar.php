@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \DateTimeInterface;
 
-class MasterKelompok extends Model
+class MasterPenangkar extends Model
 {
 	use HasFactory, SoftDeletes;
 
-	public $table = 'master_kelompoks';
+	public $table = 'master_penangkars';
 
 	protected $dates = [
 		'created_at',
@@ -19,31 +19,19 @@ class MasterKelompok extends Model
 		'deleted_at',
 	];
 
-	protected $fillable = [
-		'user_id',
-		'nama_kelompok',
+	public $fillable = [
+		'nama_lembaga',
+		'alamat',
+		'provinsi_id',
+		'kabupaten_id',
+		'kecamatan_id',
+		'desa_id',
 		'nama_pimpinan',
-		'hp_pimpinan',
-		'id_provinsi',
-		'id_kabupaten',
-		'id_kecamatan',
-		'id_kelurahan',
-		'created_at',
-		'updated_at',
+		'no_kontak',
 	];
 
 	protected function serializeDate(DateTimeInterface $date)
 	{
 		return $date->format('Y-m-d H:i:s');
-	}
-
-	public function user()
-	{
-		return $this->belongsTo(User::class);
-	}
-
-	public function masteranggota()
-	{
-		return $this->hasMany(MasterAnggota::class);
 	}
 }

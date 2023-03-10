@@ -9,7 +9,7 @@
 		<div class="panel" id="panel-1">
 			<div class="panel-hdr">
 				<h2>
-					Kelompok Tani
+					Daftar Penangkar Benih Bawang Putih Berlabel
 				</h2>
 				<div class="panel-toolbar">
 					@include('partials.globaltoolbar')
@@ -19,29 +19,44 @@
 				<div class="panel-content">
 					<table id="datatable" class="table table-bordered table-hover table-striped w-100">
 						<thead>
-							<th>Nama Kelompok</th>
+							<th>Nama Lembaga</th>
 							<th>Pimpinan</th>
-							<th>Kontak (HP)</th>
+							<th>Alamat & Kontak</th>
+							<th>Provinsi</th>
 							<th>Kota</th>
-							<th>Kecamatan - Desa</th>
 							<th>Tindakan</th>
 						</thead>
 						<tbody>
-							@foreach ($poktans as $poktan)
+							@foreach ($masterpenangkars as $penangkar)
 							<tr>
-								<td>{{$poktan->nama_kelompok}}</td>
-								<td>{{$poktan->nama_pimpinan}}</td>
-								<td>{{$poktan->hp_pimpinan}}</td>
-								<td>{{$poktan->id_kabupaten}}</td>
-								<td>{{$poktan->id_kecamatan}} - {{$poktan->id_kelurahan}}</td>
+								<td>{{$penangkar->nama_lembaga}}</td>
+								<td>{{$penangkar->nama_pimpinan}}</td>
 								<td>
-									<a href="{{ route('admin.task.masterpoktan.show', [$poktan->id]) }}" class="btn btn-icon btn-xs btn-danger">
-										<i class="fal fa-users"></i>
-									</a>
-									<button type="button" class="btn btn-icon btn-xs btn-primary" data-toggle="modal" data-target="#myEditModal{{$poktan->id}} ">
+									<div class="row">
+										<div class="col-1">
+											<i class="mr-1 fal fa-home-alt"></i>
+										</div>
+										<div class="col">
+											{{$penangkar->alamat}}
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-1">
+											<i class="mr-1 fal fa-phone"></i>
+										</div>
+										<div class="col">
+											{{$penangkar->hp_pimpinan}}
+										</div>
+									</div>
+								</td>
+								<td>{{$penangkar->provinsi_id}}</td>
+								<td>{{$penangkar->kabupaten_id}}</td>
+								<td>
+									<button type="button" class="btn btn-icon btn-xs btn-primary"
+										data-toggle="modal" data-target="#myEditModal{{$penangkar->id}} ">
 										<i class="fal fa-edit"></i>
 									</button>
-									<form action="{{ route('admin.task.masterpoktan.destroy', $poktan->id) }}" method="POST" style="display: inline-block;">
+									<form action="{{ route('admin.task.masterpenangkar.destroy', $penangkar->id) }}" method="POST" style="display: inline-block;">
 										@csrf
 										@method('DELETE')
 										<button type="submit" class="btn btn-icon btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this item?');">
@@ -50,38 +65,37 @@
 									</form>
 								</td>
 								{{-- Modal Edit Poktan --}}
-								<div class="modal fade" id="myEditModal{{$poktan->id}}"
+								<div class="modal fade" id="myEditModal{{$penangkar->id}}"
 									tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 									<div class="modal-dialog modal-dialog-right" role="document">
 										<div class="modal-content">
 											<div class="modal-header">
 												<div>
-													<h6 class="modal-title" id="myModalLabel">Ubah Data Kelompoktani</h6>
-													<h4 class="fw-500 text-primary">{{ $poktan->nama_kelompok }}</h4>
+													<h6 class="modal-title" id="myModalLabel">Ubah Data Penangkar</h6>
+													<h4 class="fw-500 text-primary">{{ $penangkar->nama_lembaga }}</h4>
 												</div>
 												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 													<span aria-hidden="true">&times;</span>
 												</button>
 											</div>
-											<form method="POST" action="{{ route('admin.task.masterpoktan.update', [$poktan->id]) }}"
+											<form method="POST" action="{{ route('admin.task.masterpenangkar.update', [$penangkar->id]) }}"
 												enctype="multipart/form-data">
 												@csrf
 												@method('PUT')
 												<div class="modal-body">
 													<!-- Add your form fields here to create a new group of farmers -->
-													<input type="text" value="{{$user->id}}" id="user_id" name="user_id" hidden>
 													<div class="form-group">
-														<label for="">Nama Kelompok Tani</label>
-														<input type="text" name="nama_kelompok" id="nama_kelompok"
-															value="{{ old('nama_kelompok', $poktan->nama_kelompok) }}"
+														<label for="">Nama Lembaga Penangkar</label>
+														<input type="text" name="nama_lembaga" id="nama_lembaga"
+															value="{{ old('nama_lembaga', $penangkar->nama_lembaga) }}"
 															class="form-control form-control-sm"
-															placeholder="Nama Kelompoktani" aria-describedby="helpId">
+															placeholder="Nama Lembaga Penangkar" aria-describedby="helpId">
 														{{-- <small id="helpId" class="text-muted">Nama Kelompok Tani</small> --}}
 													</div>
 													<div class="form-group">
 														<label for="">Nama Pimpinan</label>
 														<input type="text" name="nama_pimpinan" id="nama_pimpinan"
-															value="{{ old('nama_pimpinan', $poktan->nama_pimpinan) }}"
+															value="{{ old('nama_pimpinan', $penangkar->nama_pimpinan) }}"
 															class="form-control form-control-sm"
 															placeholder="" aria-describedby="helpId">
 														{{-- <small id="helpId" class="text-muted">Nama Pimpinan Kelompok Tani</small> --}}
@@ -89,26 +103,32 @@
 													<div class="form-group">
 														<label for="">Nomor Kontak</label>
 														<input type="text" name="hp_pimpinan" id="hp_pimpinan"
-															value="{{ old('hp_pimpinan', $poktan->hp_pimpinan) }}"
+															value="{{ old('hp_pimpinan', $penangkar->hp_pimpinan) }}"
 															class="form-control form-control-sm"
 															placeholder="" aria-describedby="helpId">
-													<small id="helpId" class="text-muted">Nomor kontak (HP/Telp) aktif yang dapat dihubungi.</small>
+													<small id="helpId" class="text-muted">Nomor kontak aktif yang dapat dihubungi (HP/Telp).</small>
+													</div>
+													<div class="form-group">
+														<label for="">Alamat</label>
+														<textarea name="alamat" id="alamat"
+															class="form-control form-control-sm" rows="2">{{ old('alamat', $penangkar->alamat) }}</textarea>
+														<small id="helpId" class="text-muted">Nomor kontak aktif yang dapat dihubungi (HP/Telp).</small>
 													</div>
 													<div class="row d-flex justify-content-between">
 														<div class="form-group col-md-6">
 															<label for="">Provinsi</label>
-															<select name="id_provinsi" id="id_provinsi" class="custom-select form-control form-control-sm">
+															<select name="provinsi_id" id="provinsi_id" class="custom-select form-control form-control-sm">
 																<option value="" hidden>-- pilih provinsi</option>
-																<option value="{{$poktan->id_provinsi}}" selected>{{$poktan->id_provinsi}}</option>
+																<option value="{{$penangkar->provinsi_id}}" selected>{{$penangkar->provinsi_id}}</option>
 																<option value=""></option>
 															</select>
 															<small id="helpId" class="text-muted">Provinsi domisili Kelompoktani.</small>
 														</div>
 														<div class="form-group col-md-6">
 															<label for="">Kabupaten</label>
-															<select name="id_kabupaten" id="id_kabupaten" class="custom-select form-control form-control-sm">
+															<select name="kabupaten_id" id="kabupaten_id" class="custom-select form-control form-control-sm">
 																<option value="" hidden>-- pilih kabupaten</option>
-																<option value="{{$poktan->id_kabupaten}}" selected>{{$poktan->id_kabupaten}}</option>
+																<option value="{{$penangkar->kabupaten_id}}" selected>{{$penangkar->kabupaten_id}}</option>
 																<option value=""></option>
 															</select>
 															<small id="helpId" class="text-muted">Kabupaten domisili Kelompoktani.</small>
@@ -117,18 +137,18 @@
 													<div class="row d-flex justify-content-between">
 														<div class="form-group col-md-6">
 															<label for="">Kecamatan</label>
-															<select name="id_kecamatan" id="id_kecamatan" class="custom-select form-control form-control-sm">
+															<select name="kecamatan_id" id="kecamatan_id" class="custom-select form-control form-control-sm">
 																<option value="" hidden>-- pilih kecamatan</option>
-																<option value="{{$poktan->id_kecamatan}}" selected>{{$poktan->id_kecamatan}}</option>
+																<option value="{{$penangkar->kecamatan_id}}" selected>{{$penangkar->kecamatan_id}}</option>
 																<option value=""></option>
 															</select>
 															<small id="helpId" class="text-muted">Provinsi domisili Kelompoktani.</small>
 														</div>
 														<div class="form-group col-md-6">
 															<label for="">Kelurahan</label>
-															<select name="id_keluarahan" id="id_kelurahan" class="custom-select form-control form-control-sm">
+															<select name="desa_id" id="desa_id" class="custom-select form-control form-control-sm">
 																<option value="" hidden>-- pilih kelurahan</option>
-																<option value="{{$poktan->id_kelurahan}}" selected>{{$poktan->id_kelurahan}}</option>
+																<option value="{{$penangkar->desa_id}}" selected>{{$penangkar->desa_id}}</option>
 																<option value=""></option>
 															</select>
 															<small id="helpId" class="text-muted">Kelurahan domisili Kelompoktani.</small>
@@ -151,86 +171,101 @@
 							@endforeach
 						</tbody>
 					</table>
-					{{-- Modal Create Poktan --}}
+					{{-- Modal Penangkar --}}
 					<div class="modal fade" id="myModal"
 						tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 						<div class="modal-dialog modal-dialog-right" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
 									<div>
-										<h4 class="modal-title" id="myModalLabel">Registrasi Kelompoktani</h4>
-									<small id="helpId" class="text-muted">Tambah kelompoktani dalam rangka kerjasama pelaksanaan wajib tanam-produksi</small>
+										<h5 class="modal-title" id="myModalLabel">Register Data Penangkar</h5>
+										<small id="helpId" class="text-muted">Tambah Daftar Penangkar Benih berlabel</small>
 									</div>
 									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 										<span aria-hidden="true">&times;</span>
 									</button>
 								</div>
-								<form action="{{ route('admin.task.masterpoktan.store') }}" method="post">
+								<form method="POST" action="{{ route('admin.task.masterpenangkar.store')}}"
+									enctype="multipart/form-data">
 									@csrf
 									<div class="modal-body">
 										<!-- Add your form fields here to create a new group of farmers -->
-											<input type="text" value="{{$user->id}}" id="user_id" name="user_id" hidden>
-											<div class="form-group">
-												<label for="">Nama Kelompok Tani</label>
-												<input type="text" name="nama_kelompok" id="nama_kelompok"
-													class="form-control form-control-sm" placeholder="Nama Kelompoktani" aria-describedby="helpId">
-												{{-- <small id="helpId" class="text-muted">Nama Kelompok Tani</small> --}}
+										<div class="form-group">
+											<label for="">Nama Lembaga Penangkar</label>
+											<input type="text" name="nama_lembaga" id="nama_lembaga"
+												class="form-control form-control-sm"
+												placeholder="Nama Lembaga Penangkar" aria-describedby="helpId">
+											{{-- <small id="helpId" class="text-muted">Nama Kelompok Tani</small> --}}
+										</div>
+										<div class="form-group">
+											<label for="">Nama Pimpinan</label>
+											<input type="text" name="nama_pimpinan" id="nama_pimpinan"
+												class="form-control form-control-sm"
+												placeholder="" aria-describedby="helpId">
+											{{-- <small id="helpId" class="text-muted">Nama Pimpinan Kelompok Tani</small> --}}
+										</div>
+										<div class="form-group">
+											<label for="">Nomor Kontak</label>
+											<input type="text" name="hp_pimpinan" id="hp_pimpinan"
+												class="form-control form-control-sm"
+												placeholder="" aria-describedby="helpId">
+										<small id="helpId" class="text-muted">Nomor kontak aktif yang dapat dihubungi (HP/Telp).</small>
+										</div>
+										<div class="form-group">
+											<label for="">Alamat</label>
+											<textarea name="alamat" id="alamat"
+												class="form-control form-control-sm" rows="2"></textarea>
+											<small id="helpId" class="text-muted">Nomor kontak aktif yang dapat dihubungi (HP/Telp).</small>
+										</div>
+										<div class="row d-flex justify-content-between">
+											<div class="form-group col-md-6">
+												<label for="">Provinsi</label>
+												<select name="provinsi_id" id="provinsi_id" class="custom-select form-control form-control-sm">
+													<option value="" hidden>-- pilih provinsi</option>
+													<option value=""></option>
+												</select>
+												<small id="helpId" class="text-muted">Provinsi domisili Penangkar.</small>
 											</div>
-											<div class="form-group">
-												<label for="">Nama Pimpinan</label>
-												<input type="text" name="nama_pimpinan" id="nama_pimpinan"
-													class="form-control form-control-sm" placeholder="" aria-describedby="helpId">
-												{{-- <small id="helpId" class="text-muted">Nama Pimpinan Kelompok Tani</small> --}}
+											<div class="form-group col-md-6">
+												<label for="">Kabupaten</label>
+												<select name="kabupaten_id" id="kabupaten_id" class="custom-select form-control form-control-sm">
+													<option value="" hidden>-- pilih kabupaten</option>
+													<option value=""></option>
+												</select>
+												<small id="helpId" class="text-muted">Kabupaten domisili Penangkar.</small>
 											</div>
-											<div class="form-group">
-												<label for="">Nomor Kontak</label>
-												<input type="text" name="hp_pimpinan" id="hp_pimpinan"
-													class="form-control form-control-sm" placeholder="" aria-describedby="helpId">
-											<small id="helpId" class="text-muted">Nomor kontak (HP/Telp) aktif yang dapat dihubungi.</small>
+										</div>
+										<div class="row d-flex justify-content-between">
+											<div class="form-group col-md-6">
+												<label for="">Kecamatan</label>
+												<select name="kecamatan_id" id="kecamatan_id" class="custom-select form-control form-control-sm">
+													<option value="" hidden>-- pilih kecamatan</option>
+													<option value=""></option>
+												</select>
+												<small id="helpId" class="text-muted">Provinsi domisili Penangkar.</small>
 											</div>
-											<div class="row d-flex justify-content-between">
-												<div class="form-group col-md-6">
-													<label for="">Provinsi</label>
-													<select name="id_provinsi" id="id_provinsi" class="custom-select form-control form-control-sm">
-														<option value="" hidden>-- pilih provinsi</option>
-													</select>
-													<small id="helpId" class="text-muted">Provinsi domisili Kelompoktani.</small>
-												</div>
-												<div class="form-group col-md-6">
-													<label for="">Kabupaten</label>
-													<select name="id_kabupaten" id="id_kabupaten" class="custom-select form-control form-control-sm">
-														<option value="" hidden>-- pilih kabupaten</option>
-													</select>
-													<small id="helpId" class="text-muted">Kabupaten domisili Kelompoktani.</small>
-												</div>
+											<div class="form-group col-md-6">
+												<label for="">Kelurahan</label>
+												<select name="desa_id" id="desa_id" class="custom-select form-control form-control-sm">
+													<option value="" hidden>-- pilih kelurahan</option>
+													<option value=""></option>
+												</select>
+												<small id="helpId" class="text-muted">Kelurahan domisili Penangkar.</small>
 											</div>
-											<div class="row d-flex justify-content-between">
-												<div class="form-group col-md-6">
-													<label for="">Kecamatan</label>
-													<select name="id_kecamatan" id="id_kecamatan" class="custom-select form-control form-control-sm">
-														<option value="" hidden>-- pilih kecamatan</option>
-													</select>
-													<small id="helpId" class="text-muted">Provinsi domisili Kelompoktani.</small>
-												</div>
-												<div class="form-group col-md-6">
-													<label for="">Kelurahan</label>
-													<select name="id_keluarahan" id="id_kelurahan" class="custom-select form-control form-control-sm">
-														<option value="" hidden>-- pilih kelurahan</option>
-													</select>
-													<small id="helpId" class="text-muted">Kelurahan domisili Kelompoktani.</small>
-												</div>
-											</div>
-										
+										</div>
 									</div>
 									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-										<button class="btn btn-primary" type="submit">Save changes</button>
+										<button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">
+											<i class="fal fa-times-circle text-danger fw-500"></i> Close
+										</button>
+										<button class="btn btn-primary btn-sm" type="submit">
+											<i class="fal fa-save"></i> Save changes
+										</button>
 									</div>
 								</form>
 							</div>
 						</div>
 					</div>
-					{{-- Modal Edit Poktan --}}
 				</div>
 			</div>
 		</div>
