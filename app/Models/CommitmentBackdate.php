@@ -27,6 +27,7 @@ class Commitmentbackdate extends Model
 		'npk',
 		'dolomit',
 		'za',
+		'mulsa',
 		'poktan_share',
 		'importir_share',
 		'status',

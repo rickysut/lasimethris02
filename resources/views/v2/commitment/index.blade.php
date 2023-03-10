@@ -42,7 +42,7 @@
 											<i class="fal fa-ruler-combined"></i>
 										</div>
 										<div class="col-9">
-											{{ number_format($commitment->volume_riph * 0.05, 2, ',','.') }} ha
+											{{ number_format($commitment->volume_riph * 0.05/6, 2, ',','.') }} ha
 										</div>
 									</div>
 									<div class="row">
@@ -50,26 +50,27 @@
 											<i class="fal fa-weight-hanging"></i>
 										</div>
 										<div class="col-9">
-											{{ number_format($commitment->volume_riph * 0.05/6, 2, ',','.') }} ton
+											{{ number_format($commitment->volume_riph * 0.05, 2, ',','.') }} ton
 										</div>
 									</div>
 								</td>
 								<td>{{$commitment->status}}</td>
 								<td>
-									<a href="{{ route('admin.task.commitments.show', $commitment->id) }}" class="btn btn-icon btn-xs btn-info"
+									<a href="{{ route('admin.task.commitments.show', $commitment->id) }}"
+										class="btn btn-icon btn-xs btn-info"
 										title="Laporan Realisasi Komitmen">
 										<i class="fal fa-ballot-check"></i>
 									</a>
-									<button type="button" class="btn btn-icon btn-xs btn-primary"
-										title="Ubah/perbarui data Komitmen" data-toggle="modal"
-										data-target="#myEditModal{{$commitment->id}} ">
+									<a href="{{ route('admin.task.commitments.edit', $commitment->id) }}"
+										class="btn btn-icon btn-xs btn-warning"
+										title="Ubah Data Komitmen">
 										<i class="fal fa-edit"></i>
-									</button>
+									</a>
 									<form action="{{ route('admin.task.commitments.destroy', $commitment->id) }}"
 										method="POST" style="display: inline-block;">
 										@csrf
 										@method('DELETE')
-										<button type="submit" class="btn btn-icon btn-xs btn-danger" title="Hapus data komitment"
+										<button type="submit" class="ml-3 btn btn-icon btn-xs btn-danger" title="Hapus data komitment"
 											onclick="return confirm('Are you sure you want to delete this item?');">
 											<i class="fal fa-trash-alt"></i>
 										</button>

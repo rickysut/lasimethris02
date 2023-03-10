@@ -53,11 +53,11 @@
 							<li class="list-group-item d-flex justify-content-between">
 								<div>
 									<span class="text-muted">Wajib Tanam</span>
-									<h6 class="fw-500 my-0">{{ number_format($commitments->volume_riph*0.05,2,',', '.') }} ha</h6>
+									<h6 class="fw-500 my-0">{{ number_format($commitments->volume_riph*0.05/6,2,',', '.') }} ha</h6>
 								</div>
 								<div>
 									<span class="text-muted">Wajib Produksi</span>
-									<h6 class="fw-500 my-0">{{ number_format( $commitments->volume_riph*0.05/6,2,',', '.') }} ton</h6>
+									<h6 class="fw-500 my-0">{{ number_format( $commitments->volume_riph*0.05,2,',', '.') }} ton</h6>
 								</div>
 							</li>
 							<li class="list-group-item d-flex justify-content-between">
@@ -71,7 +71,11 @@
 													Menunggu Review Verifikasi 
 												</div>
 												<div class="col-md-12 my-1">
-													No Dokumen: <a href="><i class="fal fa-arrow-alt-right"></i>&nbsp;{{ $commitments->no_doc }}</a>
+													No Dokumen:
+													<a href="" title="Lihat Pengajuan">
+														<i class="fal fa-arrow-alt-right"></i>
+														&nbsp;{{ $commitments->no_doc }}
+													</a>
 												</div>
 											</div>
 											@break
@@ -96,15 +100,25 @@
 											Review SKL
 											@break
 										@case(5)
-											SKL Sudah Terbit
+											<div class="row">
+												<div class="col-md-12 my-1">
+													SKL telah diterbitkan
+												</div>
+												<div class="col-md-12 my-1">
+													<a href="#" class="btn btn-xs btn-success">
+														<i class="fas fa-award"></i>
+														Lihat/Unduh SKL
+													</a>
+												</div>
+											</div>
 											@break
 										@default
 											<div class="row">
-												<div class="col-md-12 my-1">
+												<div class="col-md-12 my-1 text-danger">
 													Belum diajukan Verifikasi Oleh Importir
 												</div>
 												<div class="col-md-12 my-1">
-													<a href="#" class="btn btn-xs btn-warning"
+													<a href="#" class="btn btn-xs btn-danger"
 														data-toggle="modal" data-target="#verifikasiModal">
 														<i class="fas fa-exclamation-triangle"></i>
 														Ajukan Verifikasi
@@ -136,7 +150,7 @@
                             <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     <span class="text-muted">Kebutuhan Benih</span>
-                                    <h6 class="fw-500 my-0"> {{ number_format($commitments->volume_riph*0.05*0.8,2,',', '.') }} ton</h6>
+                                    <h6 class="fw-500 my-0"> {{ number_format($commitments->volume_riph*0.05/6*0.8,2,',', '.') }} ton</h6>
                                 </div>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
@@ -148,7 +162,7 @@
                             <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     <span class="text-muted">Beli dari Penangkar</span>
-                                    <h6 class="fw-500 my-0"> {{ number_format($commitments->volume_riph*0.05*0.8-$commitments->stok_mandiri ,2,',', '.') }} ton</h6>
+                                    <h6 class="fw-500 my-0"> {{ number_format($commitments->volume_riph*0.05/6*0.8-$commitments->stok_mandiri ,2,',', '.') }} ton</h6>
                                 </div>
                             </li>
                         </ul>
@@ -224,9 +238,9 @@
                             <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     
-                                    <span class="text-muted">Bagi Hasil (Poktan:Importir)</span>
+                                    <span class="text-muted">Bagi Hasil (%)</span>
                                     <h6 class="fw-500 my-0">
-										{{ number_format($commitments->poktan_share * 100, 2, ',', '.') }}% : {{ number_format($commitments->importir_share * 100, 2, ',', '.') }}%
+										{{$commitments->poktan_share}} : {{$commitments->importir_share}}
 									</h6>
                                     
                                 </div>
@@ -259,10 +273,13 @@
                             </div>
                         </div>
                         <div class="flex-1 help-block">
-                            <span>Berikut ini adalah daftar Kelompoktani Binaan yang telah Anda pilih sebelumnya pada form Komitmen Baru.</span>
+							<span>
+								Berikut ini adalah daftar Kerjasama Kelompoktani Mitra yang telah Anda buat.<br>
+								Klik tombol <i class="text-primary fa fa-plus-circle"></i> pada tabel di bawah menambah daftar kerjasama.
+							</span>
                         </div>
                         <div class="flex-2">
-                            <span><a href="" class="btn btn-primary">Detail</a></span>
+                            <span><a href="" class="btn btn-xs btn-primary">Detail</a></span>
                         </div>
                     </div>
                 </div>

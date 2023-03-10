@@ -27,6 +27,7 @@ return new class extends Migration
 			$table->string('npk')->nullable();
 			$table->string('dolomit')->nullable();
 			$table->string('za')->nullable();
+			$table->string('mulsa')->nullable();
 			$table->string('poktan_share')->nullable();
 			$table->string('importir_share')->nullable();
 			$table->string('status')->nullable(); //null = un-accomplished, 1 = accomplished/lunas

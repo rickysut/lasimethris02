@@ -29,6 +29,7 @@ class CommitmentBackdateFactory extends Factory
 			'npk' => $this->faker->randomFloat(2, 0, 100),
 			'dolomit' => $this->faker->randomFloat(2, 0, 100),
 			'za' => $this->faker->randomFloat(2, 0, 100),
+			'mulsa' => 10.5,
 			'poktan_share' => 0.5,
 			'importir_share' => 0.5,
 			'status' => null,

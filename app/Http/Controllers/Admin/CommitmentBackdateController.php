@@ -39,6 +39,12 @@ class CommitmentBackdateController extends Controller
 	public function create()
 	{
 		//
+		$module_name = 'Commitments';
+		$page_title = 'Commitment';
+		$page_heading = 'Create New Commitment: ';
+		$heading_class = 'fa fa-file-edit';
+
+		return view('v2.commitment.create', compact('module_name', 'page_title', 'page_heading', 'heading_class'));
 	}
 
 	/**
@@ -50,6 +56,26 @@ class CommitmentBackdateController extends Controller
 	public function store(Request $request)
 	{
 		//
+		$commitments = new CommitmentBackdate();
+		$commitments->user_id = Auth::user()->id;
+		$commitments->no_ijin = $request->input('no_ijin');
+		$commitments->periodetahun = $request->input('periodetahun');
+		$commitments->tgl_ijin = $request->input('tgl_ijin');
+		$commitments->tgl_akhir = $request->input('tgl_akhir');
+		$commitments->no_hs = $request->input('no_hs');
+		$commitments->volume_riph = $request->input('volume_riph');
+		$commitments->no_hs = $request->input('no_hs');
+		$commitments->stok_mandiri = $request->input('stok_mandiri');
+		$commitments->organik = $request->input('organik');
+		$commitments->npk = $request->input('npk');
+		$commitments->dolomit = $request->input('dolomit');
+		$commitments->za = $request->input('za');
+		$commitments->mulsa = $request->input('mulsa');
+		$commitments->poktan_share = $request->input('poktan_share');
+		// dd($commitments);
+		$commitments->save();
+
+		return redirect()->route('admin.task.commitments.index')->with('success', 'Data Commitment updated successfully');
 	}
 
 	/**
@@ -79,6 +105,14 @@ class CommitmentBackdateController extends Controller
 	public function edit($id)
 	{
 		//
+		$commitments = CommitmentBackdate::with('user')->findOrFail($id);
+
+		$module_name = 'Commitments';
+		$page_title = 'Commitment';
+		$page_heading = 'Edit Commitment: ' . $commitments->no_ijin;
+		$heading_class = 'fa fa-file-edit';
+
+		return view('v2.commitment.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments'));
 	}
 
 	/**
@@ -91,6 +125,25 @@ class CommitmentBackdateController extends Controller
 	public function update(Request $request, $id)
 	{
 		//
+		$commitments = CommitmentBackdate::find($id);
+		$commitments->user_id = Auth::user()->id;
+		$commitments->no_ijin = $request->input('no_ijin');
+		$commitments->periodetahun = $request->input('periodetahun');
+		$commitments->tgl_ijin = $request->input('tgl_ijin');
+		$commitments->tgl_akhir = $request->input('tgl_akhir');
+		$commitments->no_hs = $request->input('no_hs');
+		$commitments->volume_riph = $request->input('volume_riph');
+		$commitments->no_hs = $request->input('no_hs');
+		$commitments->stok_mandiri = $request->input('stok_mandiri');
+		$commitments->organik = $request->input('organik');
+		$commitments->npk = $request->input('npk');
+		$commitments->dolomit = $request->input('dolomit');
+		$commitments->za = $request->input('za');
+		$commitments->mulsa = $request->input('mulsa');
+		$commitments->poktan_share = $request->input('poktan_share');
+		// dd($commitments);
+		$commitments->save();
+		return redirect()->route('admin.task.commitments.index')->with('success', 'Data Commitment updated successfully');
 	}
 
 	/**
@@ -104,5 +157,6 @@ class CommitmentBackdateController extends Controller
 		$commitments = CommitmentBackdate::withTrashed()->findOrFail($id);
 		// $commitments->childrelatedmodel()->delete(); //delete related object here
 		$commitments->delete();
+		return redirect()->route('admin.task.commitments.index')->with('success', 'Data Commitment deleted successfully');
 	}
 }

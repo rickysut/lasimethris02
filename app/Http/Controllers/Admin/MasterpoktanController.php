@@ -103,7 +103,7 @@ class MasterpoktanController extends Controller
 	public function update(Request $request, $id)
 	{
 		$masterkelompok = MasterKelompok::find($id);
-		$masterkelompok->user_id = $request->input('user_id');
+		$masterkelompok->user_id = Auth::user()->id;
 		$masterkelompok->nama_kelompok = $request->input('nama_kelompok');
 		$masterkelompok->nama_pimpinan = $request->input('nama_pimpinan');
 		$masterkelompok->hp_pimpinan = $request->input('hp_pimpinan');
