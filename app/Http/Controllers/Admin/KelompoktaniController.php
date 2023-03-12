@@ -325,7 +325,7 @@ class KelompoktaniController extends Controller
                 $nomor = Str::replace('.', '', $row->id_poktan);
                 // $nomor = Str::replace('/', '', $nomor);
                 $urlView = route('admin.task.kelompoktani.showtani', $nomor );
-                return '<a class="btn btn-xs btn-success " data-toggle="tooltip" title data-original-title="view" href='.$urlView.'>'.
+                return '<a class="btn btn-xs btn-success btn-icon" data-toggle="tooltip" title data-original-title="View poktan" href='.$urlView.'>'.
                 '    <i class="fal fa-pencil"></i></a>';
             });
 

@@ -17,9 +17,7 @@
                     Detail Kelompoktani - ID Poktan = {{ $nomor }}
                 </h2>
                 <div class="panel-toolbar">
-                    @can('poktan_create')
-                        <a class="btn btn-xs btn-primary mr-1 ml-1" href="{{ route('admin.task.kelompoktani.create') }}"><i class="fal fa-plus mr-1"></i>Kelompoktani</a>
-                    @endcan
+                    <a class="btn btn-xs btn-primary mr-1 ml-1" href="javascript:history.back()"><i class="fal fa-plus mr-1"></i>Kembali</a>
                     @include('partials.globaltoolbar')
                 </div>
             </div>

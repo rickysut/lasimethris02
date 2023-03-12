@@ -11,7 +11,7 @@
         <div id="panel-1" class="panel" data-title="Panel Data" data-intro="Panel ini berisi data-data" data-step="2">
             <div class="panel-hdr">
                 <h2>
-                    Daftar<span class="fw-300"><i>RIPH</i></span>
+                    Daftar<span class="fw-300"><i>PKS</i></span>
                 </h2>
                 <div class="panel-toolbar">
                     @include('partials.globaltoolbar')
@@ -25,13 +25,20 @@
                                 <tr>
                                     <th ></th>
                                     {{-- <th hidden>ID</th> --}}
-                                    <th >Periode Tahun</th>
+                                    <th class="text-center">NPWP</th>
                                     <th class="text-center">No. RIPH</th>
-                                    <th >Tanggal.Terbit</th>
-                                    <th class="text-center">V. RIPH (ton)</th>
-                                    <th class="text-center">V. Produksi (ton)</th>
-                                    <th class="text-center">L. Wajib Tanam (ha)</th>
-                                    <th class="text-center">Status</th>
+                                    <th class="text-center">No. Perjanjian</th>
+                                    <th class="text-center">Tgl. Mulai</th>
+                                    <th class="text-center">Tgl. Berakhir</th>
+                                    <th class="text-center">Jumlah Anggota</th>
+                                    <th class="text-center">Luas Rencana</th>
+                                    <th class="text-center">Varietas Tanam</th>
+                                    <th class="text-center">Periode Tanam</th>
+                                    <th class="text-center">Provinsi</th>
+                                    <th class="text-center">Kabupaten</th>
+                                    <th class="text-center">Kecamatan</th>
+                                    <th class="text-center">Desa</th>
+                                    <th class="text-center">Berkas</th>
                                     <th style="width:15%">
                                         {{ trans('global.actions') }}
                                     </th>
@@ -66,11 +73,11 @@
         };
 
 		let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-        @can('commitment_delete')
+        @can('pks_delete')
             let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
             let deleteButton = {
                 text: deleteButtonTrans,
-                url: "{{ route('admin.task.commitment.massDestroy') }}",
+                url: "{{ route('admin.task.pks.massDestroy') }}",
                 className: 'btn-danger btn-sm waves-effect waves-themed  mr-1', 
                 action: function (e, dt, node, config) {
                 var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
@@ -100,6 +107,7 @@
             processing: true,
             serverSide: true,
             retrieve: true,
+            responsive: true,
             aaSorting: [],
             columnDefs: [{
                                 orderable: false,
@@ -120,28 +128,24 @@
 					"<'row'<'col-sm-12 col-md-12'tr>>" +
 					"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
             
-            ajax: "{{ route('admin.task.commitment') }}",
+            ajax: "{{ route('admin.task.pks.index') }}",
             columns: [
                 { data: 'placeholder', name: 'placeholder' },
                 // { data: 'id', name: 'id',  },
-                { data: 'periodetahun', name: 'periodetahun' },
-                { data: 'no_ijin', name: 'no_ijin' },
-                { data: 'tgl_ijin', name: 'tgl_ijin',class: 'text-center'  },
-                { data: 'volume_riph', name: 'volume_riph', class: 'text-right' },
-                { data: 'volume_produksi', name: 'volume_produksi', class: 'text-right' },
-                { data: 'luas_wajib_tanam', name: 'luas_wajib_tanam', class: 'text-right' },
-                { data: 'status', name: 'status', class: 'text-center',
-                  render: function( data, type, row ) {
-                    out = '';
-                    if (data == 0) out = 'Belum Diverifikasi';
-                    if (data == 1) out = 'Menunggu review verifikasi';
-                    if (data == 2) out = 'Sudah Diverifikasi';
-                    if (data == 3) out = 'Pengajuan SKL';
-                    if (data == 4) out = 'Review SKL';
-                    if (data == 5) out = 'SKL Sudah Terbit';
-                    return out;
-                  }
-             },
+                { data: 'npwp', name: 'npwp' },
+                { data: 'no_riph', name: 'no_riph' },
+                { data: 'no_perjanjian', name: 'no_perjanjian' },
+                { data: 'tgl_perjanjian_start', name: 'tgl_perjanjian_start',class: 'text-center'  },
+                { data: 'tgl_perjanjian_end', name: 'tgl_perjanjian_end',class: 'text-center'  },
+                { data: 'jumlah_anggota', name: 'jumlah_anggota', class: 'text-right' },
+                { data: 'luas_rencana', name: 'luas_rencana', class: 'text-right' },
+                { data: 'varietas_tanam', name: 'varietas_tanam' },
+                { data: 'periode_tanam', name: 'periode_tanam' },
+                { data: 'provinsi', name: 'provinsi' },
+                { data: 'kabupaten', name: 'kabupaten' },
+                { data: 'kecamatan', name: 'kecamatan' },
+                { data: 'desa', name: 'desa' },
+                { data: 'berkas_pks', name: 'berkas_pks' },
                 { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
             ],
             orderCellsTop: true,

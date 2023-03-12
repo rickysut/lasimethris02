@@ -130,7 +130,7 @@
                 { data: 'nama_kelompok', name: 'nama_kelompok' , visible: true},
                 { data: 'nama_pimpinan', name: 'nama_pimpinan' , visible: true},
                 { data: 'hp_pimpinan', name: 'hp_pimpinan' , visible: true},
-                { data: 'jum_petani', name: 'jum_petani' },
+                { data: 'jum_petani', name: 'jum_petani' , class: 'text-right'},
                 { data: 'luas', name: 'luas', class: 'text-right' },
                 { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' , orderable: false }
             ],
@@ -149,31 +149,41 @@
                     var intVal = function ( i ) {
                         return typeof i === 'string' ?
                             i.replace(/,/g, '.')*1 : typeof i === 'number' ? i : 0;
-                    };
+                        };
                     total=[];
+                    petani=[];
                     api.column(0, { page: 'all' })
                         .data()
                         .each(function (group, i) {
                             nomor = group.replace('.', '');
                             nomor = nomor.replace(/\//g,'');
+                            totPetani = nomor+'_02';
                             if(typeof total[nomor] != 'undefined'){
                                 total[nomor]=total[nomor]+intVal(api.column(6).data()[i]);
                             }else{
                                 total[nomor]=intVal(api.column(6).data()[i]);
                             }
+                            if(typeof petani[totPetani] != 'undefined'){
+                                petani[totPetani]=petani[totPetani]+intVal(api.column(5).data()[i]);
+                            }else{
+                                petani[totPetani]=intVal(api.column(5).data()[i]);
+                            }
                             if (last !== group) {
-                                urlView = "{{ route('admin.task.kelompoktani.show', ':no' ) }}";
-                                urlEdit = "{{ route('admin.task.kelompoktani.edit', ':no') }}";
-                                urlView = urlView.replace(':no', nomor);
+                                urlCreate = "{{ route('admin.task.pks.create', [':no'] ) }}";
+                                urlEdit = "{{ route('admin.task.pks.edit', [':no'] ) }}";
+                                urlCreate = urlCreate.replace(':no', nomor);
                                 urlEdit = urlEdit.replace(':no', nomor);
 
                                 $(rows)
                                     .eq(i)
-                                    .before('<tr class="group"><td colspan="5" class="text-center"><strong>' + group  +'</strong></td>'+
+                                    .before('<tr class="group"><td colspan="4" class="text-center"><strong>' + group  +'</strong></td>'+
+                                        '<td class="'+totPetani+' text-right "></td>'+
                                         '<td class="'+nomor+' text-right "></td>'+
                                         '<td class="text-center">'+
-                                        '<a class="btn btn-xs btn-primary " data-toggle="tooltip" title data-original-title="Lihat Rincian" href='+urlView+'>'+
-                                        '    <i class="fal fa-plus-circle"></i>&nbsp;PKS</a>'+
+                                        '<a class="btn btn-xs btn-primary btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Tambah PKS"  href='+urlCreate+'>'+
+                                        '    <i class="fal fa-plus-circle"></i></a>'+
+                                        '<a class="btn btn-xs btn-warning btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Edit PKS" href='+urlEdit+'>'+
+                                        '    <i class="fal fa-pencil"></i></a>'+
                                         '</td></tr>');
         
                                 last = group;
@@ -181,6 +191,9 @@
                         });
                         for(var key in total) {
                             $("."+key).html('<strong>'+Math.round((total[key] + Number.EPSILON) * 100) / 100 + '<strong>');
+                        }
+                        for(var key in petani) {
+                            $("."+key).html('<strong>'+Math.round((petani[key] + Number.EPSILON) * 100) / 100 + '<strong>');
                         }
                 }
             }
@@ -191,6 +204,9 @@
                 .columns.adjust();
         });
         
+        $('.datatable-Kelompoktani').on('draw.dt', function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
         
         
     });
