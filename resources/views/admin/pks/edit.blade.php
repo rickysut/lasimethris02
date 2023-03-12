@@ -10,10 +10,10 @@
             <div class="panel" id="panel-1">
                 <div class="panel-hdr">
                     <h2>
-                        DATA <span class="fw-300"><i>PKS</i></span>
+                        Edit<span class="fw-300"><i>PKS</i></span>
                     </h2>
                     <div class="panel-toolbar">
-
+                        @include('partials.globaltoolbar')
                     </div>
                 </div>
                 <div class="panel-container show">

@@ -322,11 +322,20 @@ class KelompoktaniController extends Controller
 
             
             $table->editColumn('actions', function ($row) {
-                $nomor = Str::replace('.', '', $row->id_poktan);
-                // $nomor = Str::replace('/', '', $nomor);
-                $urlView = route('admin.task.kelompoktani.showtani', $nomor );
-                return '<a class="btn btn-xs btn-success btn-icon" data-toggle="tooltip" title data-original-title="View poktan" href='.$urlView.'>'.
+                $riph = Str::replace('.', '', $row->no_riph);
+                $riph = Str::replace('/', '', $riph);
+                $nomor = $row->id_poktan;
+                $urlView = route('admin.task.kelompoktani.showtani', [$riph, $nomor] );
+                $urlCreate = route('admin.task.pks.create', [$riph , $nomor] );
+                $urlEdit = route('admin.task.pks.edit', [$riph, $nomor] );
+                
+                return '<a class="btn btn-xs btn-primary btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Tambah PKS"  href='.$urlCreate.'>'.
+                '    <i class="fal fa-plus-circle"></i></a>'.
+                '<a class="btn btn-xs btn-warning btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Edit PKS" href='.$urlEdit.'>'.
                 '    <i class="fal fa-pencil"></i></a>';
+                
+                // '<a class="btn btn-xs btn-success btn-icon" data-toggle="tooltip" title data-original-title="View poktan" href='.$urlView.'>'.
+                // '    <i class="fal fa-pencil"></i></a>';
             });
 
             

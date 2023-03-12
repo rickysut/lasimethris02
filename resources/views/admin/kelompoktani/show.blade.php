@@ -169,10 +169,10 @@
                                 petani[totPetani]=intVal(api.column(5).data()[i]);
                             }
                             if (last !== group) {
-                                urlCreate = "{{ route('admin.task.pks.create', [':no'] ) }}";
-                                urlEdit = "{{ route('admin.task.pks.edit', [':no'] ) }}";
-                                urlCreate = urlCreate.replace(':no', nomor);
-                                urlEdit = urlEdit.replace(':no', nomor);
+                                // urlCreate = "{ { route('admin.task.pks.create', [':no'] ) }}";
+                                // urlEdit = "{ { route('admin.task.pks.edit', [':no'] ) }}";
+                                // urlCreate = urlCreate.replace(':no', nomor);
+                                // urlEdit = urlEdit.replace(':no', nomor);
 
                                 $(rows)
                                     .eq(i)
@@ -180,10 +180,10 @@
                                         '<td class="'+totPetani+' text-right "></td>'+
                                         '<td class="'+nomor+' text-right "></td>'+
                                         '<td class="text-center">'+
-                                        '<a class="btn btn-xs btn-primary btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Tambah PKS"  href='+urlCreate+'>'+
-                                        '    <i class="fal fa-plus-circle"></i></a>'+
-                                        '<a class="btn btn-xs btn-warning btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Edit PKS" href='+urlEdit+'>'+
-                                        '    <i class="fal fa-pencil"></i></a>'+
+                                        // '<a class="btn btn-xs btn-primary btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Tambah PKS"  href='+urlCreate+'>'+
+                                        // '    <i class="fal fa-plus-circle"></i></a>'+
+                                        // '<a class="btn btn-xs btn-warning btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Edit PKS" href='+urlEdit+'>'+
+                                        // '    <i class="fal fa-pencil"></i></a>'+
                                         '</td></tr>');
         
                                 last = group;

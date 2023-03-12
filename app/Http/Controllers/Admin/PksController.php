@@ -102,7 +102,7 @@ class PksController extends Controller
             return $table->make(true);
         }
         $module_name = 'Proses RIPH' ;
-        $page_title = 'Kelompok Tani';
+        $page_title = 'Daftar PKS';
         $page_heading = 'Daftar PKS ' ;
         $heading_class = 'fal fa-ballot-check';
         return view('admin.pks.index', compact('module_name', 'page_title', 'page_heading', 'heading_class'));
@@ -113,9 +113,13 @@ class PksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($no_riph)
+    public function create($no_riph, $poktan)
     {
-        //
+        $module_name = 'Proses RIPH' ;
+        $page_title = 'Kelompok Tani';
+        $page_heading = 'Buat PKS ' ;
+        $heading_class = 'fal fa-ballot-check';
+        return view('admin.pks.create', compact('module_name', 'page_title', 'page_heading', 'heading_class'));
     }
 
     /**
