@@ -91,8 +91,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::post('commitment/unggah', 'CommitmentController@store')->name('commitment.store');
 		Route::delete('commitmentmd', 'CommitmentController@massDestroy')->name('commitment.massDestroy');
 
-		//commitment for backdate data (v2)
+		//route for backdate commitment (v2)
 		Route::resource('commitments', 'CommitmentBackdateController');
+		Route::get('commitments/{commitments}/penangkar', 'CommitmentBackdateController@penangkar')->name('commitments.penangkar');
+		Route::get('commitments/{commitments}/pksmitra', 'CommitmentBackdateController@pksmitra')->name('commitments.pksmitra');
+		Route::resource('pksmitra', 'PksMitraController');
+
+		//route for penangkar mitra v2
+		Route::resource('penangkarmitra', 'PenangkarMitraController');
+
 
 		// pengajuan
 		Route::resource('pengajuan', 'PengajuanController');

@@ -75,8 +75,13 @@ class MasterpoktanController extends Controller
 		$page_heading = 'Master Anggota Poktan';
 		$heading_class = 'fa fa-users';
 
+		//load all master kelompok
 		$poktans = MasterKelompok::all();
+
+		//load poktan for current id that has anggota
 		$poktan = MasterKelompok::with('masteranggota')->findOrFail($id);
+
+		//load anggota for current poktan
 		$anggotas = $poktan->masteranggota;
 
 		return view('v2.poktan.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'poktans', 'poktan', 'anggotas'));

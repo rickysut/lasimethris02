@@ -56,4 +56,14 @@ class Commitmentbackdate extends Model
 	{
 		return $this->belongsTo(User::class);
 	}
+
+	public function pksmitra()
+	{
+		return $this->hasMany(PksMitra::class);
+	}
+
+	public function penangkarmitra()
+	{
+		return $this->hasMany(PenangkarMitra::class);
+	}
 }

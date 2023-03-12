@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\MasterKelompok::factory(5)->create();
         // \App\Models\MasterAnggota::factory(50)->create();
         // \App\Models\MasterPenangkar::factory(10)->create();
-        \App\Models\CommitmentBackdate::factory(1)->create();
+        // \App\Models\CommitmentBackdate::factory(1)->create();
         // \App\Models\V2Kelompoktani::factory(10)->create();
         // \App\Models\V2PoktanMember::factory(20)->create();
     }

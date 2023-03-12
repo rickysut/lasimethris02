@@ -226,7 +226,7 @@
 											title="Bagi hasil untuk Importir" readonly>
 									</div>
 									<small id="helpId" class="text-muted">
-										Bagi hasil untuk Pelaku Usaha dan Importir.
+										Bagi hasil untuk Poktan dan Pelaku Usaha.
 									</small>
 								</div>
 							</div>
@@ -243,7 +243,7 @@
 								class="btn btn-default btn-sm mr-1" role="button">
 								<i class="fa fa-times-circle text-danger"></i> Cancel
 							</a>
-							<button class="btn btn-danger btn-sm" type="submit">
+							<button class="btn btn-primary btn-sm" type="submit">
 								<i class="fa fa-save"></i> Update
 							</button>
 						</div>

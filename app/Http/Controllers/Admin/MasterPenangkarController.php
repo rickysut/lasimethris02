@@ -27,7 +27,7 @@ class MasterPenangkarController extends Controller
 			$penangkar->alamat = trim($penangkar->alamat);
 		}
 
-		return view('v2.penangkar.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'masterpenangkars'));
+		return view('v2.masterpenangkar.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'masterpenangkars'));
 	}
 
 	/**

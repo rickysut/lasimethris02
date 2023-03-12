@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \DateTimeInterface;
 
-class MasterPenangkar extends Model
+class PksMitra extends Model
 {
 	use HasFactory, SoftDeletes;
 
-	public $table = 'master_penangkars';
+	public $table = 'pks_mitras';
 
 	protected $dates = [
 		'created_at',
@@ -19,15 +19,21 @@ class MasterPenangkar extends Model
 		'deleted_at',
 	];
 
-	public $fillable = [
-		'nama_lembaga',
-		'alamat',
+	protected $fillable = [
+		'commitmentbackdate_id',
+		'master_kelompok_id',
+		'no_pks',
+		'tgl_mulai',
+		'tgl_akhir',
+		'luas_rencana',
+		'varietas',
+		'periode_tanam',
 		'provinsi_id',
 		'kabupaten_id',
 		'kecamatan_id',
-		'desa_id',
-		'nama_pimpinan',
-		'no_kontak',
+		'kelurahan_id',
+		'attachment',
+		'status',
 	];
 
 	protected function serializeDate(DateTimeInterface $date)
@@ -35,8 +41,8 @@ class MasterPenangkar extends Model
 		return $date->format('Y-m-d H:i:s');
 	}
 
-	public function penangkarmitra()
+	public function commitmentbackdate()
 	{
-		return $this->hasMany(PenangkarMitra::class);
+		return $this->belongsTo(CommitmentBackdate::class);
 	}
 }
