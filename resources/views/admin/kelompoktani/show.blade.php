@@ -126,7 +126,7 @@
             ajax: "{{ route('admin.task.kelompoktani.show', [$nomor]) }}",
             columns: [
                 { data: 'no_riph', name: 'no_riph', visible: false },
-                { data: 'id_kecamatan', name: 'id_kecamatan', visible: true },
+                { data: 'id_kecamatan', name: 'id_kecamatan', visible: true},
                 { data: 'nama_kelompok', name: 'nama_kelompok' , visible: true},
                 { data: 'nama_pimpinan', name: 'nama_pimpinan' , visible: true},
                 { data: 'hp_pimpinan', name: 'hp_pimpinan' , visible: true},

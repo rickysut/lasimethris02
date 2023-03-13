@@ -5,13 +5,18 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Pks;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\SimeviTrait;
+use App\Models\GroupTani;
 use Gate;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class PksController extends Controller
 {
+    use SimeviTrait;
     /**
      * Display a listing of the resource.
      *
@@ -115,11 +120,39 @@ class PksController extends Controller
      */
     public function create($no_riph, $poktan)
     {
+        $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
+
+        $nomor = Str::substr($no_riph, 0, 4) . '/' . Str::substr($no_riph, 4, 2) . '.' . Str::substr($no_riph, 6, 3) . '/' . 
+        Str::substr($no_riph, 9, 1) . '/' . Str::substr($no_riph, 10, 2) . '/' . Str::substr($no_riph, 12, 4);
+        
+        $query = 'select g.nama_kelompok, g.id_kecamatan, g.id_kelurahan , count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+            from poktans p, group_tanis g
+            where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan and g.no_riph= "' .$nomor . '" and g.id_poktan = "' . $poktan . '"
+            GROUP BY g.nama_kelompok';
+
+            
+        $poktans = DB::select(DB::raw($query));
+        // dd($poktans);
+        foreach ($poktans as $poktan){
+            $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+            $datakecamatan = $this->getAPIKecamatan($access_token, $poktan->id_kecamatan);
+            if($datakecamatan['data'][0]){
+                $kec = $datakecamatan['data'][0]['nm_kec'];
+                $poktan->kecamatan = $kec;
+            }
+            $datakelurahan = $this->getAPIDesa($access_token, $poktan->id_kelurahan);
+            if($datakelurahan['data'][0]){
+                $desa = $datakelurahan['data'][0]['nm_desa'];
+                $poktan->kelurahan = $desa;
+            }
+        }
+
+        // dd($poktans);
         $module_name = 'Proses RIPH' ;
         $page_title = 'Kelompok Tani';
         $page_heading = 'Buat PKS ' ;
         $heading_class = 'fal fa-ballot-check';
-        return view('admin.pks.create', compact('module_name', 'page_title', 'page_heading', 'heading_class'));
+        return view('admin.pks.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'poktans'));
     }
 
     /**

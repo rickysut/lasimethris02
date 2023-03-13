@@ -214,7 +214,6 @@
         $('#kecamatan').on('change', function() {
             var kec_id =$(this).val();
             var token = "{{ $access_token }}";
-            console
             $.ajax({
                 type: 'get',
                 url: '/api/getAPIDesaKec',

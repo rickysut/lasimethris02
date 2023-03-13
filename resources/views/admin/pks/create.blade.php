@@ -18,44 +18,46 @@
                 </div>
                 <div class="panel-container show">
                     <div class="panel-content">
+                        @foreach ($poktans as $info)
                         <ul class="list-group mb-3">
                             <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     <span class="text-muted">Kelompoktani Mitra</span>
-                                    <h6 class="fw-500 my-0">API Nama Kelompoktani</h6>
+                                    <h6 class="fw-500 my-0">{{ $info->nama_kelompok }}</h6>
                                 </div>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     <span class="text-muted">Kecamatan</span>
-                                    <h6 class="fw-500 my-0">API Kecamatan</h6>
+                                    <h6 class="fw-500 my-0">{{ $info->kecamatan }}</h6>
                                 </div>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     <span class="text-muted">Desa/Kel</span>
-                                    <h6 class="fw-500 my-0">API Desa</h6>
+                                    <h6 class="fw-500 my-0">{{ $info->kelurahan }}</h6>
                                 </div>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     <span class="text-muted">Jumlah Anggota</span>
-                                    <h6 class="fw-500 my-0">API</h6>
+                                    <h6 class="fw-500 my-0">{{ $info->jum_petani }}</h6>
                                 </div>
                             </li>
                             <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     <span class="text-muted">Luas Garapan</span>
-                                    <h6 class="fw-500 my-0">API <sup>ha</sup></h6>
+                                    <h6 class="fw-500 my-0">{{ $info->luas }} ha</h6>
                                 </div>
                             </li>
-                            <li class="list-group-item d-flex justify-content-between">
+                            {{-- <li class="list-group-item d-flex justify-content-between">
                                 <div>
                                     <span class="text-muted">Periode Tanam</span>
                                     <h6 class="fw-500 my-0">API</h6>
                                 </div>
-                            </li>
+                            </li> --}}
                         </ul>
+                        @endforeach
                     </div>
                 </div>
             </div>

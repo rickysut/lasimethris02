@@ -13,6 +13,8 @@ Route::group(['namespace' => 'Api'], function () {
     //Kecamatan
     Route::get('getAPIKecamatanAll', 'HelperController@getAPIKecamatanAll');
     Route::get('getAPIKecamatanKab', 'HelperController@getAPIKecamatanKab');
+    Route::get('getAPIKecamatan', 'HelperController@getAPIKecamatan');
+
     //Desa
     Route::get('getAPIDesaAll', 'HelperController@getAPIDesaAll');
     Route::get('getAPIDesaKec', 'HelperController@getAPIDesaKec');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Poktan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\SimeviTrait;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -19,131 +20,11 @@ use Illuminate\Support\Facades\DB;
 class KelompoktaniController extends Controller
 {
     private $access_token;
-    private $provinsis;
-    private $kecamatans;
-    private $kabupatens;
-    private $desas;
+    
+    use SimeviTrait;
+
 
     
-    
-    protected function getAPIAccessToken($username, $pass){
-        $response = Http::asForm()->post(config('app.simevi_url').'getToken', [
-            'username' => $username,
-            'password' => $pass
-        ]);
-
-        $access_token = $response->json('access_token');
-        return $access_token;
-    }
-
-    protected function getAPIProvinsi($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'provinsis');
-
-        
-        return $response->json();
-    }
-
-    protected function getAPIKabupaten($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatens');
-
-        
-        return $response->json();
-    }
-
-
-    protected function getAPIKecamatan($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatans');
-
-        
-        return $response->json();
-    }
-
-
-    protected function getAPIDesa($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desas');
-
-        
-        return $response->json();
-    }
-
-    protected function searchProp($json , $str){
-        
-        foreach ($json['data'] as $item) {
-                      
-            if ($item['kd_prop'] == $str) {
-                return $item['nm_prop'];
-            }
-        }
-    }
-
-    protected function searchKab($json , $str){
-        foreach ($json['data'] as $item) {
-            if ($item['kd_kab'] == $str) {
-                return $item['nama_kab'];
-            }
-        }
-    }
-
-    protected function searchKec($json , $str){
-        foreach ($json['data'] as $item) {
-            if ($item['kd_kec'] == $str) {
-                return $item['nm_kec'];
-            }
-        }
-    }
-
-    protected function searchDesa($json , $str){
-        foreach ($json['data'] as $item) {
-            if ($item['kd_desa'] == $str) {
-                return $item['nm_desa'];
-            }
-        }
-    }
-
-    public function getAPIKabupatenProp($token, $provinsi){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatenwithprop/'.$provinsi);
-
-        
-        return $response->json();
-    }
-
-    public function getAPIKecamatanKab($token, $kabupaten){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatanwithkab/'.$kabupaten);
-
-        
-        return $response->json();
-    }
-
-    public function getAPIDesaKec($token, $kecamatan){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desawithkec/'.$kecamatan);
-
-        
-        return $response->json();
-    }
-
-    public function __construct()
-    {
-        // $this->access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
-        // $this->provinsis = $this->getAPIProvinsi($this->access_token);
-        // $this->kabupatens = $this->getAPIKabupaten($this->access_token);
-        // $this->kecamatans = $this->getAPIKecamatan($this->access_token);
-        // $this->desas = $this->getAPIDesa($this->access_token);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -182,6 +63,11 @@ class KelompoktaniController extends Controller
             });
             
             $table->editColumn('id_kecamatan', function ($row) {
+                $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+                $datakecamatan = $this->getAPIKecamatan($access_token, $row->id_kecamatan);
+                if($datakecamatan['data'][0]){
+                    return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
+                } 
                 return $row->id_kecamatan ? $row->id_kecamatan : '';
             });
             
@@ -306,9 +192,7 @@ class KelompoktaniController extends Controller
         abort_if(Gate::denies('poktan_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-
             $realno = Str::substr($nomor, 0, 4) . '/' . Str::substr($nomor, 4, 2) . '.' . Str::substr($nomor, 6, 3) . '/' . Str::substr($nomor, 9, 1) . '/' . Str::substr($nomor, 10, 2) . '/' . Str::substr($nomor, 12, 4);
-
             $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
 
             $query = 'select g.no_riph, g.id_kecamatan, g.nama_kelompok, g.nama_pimpinan, g.hp_pimpinan, g.id_poktan, count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
@@ -344,6 +228,11 @@ class KelompoktaniController extends Controller
             });
             
             $table->editColumn('id_kecamatan', function ($row) {
+                $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+                $datakecamatan = $this->getAPIKecamatan($access_token, $row->id_kecamatan);
+                if($datakecamatan['data'][0]){
+                    return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
+                } 
                 return $row->id_kecamatan ? $row->id_kecamatan : '';
             });
             
@@ -381,7 +270,8 @@ class KelompoktaniController extends Controller
         $page_heading = 'Summary Kelompok Tani' ;
         $heading_class = 'fal fa-user-alt';
         
-        return view('admin.kelompoktani.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'nomor', 'realno'));
+        
+        return view('admin.kelompoktani.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'nomor', 'realno' ));
     }
 
     public function showtani(Request $request, $nomor)
