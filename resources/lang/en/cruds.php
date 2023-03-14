@@ -121,7 +121,7 @@ return [
         'can_access'     => '1', 
         'can_create'     => '0',
     ],
-    'permistionon' => [
+    'permission' => [
         'title'          => 'Permission',
         'title_lang'     => 'Permission',
         'is_parent'      => '0',

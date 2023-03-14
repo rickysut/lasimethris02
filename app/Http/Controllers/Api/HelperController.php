@@ -60,6 +60,14 @@ class HelperController extends Controller
         return $response->json();
     }
 
+    public function getAPIKecamatan(Request $request){
+        $response = Http::withToken($request->token)->withHeaders([
+            'Accept' => 'application/json'
+        ])->get(config('app.simevi_url').'kecamatans/'. $request->kecamatan);
+
+        return $response->json();
+    }
+
     public function getAPIKecamatanKab(Request $request){
         $response = Http::withToken($request->token)->withHeaders([
             'Accept' => 'application/json'
