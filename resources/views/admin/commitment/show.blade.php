@@ -279,7 +279,7 @@
                                         <td>{{ $poktan->nama_pimpinan }}</td>
                                         <td>{{ $poktan->hp_pimpinan }}</td>
                                         <td style="text-align: center;">{{ $poktan->jum_petani }}</td>
-                                        <td>{{ $poktan->id_kecamatan }}</td>
+                                        <td>{{ $poktan->kecamatan }}</td>
                                         <td style="text-align: center;">{{ $poktan->luas }}</td>
                                         
                                     </tr>    

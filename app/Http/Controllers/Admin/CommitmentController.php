@@ -237,9 +237,9 @@ class CommitmentController extends Controller
             $pullData = null;
         
 
-        //$access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+        $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
 
-        //Log::info($pullData);
+        
         $data_poktan = [];
         $poktans = null;
         if ($pullData){
@@ -252,7 +252,11 @@ class CommitmentController extends Controller
 
             $poktans = DB::select(DB::raw($query));
             
-            // dd ($poktans);
+            foreach($poktans as $poktan){
+                $datakecamatan = $this->getAPIKecamatan($access_token, $poktan->id_kecamatan);
+                $kec = $datakecamatan['data'][0]['nm_kec'];
+                $poktan->kecamatan = $kec ;
+            }
             
         }
         $module_name = 'Proses RIPH' ;
