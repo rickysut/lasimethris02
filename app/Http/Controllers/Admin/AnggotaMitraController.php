@@ -9,6 +9,7 @@ use App\Models\MasterAnggota;
 use App\Models\Commitmentbackdate;
 use App\Models\PksMitra;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\Switch_;
 
 class AnggotaMitraController extends Controller
@@ -135,8 +136,19 @@ class AnggotaMitraController extends Controller
 				break;
 
 			case 'form3':
-				$anggotamitra->tanam_doc = $request->input('tanam_doc');
-				$anggotamitra->tanam_pict = $request->input('tanam_pict');
+				if ($request->hasFile('tanam_doc')) {
+					$attch = $request->file('tanam_doc');
+					$attchname = 'tanam_doc' . $anggotamitra->id . '_' . $anggotamitra->master_kelompok_id . '_' . $anggotamitra->pks_mitra_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+					Storage::disk('public')->putFileAs('docs/pks/anggota/tanam/docs', $attch, $attchname);
+					$anggotamitra->tanam_doc = $attchname;
+				}
+
+				if ($request->hasFile('tanam_pict')) {
+					$attch = $request->file('tanam_pict');
+					$attchname = 'tanam_pict' . $anggotamitra->id . '_' . $anggotamitra->master_kelompok_id . '_' . $anggotamitra->pks_mitra_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+					Storage::disk('public')->putFileAs('docs/pks/anggota/tanam/img', $attch, $attchname);
+					$anggotamitra->tanam_pict = $attchname;
+				}
 				break;
 
 			case 'form4':
@@ -145,8 +157,19 @@ class AnggotaMitraController extends Controller
 				break;
 
 			case 'form5':
-				$anggotamitra->panen_doc = $request->input('panen_doc');
-				$anggotamitra->panen_pict = $request->input('panen_pict');
+				if ($request->hasFile('panen_doc')) {
+					$attch = $request->file('panen_doc');
+					$attchname = 'panen_doc' . $anggotamitra->id . '_' . $anggotamitra->master_kelompok_id . '_' . $anggotamitra->pks_mitra_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+					Storage::disk('public')->putFileAs('docs/pks/anggota/panen/docs', $attch, $attchname);
+					$anggotamitra->panen_doc = $attchname;
+				}
+
+				if ($request->hasFile('panen_pict')) {
+					$attch = $request->file('panen_pict');
+					$attchname = 'panen_pict' . $anggotamitra->id . '_' . $anggotamitra->master_kelompok_id . '_' . $anggotamitra->pks_mitra_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+					Storage::disk('public')->putFileAs('docs/pks/anggota/panen/img', $attch, $attchname);
+					$anggotamitra->panen_pict = $attchname;
+				}
 				break;
 
 				//this line will execute by admin/verifikator only

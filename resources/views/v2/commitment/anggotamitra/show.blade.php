@@ -203,13 +203,22 @@
 							</div>
 							<div>
 								<label class="form-label" for="tgl_prod">Dokumentasi Tanam</label>
-								<div id="js-galleryTanam">
-									<a class="" href="{{asset('img/demo/gallery/16.jpg')}}" data-sub-html="nama berkas">
-										<img class="img-responsive" src="{{asset('img/demo/gallery/thumb/16.jpg')}}" alt="nama berkas">
-									</a>
-									<a class="" href="{{asset('img/demo/gallery/16.jpg')}}" data-sub-html="nama berkas">
-										<img class="img-responsive" src="{{asset('img/demo/gallery/thumb/28.jpg')}}" alt="nama berkas">
-									</a>
+								<div class="d-flex align-items-center flex-row">
+									<a href="{{ url('storage/docs/pks/anggota/tanam/docs/' . $anggotamitras->tanam_doc) }}"
+										data-sub-html="{{$anggotamitras->tanam_doc}}" title="{{$anggotamitras->tanam_doc}}"
+										target="_blank">
+										<div class="d-flex align-items-center">
+										   <i class="far fa-file-alt fa-5x mr-3"></i>
+										</div>
+									 </a>
+									<div id="js-galleryTanam">
+										<a href="{{ url('storage/docs/pks/anggota/tanam/img/' . $anggotamitras->tanam_pict) }}"
+											data-sub-html="{{$anggotamitras->tanam_pict}}" title="{{$anggotamitras->tanam_pict}}">
+											<img class="img-responsive"
+											src="{{ url('storage/docs/pks/anggota/tanam/img/' . $anggotamitras->tanam_pict) }}"
+											alt="{{$anggotamitras->tanam_pict}}">
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -219,7 +228,6 @@
 									class="btn btn-sm btn-info" role="button">
 									<i class="fa fa-door-open mr-1"></i>Kembali
 								</a>
-								@include('components.save', ['buttonText' => 'Click me'])
 								<button class="btn btn-sm btn-primary" role="button" type="submit">
 									<i class="fa fa-save mr-1"></i>Simpan
 								</button>
@@ -280,13 +288,22 @@
 							</div>
 							<div>
 								<label class="form-label" for="tgl_prod">Dokumentasi Produksi</label>
-								<div id="js-galleryProduksi">
-									<a class="" href="{{asset('img/demo/gallery/16.jpg')}}" data-sub-html="nama berkas">
-										<img class="img-responsive" src="{{asset('img/demo/gallery/thumb/16.jpg')}}" alt="nama berkas">
+								<div class="d-flex align-items-center flex-row">
+									<a href="{{ url('storage/docs/pks/anggota/panen/docs/' . $anggotamitras->panen_doc) }}"
+										data-sub-html="{{$anggotamitras->panen_doc}}" title="{{$anggotamitras->panen_doc}}"
+										target="_blank">
+										<div class="d-flex align-items-center">
+										<i class="far fa-file-alt fa-5x mr-3"></i>
+										</div>
 									</a>
-									<a class="" href="{{asset('img/demo/gallery/16.jpg')}}" data-sub-html="nama berkas">
-										<img class="img-responsive" src="{{asset('img/demo/gallery/thumb/28.jpg')}}" alt="nama berkas">
-									</a>
+									<div id="js-galleryProduksi">
+										<a href="{{ url('storage/docs/pks/anggota/panen/img/' . $anggotamitras->panen_pict) }}"
+											data-sub-html="{{$anggotamitras->panen_pict}}" title="{{$anggotamitras->panen_pict}}">
+											<img class="img-responsive"
+											src="{{ url('storage/docs/pks/anggota/panen/img/' . $anggotamitras->panen_pict) }}"
+											alt="{{$anggotamitras->panen_pict}}">
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -341,7 +358,6 @@
 							<label class="form-label">Dokumen Pendukung</label>
 							<div class="custom-file input-group">
 								<input type="file" class="custom-file-input" id="customControlValidation7"
-									value="{{ old('tanam_doc', $anggotamitras->tanam_doc) }}"
 									name="tanam_doc" id="tanam_doc">
 								<label class="custom-file-label" for="customControlValidation7">Choose file...</label>
 							</div>
@@ -351,7 +367,6 @@
 							<label class="form-label">Dokumentasi Tanam</label>
 							<div class="custom-file input-group">
 								<input type="file" class="custom-file-input" id="customControlValidation7"
-									value="{{ old('tanam_pict', $anggotamitras->tanam_pict) }}"
 									name="tanam_pict" id="tanam_pict">
 								<label class="custom-file-label" for="customControlValidation7">Choose file...</label>
 							</div>
@@ -415,7 +430,7 @@
 									name="panen_pict" id="panen_pict">
 								<label class="custom-file-label" for="customControlValidation7">Choose file...</label>
 							</div>
-							<span class="help-block">Unggah Dokumentasi Tanam. Ekstensi jpg ukuran maks 4mb.</span>
+							<span class="help-block">Unggah Dokumentasi Panen. Ekstensi jpg ukuran maks 4mb.</span>
 						</div>
 					</div>
 					<div class="modal-footer">

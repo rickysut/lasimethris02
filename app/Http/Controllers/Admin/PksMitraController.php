@@ -47,19 +47,23 @@ class PksMitraController extends Controller
 		$pksmitra->commitmentbackdate_id = $request->input('commitmentbackdate_id');
 		$pksmitra->master_kelompok_id = $request->input('master_kelompok_id');
 		$pksmitra->no_ijin = $request->input('no_ijin');
-		$pksmitra->no_pks = $request->input('no_pks');
-		$pksmitra->tgl_mulai = $request->input('tgl_mulai');
-		$pksmitra->tgl_akhir = $request->input('tgl_akhir');
+		$pksmitra->no_perjanjian = $request->input('no_perjanjian');
+		$pksmitra->tgl_perjanjian_start = $request->input('tgl_perjanjian_start');
+		$pksmitra->tgl_perjanjian_end = $request->input('tgl_akhitgl_perjanjian_endr');
 		$pksmitra->luas_rencana = $request->input('luas_rencana');
-		$pksmitra->varietas = $request->input('varietas');
+		$pksmitra->varietas_tanam = $request->input('varietas_tanam');
 		$pksmitra->periode_tanam = $request->input('periode_tanam');
-		$pksmitra->attachment = $request->input('attachment');
+		$pksmitra->provinsi_id = $request->input('provinsi_id');
+		$pksmitra->kabupaten_id = $request->input('kabupaten_id');
+		$pksmitra->kecamatan_id = $request->input('kecamatan_id');
+		$pksmitra->kelurahan_id = $request->input('kelurahan_id');
+		$pksmitra->berkas_pks = $request->input('berkas_pks');
 
-		if ($request->hasFile('attachment')) {
-			$attch = $request->file('attachment');
-			$attchname = 'riph' . $pksmitra->commitmentbackdate_id . '_' . 'pks' . $pksmitra->id . '_' . 'poktan' . $pksmitra->master_kelompok_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+		if ($request->hasFile('berkas_pks')) {
+			$attch = $request->file('berkas_pks');
+			$attchname = 'pks' . $pksmitra->id . '_' . 'riph' . $pksmitra->commitmentbackdate_id . '_' . 'poktan' . $pksmitra->master_kelompok_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
 			Storage::disk('public')->putFileAs('docs/pks', $attch, $attchname);
-			$pksmitra->attachment = $attchname;
+			$pksmitra->berkas_pks = $attchname;
 		}
 
 		// dd($pksmitra);
@@ -159,24 +163,28 @@ class PksMitraController extends Controller
 		$pksmitra->commitmentbackdate_id = $request->input('commitmentbackdate_id');
 		$pksmitra->master_kelompok_id = $request->input('master_kelompok_id');
 		$pksmitra->no_ijin = $request->input('no_ijin');
-		$pksmitra->no_pks = $request->input('no_pks');
-		$pksmitra->tgl_mulai = $request->input('tgl_mulai');
-		$pksmitra->tgl_akhir = $request->input('tgl_akhir');
+		$pksmitra->no_perjanjian = $request->input('no_perjanjian');
+		$pksmitra->tgl_perjanjian_start = $request->input('tgl_perjanjian_start');
+		$pksmitra->tgl_perjanjian_end = $request->input('tgl_perjanjian_end');
 		$pksmitra->luas_rencana = $request->input('luas_rencana');
-		$pksmitra->varietas = $request->input('varietas');
+		$pksmitra->varietas_tanam = $request->input('varietas_tanam');
 		$pksmitra->periode_tanam = $request->input('periode_tanam');
-		$pksmitra->attachment = $request->input('attachment');
+		$pksmitra->provinsi_id = $request->input('provinsi_id');
+		$pksmitra->kabupaten_id = $request->input('kabupaten_id');
+		$pksmitra->kecamatan_id = $request->input('kecamatan_id');
+		$pksmitra->kelurahan_id = $request->input('kelurahan_id');
+		$pksmitra->berkas_pks = $request->input('berkas_pks');
 
-		if ($request->hasFile('attachment')) {
-			$attch = $request->file('attachment');
-			$attchname = 'riph' . $pksmitra->commitmentbackdate_id . '_' . 'pks' . $pksmitra->id . '_' . 'poktan' . $pksmitra->master_kelompok_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+		if ($request->hasFile('berkas_pks')) {
+			$attch = $request->file('berkas_pks');
+			$attchname = 'pks' . $pksmitra->id . '_' . 'riph' . $pksmitra->commitmentbackdate_id . '_' . 'poktan' . $pksmitra->master_kelompok_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
 			Storage::disk('public')->putFileAs('docs/pks', $attch, $attchname);
-			$pksmitra->attachment = $attchname;
+			$pksmitra->berkas_pks = $attchname;
 		}
 
 		// dd($pksmitra);
 		$pksmitra->save();
-		return redirect()->route('admin.task.commitments.show', $pksmitra->commitmentbackdate_id)->with('success', 'Data Perjanjian Kerjasama saved successfully');
+		return redirect()->route('admin.task.pksmitra.edit', $pksmitra->commitmentbackdate_id)->with('success', 'Data Perjanjian Kerjasama saved successfully');
 	}
 
 	/**

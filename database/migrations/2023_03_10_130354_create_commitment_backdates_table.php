@@ -14,24 +14,24 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('commitment_backdates', function (Blueprint $table) {
-			$table->id();
+			$table->bigIncrements('id');
 			$table->unsignedBigInteger('user_id');
 			$table->string('npwp')->nullable();
 			$table->string('no_ijin')->unique()->nullable();
-			$table->string('periodetahun')->nullable();
-			$table->string('tgl_ijin')->nullable();
-			$table->string('tgl_akhir')->nullable();
+			$table->integer('periodetahun')->nullable();
+			$table->date('tgl_ijin')->nullable();
+			$table->date('tgl_akhir')->nullable();
 			$table->string('no_hs')->nullable();
-			$table->string('volume_riph')->nullable();
-			$table->string('stok_mandiri')->nullable();
-			$table->string('organik')->nullable();
-			$table->string('npk')->nullable();
-			$table->string('dolomit')->nullable();
-			$table->string('za')->nullable();
-			$table->string('mulsa')->nullable();
-			$table->string('poktan_share')->nullable();
-			$table->string('importir_share')->nullable();
-			$table->string('status')->nullable(); //null = un-accomplished, 1 = accomplished/lunas
+			$table->double('volume_riph', 8, 2)->nullable();
+			$table->double('stok_mandiri', 8, 2)->nullable();
+			$table->double('organik', 8, 2)->nullable();
+			$table->double('npk', 8, 2)->nullable();
+			$table->double('dolomit', 8, 2)->nullable();
+			$table->double('za', 8, 2)->nullable();
+			$table->double('mulsa', 8, 2)->nullable();
+			$table->integer('poktan_share')->nullable();
+			$table->integer('importir_share')->nullable();
+			$table->integer('status')->nullable(); //null = un-accomplished, 1 = accomplished/lunas
 			$table->string('formRiph')->nullable();
 			$table->string('formSptjm')->nullable();
 			$table->string('logbook')->nullable();

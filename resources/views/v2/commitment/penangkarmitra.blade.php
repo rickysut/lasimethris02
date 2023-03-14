@@ -77,7 +77,7 @@
 															value="{{$commitment->id}}" hidden>
 														<input type="text" name="no_ijin" id="no_ijin"
 															class="form-control " placeholder="" aria-describedby="helpId"
-															value="{{$commitment->no_ijin}}">
+															value="{{$commitment->no_ijin}}" hidden>
 														<div class="form-group">
 															<label for=""></label>
 															<select class="form-control custom-select selecteditpenangkar" name="penangkar_id" id="penangkar_id">
@@ -156,7 +156,7 @@
 							value="{{$commitment->id}}" hidden>
 						<input type="text" name="no_ijin" id="no_ijin"
 							class="form-control " placeholder="" aria-describedby="helpId"
-							value="{{$commitment->no_ijin}}">
+							value="{{$commitment->no_ijin}}" hidden>
 						<div class="form-group">
 							<label for=""></label>
 							<select class="form-control custom-select selectpenangkar"

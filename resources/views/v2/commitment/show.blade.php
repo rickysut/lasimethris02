@@ -97,7 +97,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="panel" id="panel-1">
+			<div class="panel" id="panel-2">
 				<div class="panel-hdr">
 					<h2>
 						Data <span class="fw-300"><i>Basic</i></span>
@@ -127,7 +127,7 @@
 								</div>
 								<div>
 									<span class="text-muted">Tanggal Terbit</span>
-									<h6 class="fw-500 my-0">{{ date('d/m/Y', strtotime($commitment->tgl_akhir)) }}</h6>
+									<h6 class="fw-500 my-0">{{ date('d/m/Y', strtotime($commitment->tgl_end)) }}</h6>
 								</div>
 							</li>
 							<li class="list-group-item d-flex justify-content-between">
@@ -291,7 +291,7 @@
 							<tbody>
 								@foreach ($pksmitras as $pksmitra)
 								<tr>
-									<td>{{$pksmitra->no_pks}}</td>
+									<td>{{$pksmitra->no_perjanjian}}</td>
 									<td>{{$pksmitra->masterkelompok->nama_kelompok}}</td>
 									<td>
 										<div class="row">

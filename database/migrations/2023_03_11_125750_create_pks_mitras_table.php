@@ -14,22 +14,23 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('pks_mitras', function (Blueprint $table) {
-			$table->id();
+			$table->bigIncrements('id');
 			$table->unsignedBigInteger('commitmentbackdate_id');
 			$table->bigInteger('master_kelompok_id')->nullable();
 			$table->string('no_ijin')->nullable();
-			$table->string('no_pks')->nullable();
-			$table->string('tgl_mulai')->nullable();
-			$table->string('tgl_akhir')->nullable();
-			$table->string('luas_rencana')->nullable();
-			$table->string('varietas')->nullable();
+			$table->string('no_perjanjian')->nullable();
+			$table->date('tgl_perjanjian_start')->nullable();
+			$table->date('tgl_perjanjian_end')->nullable();
+			$table->integer('jumlah_anggota')->nullable();
+			$table->integer('luas_rencana')->nullable();
+			$table->string('varietas_tanam')->nullable();
 			$table->string('periode_tanam')->nullable();
 			$table->string('provinsi_id')->nullable();
 			$table->string('kabupaten_id')->nullable();
 			$table->string('kecamatan_id')->nullable();
 			$table->string('kelurahan_id')->nullable();
-			$table->string('attachment')->nullable();
-			$table->string('status')->nullable();
+			$table->string('berkas_pks')->nullable();
+			$table->integer('status')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 

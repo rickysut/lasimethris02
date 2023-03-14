@@ -34,7 +34,7 @@
 								<td>{{$commitment->no_ijin}}</td>
 								<td>{{$commitment->periodetahun}}</td>
 								<td>{{$commitment->tgl_ijin}}</td>
-								<td>{{$commitment->tgl_akhir}}</td>
+								<td>{{$commitment->tgl_end}}</td>
 								<td>{{ number_format($commitment->volume_riph, 2, ',','.') }} ton</td>
 								<td>
 									<div class="row">
@@ -63,7 +63,7 @@
 									</a>
 									<a href="{{ route('admin.task.commitments.penangkar', $commitment->id) }}"
 										class="btn btn-icon btn-xs btn-success"
-										title="Laporan Realisasi Komitmen">
+										title="Data Penangkar Mitra">
 										<i class="fal fa-seedling"></i>
 									</a>
 									<a href="{{ route('admin.task.commitments.edit', $commitment->id) }}"

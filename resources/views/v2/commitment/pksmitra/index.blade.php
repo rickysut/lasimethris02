@@ -28,15 +28,15 @@
 								<th>No Perjanjian</th>
 								<th>Poktan Mitra</th>
 								<th>Masa berlaku</th>
-								<th>Rencana</th>
+								<th>Luas Kerjasama</th>
 								<th>Tindakan</th>
 							</thead>
 							<tbody>
 								@foreach ($pksmitras as $pksmitra)
 								<tr>
-									<td> {{$pksmitra->no_pks}} </td>
+									<td> {{$pksmitra->no_perjanjian}} </td>
 									<td> {{$pksmitra->masterkelompok->nama_kelompok}} </td>
-									<td> {{$pksmitra->tgl_mulai}} s.d {{$pksmitra->tgl_akhir}} </td>
+									<td> {{$pksmitra->tgl_perjanjian_start}} s.d {{$pksmitra->tgl_perjanjian_end}} </td>
 									<td>
 										<div class="row col">
 											<div class="col-2">
@@ -99,12 +99,12 @@
 															value="{{$commitment->id}}" hidden>
 														<input type="text" name="no_ijin" id="no_ijin"
 															class="form-control " placeholder="" aria-describedby="helpId"
-															value="{{$commitment->no_ijin}}">
+															value="{{$commitment->no_ijin}}" hidden>
 														<div class="form-group">
 															<label for="">Nomor PKS</label>
-															<input type="text" name="no_pks" id="no_pks"
+															<input type="text" name="no_perjanjian" id="no_perjanjian"
 																class="form-control " placeholder="misal: 001/PKS/PTABC/V/2022"
-																value="{{ old('no_pks', $pksmitra->no_pks) }}"
+																value="{{ old('no_perjanjian', $pksmitra->no_perjanjian) }}"
 																aria-describedby="helpId">
 															<small id="helpId" class="text-muted">Nomor Perjanjian Kerjasama dengan Poktan Mitra</small>
 														</div>
@@ -128,16 +128,16 @@
 														<div class="row d-flex">
 															<div class="form-group col-md-6">
 																<label for="">Tanggal Perjanjian</label>
-																<input type="date" name="tgl_mulai" id="tanggal_mulai"
-																	value="{{ old('tgl_mulai', $pksmitra->tgl_mulai) }}"
+																<input type="date" name="tgl_perjanjian_start" id="tgl_perjanjian_start"
+																	value="{{ old('tgl_perjanjian_start', $pksmitra->tgl_perjanjian_start) }}"
 																	class="form-control " placeholder="tanggal mulai perjanjian"
 																	aria-describedby="helpId">
 																<small id="helpId" class="text-muted">Tanggal mulai berlaku perjanjian</small>
 															</div>
 															<div class="form-group col-md-6">
 																<label for="">Tanggal Akhir</label>
-																<input type="date" name="tgl_akhir" id="tgl_akhir"
-																	value="{{ old('tgl_akhir', $pksmitra->tgl_akhir) }}"
+																<input type="date" name="tgl_perjanjian_end" id="tgl_perjanjian_end"
+																	value="{{ old('tgl_perjanjian_end', $pksmitra->tgl_perjanjian_end) }}"
 																	class="form-control " placeholder="tanggal akhir perjanjian"
 																	aria-describedby="helpId">
 																<small id="helpId" class="text-muted">Tanggal berakhirnya perjanjian kerjasama</small>
@@ -154,9 +154,9 @@
 															</div>
 															<div class="form-group col-md-4">
 																<label for="">Varietas</label>
-																<input type="text" name="varietas" id="varietas"
+																<input type="text" name="varietas_tanam" id="varietas_tanam"
 																	class="form-control " placeholder="varietas yang akan ditanam"
-																	value="{{ old('varietas', $pksmitra->varietas) }}"
+																	value="{{ old('varietas_tanam', $pksmitra->varietas_tanam) }}"
 																	aria-describedby="helpId">
 																{{-- <small id="helpId" class="text-muted">Varietas yang akan ditanam di lahan kerjasama.</small> --}}
 															</div>
@@ -168,12 +168,40 @@
 																	aria-describedby="helpId">
 																{{-- <small id="helpId" class="text-muted">Jadwal Periode pelaksanaan penanaman.</small> --}}
 															</div>
+															<div class="form-group col-md-4">
+																<label for="provinsi_id">Provinsi</label>
+																<select class="form-control custom-select selecteditprov"
+																	name="provinsi_id" id="provinsi_id">
+																	<option value=""></option>
+																</select>
+															</div>
+															<div class="form-group col-md-4">
+																<label for="kabupaten_id">Kabupaten</label>
+																<select class="form-control custom-select selecteditkab"
+																	name="kabupaten_id" id="kabupaten_id">
+																	<option value=""></option>
+																</select>
+															</div>
+															<div class="form-group col-md-4">
+																<label for="kecamatan_id">Kecamatan</label>
+																<select class="form-control custom-select selecteditkab"
+																	name="kecamatan_id" id="kecamatan_id">
+																	<option value=""></option>
+																</select>
+															</div>
+															<div class="form-group col-md-4">
+																<label for="kelurahan_id">Desa/kelurahan</label>
+																<select class="form-control custom-select selecteditkab"
+																	name="kelurahan_id" id="kelurahan_id">
+																	<option value=""></option>
+																</select>
+															</div>
 														</div>
 														<div class="form-group">
-															<label for="">Salinan Perjanjian Kerjasama</label>
-															<input type="file" name="attachment" id="attachment"
+															<label for="berkas_pks">Salinan Perjanjian Kerjasama</label>
+															<input type="file" name="berkas_pks" id="berkas_pks"
 																class="form-control " placeholder="unggah lampiran"
-																value="{{ old('attachment', $pksmitra->attachment) }}"
+																value="{{ old('berkas_pks', $pksmitra->berkas_pks) }}"
 																aria-describedby="helpId">
 															{{-- <small id="helpId" class="text-muted">Unggah hasil pindai Salinan Perjanjian Kerjasama. Berkas dalam bentuk PDF. Ukuran maks 4 megabytes (mb). </small> --}}
 														</div>
@@ -223,10 +251,10 @@
 						value="{{$commitment->id}}" hidden>
 					<input type="text" name="no_ijin" id="no_ijin"
 						class="form-control " placeholder="" aria-describedby="helpId"
-						value="{{$commitment->no_ijin}}">
+						value="{{$commitment->no_ijin}}" hidden>
 					<div class="form-group">
 						<label for="">Nomor PKS</label>
-						<input type="text" name="no_pks" id="no_pks"
+						<input type="text" name="no_perjanjian" id="no_perjanjian"
 							class="form-control " placeholder="misal: 001/PKS/PTABC/V/2022"
 							aria-describedby="helpId" required>
 						<small id="helpId" class="text-muted">Nomor Perjanjian Kerjasama dengan Poktan Mitra</small>
@@ -246,15 +274,15 @@
 					</div>
 					<div class="row d-flex">
 						<div class="form-group col-md-6">
-							<label for="">Tanggal Perjanjian</label>
-							<input type="date" name="tgl_mulai" id="tanggal_mulai"
+							<label for="tgl_perjanjian_start">Tanggal Perjanjian</label>
+							<input type="date" name="tgl_perjanjian_start" id="tgl_perjanjian_start"
 								class="form-control " placeholder="tanggal mulai perjanjian"
 								aria-describedby="helpId">
 							<small id="helpId" class="text-muted">Tanggal mulai berlaku perjanjian.</small>
 						</div>
 						<div class="form-group col-md-6">
-							<label for="">Tanggal Akhir</label>
-							<input type="date" name="tgl_akhir" id="tgl_akhir"
+							<label for="tgl_perjanjian_end">Tanggal Akhir</label>
+							<input type="date" name="tgl_perjanjian_end" id="tgl_perjanjian_end"
 								class="form-control " placeholder="tanggal akhir perjanjian"
 								aria-describedby="helpId">
 							<small id="helpId" class="text-muted">Tanggal berakhirnya perjanjian.</small>
@@ -269,8 +297,8 @@
 							{{-- <small id="helpId" class="text-muted">Luas rencana tanam yang dikerjasamakan. Dalam satuan hektar(ha)</small> --}}
 						</div>
 						<div class="form-group col-md-4">
-							<label for="">Varietas</label>
-							<input type="text" name="varietas" id="varietas"
+							<label for="varietas_tanam">Varietas</label>
+							<input type="text" name="varietas_tanam" id="varietas_tanam"
 								class="form-control " placeholder="varietas yang akan ditanam"
 								aria-describedby="helpId">
 							{{-- <small id="helpId" class="text-muted">Varietas yang akan ditanam di lahan kerjasama.</small> --}}
@@ -282,10 +310,38 @@
 								aria-describedby="helpId">
 							{{-- <small id="helpId" class="text-muted">Jadwal Periode pelaksanaan penanaman.</small> --}}
 						</div>
+						<div class="form-group col-md-6">
+							<label for="provinsi_id">Provinsi</label>
+							<select class="form-control custom-select selecteditprov"
+								name="provinsi_id" id="provinsi_id">
+								<option value=""></option>
+							</select>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="kabupaten_id">Kabupaten</label>
+							<select class="form-control custom-select selecteditkab"
+								name="kabupaten_id" id="kabupaten_id">
+								<option value=""></option>
+							</select>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="kecamatan_id">Kecamatan</label>
+							<select class="form-control custom-select selecteditkab"
+								name="kecamatan_id" id="kecamatan_id">
+								<option value=""></option>
+							</select>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="kelurahan_id">Desa/kelurahan</label>
+							<select class="form-control custom-select selecteditkab"
+								name="kelurahan_id" id="kelurahan_id">
+								<option value=""></option>
+							</select>
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="">Salinan Perjanjian Kerjasama</label>
-						<input type="file" name="attachment" id="attachment"
+						<label for="berkas_pks">Salinan Perjanjian Kerjasama</label>
+						<input type="file" name="berkas_pks" id="berkas_pks"
 							class="form-control " placeholder="unggah lampiran"
 							aria-describedby="helpId">
 						<small id="helpId" class="text-muted">Unggah hasil pindai Salinan Perjanjian Kerjasama. Berkas dalam bentuk PDF. Ukuran maks 4 megabytes (mb). </small>

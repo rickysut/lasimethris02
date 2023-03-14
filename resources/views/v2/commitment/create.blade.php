@@ -42,8 +42,8 @@
 									<small id="helpId" class="text-muted">Tanggal ijin RIPH diterbitkan</small>
 								</div>
 								<div class="form-group col-md-3">
-									<label for="tgl_akhir">Tanggal Akhir</label>
-									<input type="date" name="tgl_akhir" id="tgl_akhir"
+									<label for="tgl_end">Tanggal Akhir</label>
+									<input type="date" name="tgl_end" id="tgl_end"
 									class="form-control form-control-sm" placeholder="Tanggal akhir berlakunya RIPH"
 									aria-describedby="helpId">
 									<small id="helpId" class="text-muted">Tanggal akhir berlaku ijin RIPH</small>
@@ -62,8 +62,7 @@
 								<div class="form-group col-md-3">
 									<label for="volume_riph">Volume RIPH (ton)</label>
 									<input type="number" name="volume_riph" id="volume_riph"
-										class="form-control form-control-sm" placeholder="Volume import yang
-										tercantum pada dokumen RIPH" aria-describedby="helpId">
+										class="form-control form-control-sm" placeholder="Volume import " aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
 										Volume import pada dokumen RIPH
 									</small>
@@ -76,7 +75,7 @@
 								</div>
 								<div class="form-group col-md-2">
 									<label for="wajib_produksi">Wajib Produksi (ton)</label>
-									<input type="numeric" name="wajib_produksi" id="wajib_produksi"
+									<input type="number" name="wajib_produksi" id="wajib_produksi"
 									class="form-control form-control-sm" placeholder="Volume wajib produksi"
 									aria-describedby="helpId" readonly>
 									<small id="helpId" class="text-muted">Volume wajib produksi yang wajib direalisasikan</small>
@@ -100,7 +99,7 @@
 							<div class="row">
 								<div class="form-group col-md-4">
 									<label for="kebutuhan_benih">Stok Mandiri (kg)</label>
-									<input type="text" name="stok_mandiri" id="stok_mandiri"
+									<input type="number" name="stok_mandiri" id="stok_mandiri"
 										class="form-control form-control-sm"
 										placeholder="Stok Mandiri" aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
@@ -109,7 +108,7 @@
 								</div>
 								<div class="form-group col-md-4">
 									<label for="kebutuhan_benih">Kebutuhan Benih (kg)</label>
-									<input readonly type="text" name="kebutuhan_benih" id="kebutuhan_benih"
+									<input readonly type="number" name="kebutuhan_benih" id="kebutuhan_benih"
 										class="form-control form-control-sm"
 										placeholder="autocalculate" aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
@@ -118,7 +117,7 @@
 								</div>
 								<div class="form-group col-md-4">
 									<label for="off_stock">Dari Penangkar (kg)</label>
-									<input readonly type="text" name="off_stock" id="off_stock"
+									<input readonly type="number" name="off_stock" id="off_stock"
 										class="form-control form-control-sm"
 										placeholder="autocalculate" aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
@@ -143,7 +142,7 @@
 							<div class="row">
 								<div class="form-group col-md-3">
 									<label for="organik">Pupuk Organik (kg)</label>
-									<input type="text" name="organik" id="organik"
+									<input type="number" name="organik" id="organik"
 										class="form-control form-control-sm"
 										placeholder="Jumlah Pupuk Organik" aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
@@ -152,7 +151,7 @@
 								</div>
 								<div class="form-group col-md-3">
 									<label for="npk">NPK (kg)</label>
-									<input type="text" name="npk" id="npk"
+									<input type="number" name="npk" id="npk"
 										class="form-control form-control-sm"
 										placeholder="Jumlah NPK" aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
@@ -161,7 +160,7 @@
 								</div>
 								<div class="form-group col-md-3">
 									<label for="dolomit">Dolomit (kg)</label>
-									<input type="text" name="dolomit" id="dolomit"
+									<input type="number" name="dolomit" id="dolomit"
 										class="form-control form-control-sm"
 										placeholder="Jumlah Dolomit" aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
@@ -170,7 +169,7 @@
 								</div>
 								<div class="form-group col-md-3">
 									<label for="za">ZA (kg)</label>
-									<input type="text" name="za" id="za"
+									<input type="number" name="za" id="za"
 										class="form-control form-control-sm"
 										placeholder="Jumlah ZA" aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
@@ -195,7 +194,7 @@
 							<div class="row">
 								<div class="form-group col-md-3">
 									<label for="mulsa">Mulsa (kg)</label>
-									<input type="text" name="mulsa" id="mulsa"
+									<input type="number" name="mulsa" id="mulsa"
 										class="form-control form-control-sm"
 										placeholder="Jumlah Mulsa" aria-describedby="helpId">
 									<small id="helpId" class="text-muted">
@@ -205,11 +204,11 @@
 								<div class="form-group col-md-3">
 									<label class="form-label" for="poktan_share">Bagi Hasil (%)</label>
 									<div class="input-group">
-										<input type="text" name="poktan_share" id="poktan_share"
+										<input type="number" name="poktan_share" id="poktan_share"
 											class="form-control form-control-sm"
 											placeholder="Bagi hasil (Poktan)" aria-describedby="helpId"
 											title="Bagi hasil untuk Kelompoktani">
-										<input type="text" name="importir_share" id="importir_share"
+										<input type="number" name="importir_share" id="importir_share"
 											class="form-control form-control-sm"
 											placeholder="autocalculate" aria-describedby="helpId"
 											title="Bagi hasil untuk Importir" readonly>
@@ -221,20 +220,13 @@
 							</div>
 						</div>
 					</div>
-				</div>
-
-				<div class="panel" id="panel-5">
-					<div class="panel-hdr">
-						<h2>
-							Tindakan
-						</h2>
-						<div class="panel-toolbar">
-							<a href="{{route('admin.task.commitments.index')}}"
-								class="btn btn-default btn-sm mr-1" role="button">
-								<i class="fa fa-times-circle text-danger"></i> Cancel
+					<div class="card-footer">
+						<div class="col-md-4 ml-auto text-right">
+							<a href="{{route('admin.task.commitments.index')}}" class="btn btn-warning btn-sm">
+								<i class="fal fa-undo mr-1"></i>Batal
 							</a>
 							<button class="btn btn-primary btn-sm" type="submit">
-								<i class="fa fa-save"></i> Save
+								<i class="fal fa-save mr-1"></i>Simpan
 							</button>
 						</div>
 					</div>

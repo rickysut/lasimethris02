@@ -25,7 +25,7 @@
 							<label for="">No. Perjanjian</label>
 							<input disabled class="form-control form-control-sm fw-500 text-primary"
 							placeholder="" aria-describedby="helpId"
-							value="{{$pksmitra->no_pks}}">
+							value="{{$pksmitra->no_perjanjian}}">
 						</div>
 						<div class="form-group col-md-4">
 							<label for="">Kelompoktani</label>
