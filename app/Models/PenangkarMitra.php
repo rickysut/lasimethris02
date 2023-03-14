@@ -22,6 +22,7 @@ class PenangkarMitra extends Model
     public $fillable = [
         'penangkar_id',
         'commitmentbackdate_id',
+        'no_ijin',
         'varietas',
         'ketersediaan',
     ];

@@ -1,346 +1,265 @@
-@extends ('layouts.admin')
-@section ('style')
-<!-- select2 -->
-<link rel="stylesheet" media="screen, print" href="{{ asset('css/formplugins/select2/select2.bundle.css') }}">
-@endsection
+@extends('layouts.admin')
 @section('content')
-<div class="" data-title="System Alert" data-intro="Ini adalah Panel yang berisi informasi atau pemberitahuan penting untuk Anda." data-step="1">@include('partials.sysalert')</div>
-<form id="js-login" novalidate="" action="{{route('v2.commitment.detail')}}">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel" id="panel-1">
-                <div class="panel-hdr">
-                    <h2>
-                        DATA <span class="fw-300"><i>Kelompoktani</i></span>
-                    </h2>
-                    <div class="panel-toolbar">
+@include('partials.breadcrumb')
+@include('partials.subheader')
+@can('commitment_show')
+	<div class="row">
+		<div class="col">
+			<div class="panel" id="panel-1">
+				<div class="panel-hdr">
+					<h2>
+						Data <span class="fw-300"><i>Informasi</i></span>
+					</h2>
+					<div class="panel-toolbar">
+					</div>
+				</div>
+				<div class="panel-container show">
+					<div class="panel-content row d-flex">
+						<div class="form-group col-md-4">
+							<label for="">No. RIPH</label>
+							<input disabled class="form-control form-control-sm fw-500 text-primary"
+							placeholder="" aria-describedby="helpId"
+							value="{{$commitment->no_ijin}}">
+						</div>
+						<div class="form-group col-md-4">
+							<label for="">No. Perjanjian</label>
+							<input disabled class="form-control form-control-sm fw-500 text-primary"
+							placeholder="" aria-describedby="helpId"
+							value="{{$pksmitra->no_pks}}">
+						</div>
+						<div class="form-group col-md-4">
+							<label for="">Kelompoktani</label>
+							<input disabled class="form-control form-control-sm fw-500 text-primary"
+							placeholder="" aria-describedby="helpId"
+							value="{{$masterkelompok->nama_kelompok}}">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel" id="panel-2">
+				<div class="panel-hdr">
+					<h2>
+						Daftar <span class="fw-300"><i>Realisasi Lokasi dan Pelaksana</i></span>
+					</h2>
+					<div class="panel-toolbar">
+						@include('partials.globaltoolbar')
+					</div>
+				</div>
+				<div class="panel-container show">
+					<div class="panel-content">
+						<!-- datatable start -->
+						<table id="tbl" class="table table-sm table-bordered table-hover table-striped w-100">
+							<thead>
+								<th></th>
+								<th>Nama Lokasi</th>
+								<th>Petani Pelaksana</th>
+								<th>Luas Tanam</th>
+								<th>Tanggal Tanam</th>
+								<th>Panen</th>
+								<th>Tanggal Panen</th>
+								<th>Tindakan</th>
+							</thead>
+							<tbody>
+								@foreach ($anggotamitras as $anggotamitra)
+								<tr>
+									<td class="text-center">
+										@if (!empty($warns))
+											<i class="fas fa-exclamation-circle text-danger" data-toggle="tooltip" data-html="true" title="{{ implode('<br>', $warns) }}"></i>
+										@elseif (empty($fault))
+											<i class="fas fa-check-circle text-success"></i>
+										@endif
+									</td>
+									<td>{{$anggotamitra->nama_lokasi}}</td>
+									<td>{{$anggotamitra->masteranggota->nama_petani}} - 
+										{{$anggotamitra->masteranggota->nik_petani}}
+									</td>
+									<td class="text-right">{{$anggotamitra->luas_tanam}} ha</td>
+									<td class="text-center">{{$anggotamitra->tgl_tanam}}</td>
+									<td class="text-right">{{$anggotamitra->volume}} ton</td>
+									<td class="text-center">{{$anggotamitra->tgl_panen}}</td>
+									<td  class="text-center">
+										<a href="{{route('admin.task.anggotamitra.show', $anggotamitra->id)}}"
+											title="Buat/Ubah Laporan Realisasi" class="btn btn-xs btn-icon btn-primary"
+											data-toggle="tooltip" >
+											<i class="fal fa-map"></i>
+										</a>
+									</td>
+								</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		{{-- Modal New PKS --}}
+<div class="modal fade" id="modalAddPetani"
+	tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-center" role="document">
+		<div class="modal-content">
+			<div class="modal-header card-header">
+				<div>
+					<h4 class="modal-title fw-500" id="myModalLabel">Tambah Petani Pelaksana</h4>
+					<small id="helpId" class="text-muted">Petani Pelaksana sesuai Kelompoktani dan Daftar Petani yang tercantum di dalam Perjanjian Kerjasama.</small>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form action="{{route('admin.task.anggotamitra.store')}}"
+				method="POST" enctype="multipart/form-data">
+				@csrf
+				<div class="modal-body">
+					<input type="text" name="commitmentbackdate_id" id="commitmentbackdate_id"
+						value="{{$commitment->id}}" hidden>
 
-                    </div>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        <ul class="list-group mb-3">
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <span class="text-muted">Kelompoktani Mitra</span>
-                                    <h6 class="fw-500 my-0">API Nama Kelompoktani</h6>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <span class="text-muted">Kecamatan</span>
-                                    <h6 class="fw-500 my-0">API Kecamatan</h6>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <span class="text-muted">Desa/Kel</span>
-                                    <h6 class="fw-500 my-0">API Desa</h6>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <span class="text-muted">Jumlah Anggota</span>
-                                    <h6 class="fw-500 my-0">API</h6>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <span class="text-muted">Luas Garapan</span>
-                                    <h6 class="fw-500 my-0">API <sup>ha</sup></h6>
-                                </div>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between">
-                                <div>
-                                    <span class="text-muted">Periode Tanam</span>
-                                    <h6 class="fw-500 my-0">API</h6>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="panel" id="panel-2">
-                <div class="panel-hdr">
-                    <h2>
-                        Data Isian <span class="fw-300"><i>PKS/Rencana Tanam</i></span>
-                    </h2>
-                    <div class="panel-toolbar">
+					<input type="text" name="pks_mitra_id" id="pks_mitra_id"
+						value="{{$pksmitra->id}}" hidden>
 
-                    </div>
-                </div>
-                <div class="alert alert-info border-0 mb-0">
-                    <div class="d-flex align-item-center">
-                        <div class="alert-icon">
-                            <div class="icon-stack icon-stack-sm mr-3 flex-shrink-0">
-                                <i class="base base-7 icon-stack-3x opacity-100 color-primary-400"></i>
-                                <i class="base base-7 icon-stack-2x opacity-100 color-primary-800"></i>
-                                <i class="fa fa-info icon-stack-1x opacity-100 color-white"></i>
-                            </div>
-                        </div>
-                        <div class="flex-1">
-                            <span>Lengkapi kolom-kolom isian berikut sesuai dengan yang tercantum dalam Dokumen Perjanjian Kerjasama antara Pihak Pelaku Usaha dengan Kelompoktani Binaan pada panel Data Kelompoktani di sebelah kiri.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        <!-- add "was-validated" to create validation form style-->
-                        <div class="row d-flex">
-                            <div class="col-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="simpleinputInvalid">Nomor Perjanjian</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend3">123</span>
-                                        </div>
-                                        <input type="text" class="form-control " id="simpleinputInvalid" required>
-                                    </div>
-                                    <div class="help-block">
-                                        Masukkan nomor Surat Perjanjian Kerjasama dengan Kelompoktani Mitra.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label">Tanggal perjanjian</label>
-                                    <div class="input-daterange input-group" id="datepickerstart">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fal fa-calendar-day"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control " name="start" required>
-                                    </div>
-                                    <div class="help-block">
-                                        Pilih Tanggal perjanjian ditandatangani.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label">Tanggal berakhir perjanjian</label>
-                                    <div class="input-daterange input-group" id="datepickerend">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fal fa-calendar-day"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control " name="end" required>
-                                    </div>
-                                    <div class="help-block">
-                                        Pilih Tanggal berakhirnya perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="simpleinputInvalid">Jumlah Anggota</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend3">
-                                                <i class="fal fa-users"></i>
-                                            </span>
-                                        </div>
-                                        <input type="number" class="form-control " id="simpleinputInvalid" required>
-                                    </div>
-                                    <div class="help-block">
-                                        Jumlah Anggota sesuai dokumen perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="simpleinputInvalid">Luas Rencana</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend3"><i class="fal fa-ruler"></i></span>
-                                        </div>
-                                        <input type="number" class="form-control " id="simpleinputInvalid" required>
-                                    </div>
-                                    <div class="help-block">
-                                        Jumlah Luas total sesuai dokumen perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="varietas">Varietas Tanam</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="varietas"><i class="fal fa-seedling"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control " id="varietas" required>
-                                    </div>
-                                    <div class="help-block">
-                                        Varietas ditanam sesuai dokumen perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="periode">Periode Tanam</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="varietas"><i class="fal fa-calendar-week"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control " id="periode" required>
-                                    </div>
-                                    <div class="help-block">
-                                        Periode tanam sesuai dokumen perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="provinsi">Provinsi</label>
-                                    <div class="input-group">
-                                        <select class="select2-prov form-control" id="provinsi" required>
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
-                                        </select>
-                                    </div>
-                                    <div class="help-block">
-                                        Provinsi tempat terjadinya perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="kabupaten">Kabupaten/Kota</label>
-                                    <div class="input-group">
-                                        <select class="select2-kab form-control" id="kabupaten" required>
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
-                                        </select>
-                                    </div>
-                                    <div class="help-block">
-                                        Pilih Kabupaten tempat terjadinya perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="kecamatan">Kecamatan</label>
-                                    <div class="input-group">
-                                        <select class="select2-kec form-control" id="kecamatan" required>
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
-                                        </select>
-                                    </div>
-                                    <div class="help-block">
-                                        Pilih Kecamatan tempat terjadinya perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12 mb-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="desa">Desa</label>
-                                    <div class="input-group">
-                                        <select class="select2-des form-control" id="desa" required>
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
-                                        </select>
-                                    </div>
-                                    <div class="help-block">
-                                        Pilih Desa tempat terjadinya perjanjian.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 mb-3">
-                                <label class="form-label">Unggah Berkas PKS (Perjanjian Kerjasama</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupPrepend3">PKS</span>
-                                    </div>
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="pksFile" required>
-                                        <label class="custom-file-label" for="pksFile">Choose file...</label>
-                                    </div>
-                                </div>
-                                <div class="help-block">Unggah hasil pemindaian berkas Form-5 dalam bentuk pdf. Ukuran berkas tidak lebih dari 2 megabytes.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="col-md-4 ml-auto text-right">
-                        <a href="{{route('v2.commitment.detail')}}" class="btn btn-warning btn-sm mt-3">Cancel</a>
-                        <button id="js-login-btn" type="submit" class="btn btn-primary btn-sm mt-3">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+					<input type="text" name="no_ijin" id="no_ijin"
+						value="{{$commitment->no_ijin}}" hidden>
+
+					<div class="form-group">
+						<label for="">No. Reg/Nama Lokasi</label>
+						<input type="text" name="nama_lokasi" id="nama_lokasi"
+							class="form-control " placeholder="misal: Lokasi 1 Pak Hadi atau 01/PTABC/RIPH/Hadi"
+							aria-describedby="helpId" required>
+						<small id="helpId" class="text-muted">Berikan nama atau nomor register agar memudahkan dalam pencarian data.</small>
+					</div>
+					<div class="form-group">
+						<label for="">Pilih Petani Pelaksana</label>
+						<select class="form-control selectpetani" id="master_anggota_id"
+						name="master_anggota_id" required>
+						<option value="" hidden>--pilih petani</option>
+							@foreach($masteranggotas as $masteranggota)
+								<option value="{{ $masteranggota->id }}">{{ $masteranggota->nama_petani}} - {{ $masteranggota->nik_petani}}</option>
+							@endforeach
+						</select>
+						<small id="helpId" class="text-muted">Periksa kesesuaian Nama Petani - NIK</small>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary btn-sm"
+					data-dismiss="modal">
+						<i class="fal fa-times-circle text-danger fw-500"></i> Close
+					</button>
+					<button class="btn btn-primary btn-sm" type="submit">
+						<i class="fal fa-save"></i> Save changes
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+	
+
+@endcan
+
 @endsection
-<!-- @parent -->
+
 <!-- start script for this page -->
 @section('scripts')
-<script src="{{ asset('js/datagrid/datatables/datatables.bundle.js') }}"></script>
-<script src="{{ asset('js/datagrid/datatables/datatables.export.js') }}"></script>
-<script src="{{ asset('js/formplugins/select2/select2.bundle.js') }}"></script>
-<script src="{{ asset('js/formplugins/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
+@parent
 
 <script>
     $(document).ready(function() {
         $(function() {
-            $(".select2-prov").select2({
-                placeholder: "Select Province"
-            });
-            $(".select2-kab").select2({
-                placeholder: "Select Kabupaten"
-            });
-            $(".select2-kec").select2({
-                placeholder: "Select Kecamatan"
-            });
-            $(".select2-des").select2({
-                placeholder: "Select Desa"
+            $(".selectpetani").select2({
+                placeholder: "--Pilih Kelompoktani",
+				dropdownParent:'#modalAddPetani'
             });
         });
     });
 </script>
+
 <script>
-    $("#js-login-btn").click(function(event) {
+	$(document).ready(function()
+	{
+		
+		$('#tbl').dataTable(
+		{
+			responsive: true,
+			lengthChange: false,
+			dom:
+				/*	--- Layout Structure 
+					--- Options
+					l	-	length changing input control
+					f	-	filtering input
+					t	-	The table!
+					i	-	Table information summary
+					p	-	pagination control
+					r	-	processing display element
+					B	-	buttons
+					R	-	ColReorder
+					S	-	Select
 
-        // Fetch form to apply custom Bootstrap validation
-        var form = $("#js-login")
+					--- Markup
+					< and >				- div element
+					<"class" and >		- div with a class
+					<"#id" and >		- div with an ID
+					<"#id.class" and >	- div with an ID and a class
 
-        if (form[0].checkValidity() === false) {
-            event.preventDefault()
-            event.stopPropagation()
-        }
+					--- Further reading
+					https://datatables.net/reference/option/dom
+					--------------------------------------
+				 */
+				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+			buttons: [
+				/*{
+					extend:    'colvis',
+					text:      'Column Visibility',
+					titleAttr: 'Col visibility',
+					className: 'mr-sm-3'
+				},*/
+				{
+					extend: 'pdfHtml5',
+					text: '<i class="fa fa-file-pdf"></i>',
+					titleAttr: 'Generate PDF',
+					className: 'btn-outline-danger btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'excelHtml5',
+					text: '<i class="fa fa-file-excel"></i>',
+					titleAttr: 'Generate Excel',
+					className: 'btn-outline-success btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'csvHtml5',
+					text: '<i class="fal fa-file-csv"></i>',
+					titleAttr: 'Generate CSV',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'copyHtml5',
+					text: '<i class="fa fa-copy"></i>',
+					titleAttr: 'Copy to clipboard',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'print',
+					text: '<i class="fa fa-print"></i>',
+					titleAttr: 'Print Table',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					text: '<i class="fa fa-user-plus"></i>',
+					titleAttr: 'Tambah Petani Pelaksana',
+					className: 'btn btn-primary btn-sm btn-icon ml-3',
+					action: function(e, dt, node, config) {
+					// find the modal element
+						var $modal = $('#modalAddPetani');
 
-        form.addClass('was-validated');
-        // Perform ajax submit here...
-    });
-</script>
-<!-- datepicker -->
-<script>
-    // Class definition
-
-    var controls = {
-        leftArrow: '<i class="fal fa-angle-left" style="font-size: 1.25rem"></i>',
-        rightArrow: '<i class="fal fa-angle-right" style="font-size: 1.25rem"></i>'
-    }
-
-    var runDatePicker = function() {
-        // range picker
-        $('#datepickerstart').datepicker({
-            todayHighlight: true,
-            templates: controls
-        });
-        // range picker
-        $('#datepickerend').datepicker({
-            todayHighlight: true,
-            templates: controls
-        });
-    }
-
-    $(document).ready(function() {
-        runDatePicker();
-    });
+						// trigger the modal's show method
+						$modal.modal('show');
+					}
+				}
+			]
+		});
+	});
 </script>
 @endsection
+
+{{-- {{ route('admin.task.commitments.pksmitra', $commitment->id) }} --}}

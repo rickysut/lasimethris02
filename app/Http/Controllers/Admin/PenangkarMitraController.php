@@ -49,6 +49,7 @@ class PenangkarMitraController extends Controller
 
 		$penangkarmitra->penangkar_id = $request->input('penangkar_id');
 		$penangkarmitra->commitmentbackdate_id = $request->input('commitmentbackdate_id');
+		$penangkarmitra->no_ijin = $request->input('no_ijin');
 		$penangkarmitra->varietas = $request->input('varietas');
 		$penangkarmitra->ketersediaan = $request->input('ketersediaan');
 
@@ -91,6 +92,7 @@ class PenangkarMitraController extends Controller
 		$penangkarmitra = PenangkarMitra::find($id);
 		$penangkarmitra->penangkar_id = $request->input('penangkar_id');
 		$penangkarmitra->commitmentbackdate_id = $request->input('commitmentbackdate_id');
+		$penangkarmitra->no_ijin = $request->input('no_ijin');
 		$penangkarmitra->varietas = $request->input('varietas');
 		$penangkarmitra->ketersediaan = $request->input('ketersediaan');
 		// dd($penangkarmitra);
@@ -109,6 +111,6 @@ class PenangkarMitraController extends Controller
 		$penangkarmitra = PenangkarMitra::withTrashed()->findOrFail($id);
 		// $commitments->childrelatedmodel()->delete(); //delete related object here
 		$penangkarmitra->delete();
-		return redirect()->route('admin.task.commitments.index', $penangkarmitra->commitmentbackdate_id)->with('success', 'Data Penangkar deleted successfully');
+		return redirect()->route('admin.task.commitments.show', $penangkarmitra->commitmentbackdate_id)->with('success', 'Data Penangkar deleted successfully');
 	}
 }

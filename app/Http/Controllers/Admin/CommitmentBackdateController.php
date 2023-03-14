@@ -95,13 +95,14 @@ class CommitmentBackdateController extends Controller
 		$page_heading = 'Detail Commitment';
 		$heading_class = 'fa fa-file-invoice';
 
-		$commitment = CommitmentBackdate::with('user')->findOrFail($id);
-		$masterpenangkars = MasterPenangkar::all();
-		$commitmentbackdate = CommitmentBackdate::with('penangkarmitra.masterpenangkar')
+		$commitment = CommitmentBackdate::with('user', 'pksmitra.masterkelompok', 'penangkarmitra.masterpenangkar')
 			->findOrFail($id);
-		$penangkarmitras = $commitmentbackdate->penangkarmitra;
-
-		return view('v2.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterpenangkars', 'penangkarmitras', 'commitmentbackdate'));
+		$masterkelompoks = MasterKelompok::all();
+		$masterpenangkars = MasterPenangkar::all();
+		$pksmitras = $commitment->pksmitra;
+		$penangkarmitras = $commitment->penangkarmitra;
+		// dd();
+		return view('v2.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'masterpenangkars', 'penangkarmitras', 'commitment', 'masterkelompoks', 'pksmitras'));
 	}
 
 	public function penangkar($id)

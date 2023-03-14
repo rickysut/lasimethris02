@@ -95,10 +95,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::resource('commitments', 'CommitmentBackdateController');
 		Route::get('commitments/{commitments}/penangkar', 'CommitmentBackdateController@penangkar')->name('commitments.penangkar');
 		Route::get('commitments/{commitments}/pksmitra', 'CommitmentBackdateController@pksmitra')->name('commitments.pksmitra');
+
+		//pks mitra v2
 		Route::resource('pksmitra', 'PksMitraController');
 
 		//route for penangkar mitra v2
 		Route::resource('penangkarmitra', 'PenangkarMitraController');
+
+		//anggota mitra pks v2
+		Route::resource('anggotamitra', 'AnggotaMitraController');
 
 
 		// pengajuan

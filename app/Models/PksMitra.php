@@ -22,6 +22,7 @@ class PksMitra extends Model
 	protected $fillable = [
 		'commitmentbackdate_id',
 		'master_kelompok_id',
+		'no_ijin',
 		'no_pks',
 		'tgl_mulai',
 		'tgl_akhir',
@@ -44,5 +45,15 @@ class PksMitra extends Model
 	public function commitmentbackdate()
 	{
 		return $this->belongsTo(CommitmentBackdate::class);
+	}
+
+	public function masterkelompok()
+	{
+		return $this->belongsTo(MasterKelompok::class, 'master_kelompok_id', 'id');
+	}
+
+	public function anggotamitras()
+	{
+		return $this->hasMany(AnggotaMitra::class, 'pks_mitra_id', 'id');
 	}
 }

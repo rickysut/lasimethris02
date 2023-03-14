@@ -75,9 +75,12 @@
 														<input type="text" name="commitmentbackdate_id" id="commitmentbackdate_id"
 															class="form-control " placeholder="" aria-describedby="helpId"
 															value="{{$commitment->id}}" hidden>
+														<input type="text" name="no_ijin" id="no_ijin"
+															class="form-control " placeholder="" aria-describedby="helpId"
+															value="{{$commitment->no_ijin}}">
 														<div class="form-group">
 															<label for=""></label>
-															<select class="form-control custom-select" name="penangkar_id" id="penangkar_id">
+															<select class="form-control custom-select selecteditpenangkar" name="penangkar_id" id="penangkar_id">
 																<option value="{{ isset($penangkarmitra) ? $penangkarmitra->masterpenangkar->id : '' }}">
 																	{{ isset($penangkarmitra) ? $penangkarmitra->penangkar_id . ' . ' . $penangkarmitra->masterpenangkar->nama_lembaga . ' - ' . $penangkarmitra->masterpenangkar->nama_pimpinan : 'Load Record' }}
 																</option>
@@ -124,71 +127,75 @@
 								@endforeach
 							</tbody>
                         </table>
-						{{-- Modal Penangkar --}}
-						<div class="modal fade" id="modalPenangkar"
-							tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-right" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<div>
-											<h5 class="modal-title" id="myModalLabel">Tambah Penangkar</h5>
-											<small id="helpId" class="text-muted">Tambah Daftar Penangkar Benih berlabel</small>
-										</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-										</button>
-									</div>
-									<form action="{{route('admin.task.penangkarmitra.store')}}"
-										method="POST" enctype="multipart/form-data">
-										@csrf
-										<div class="modal-body">
-											<input type="text" name="commitmentbackdate_id" id="commitmentbackdate_id"
-												class="form-control " placeholder="" aria-describedby="helpId"
-												value="{{$commitment->id}}" hidden>
-											<div class="form-group">
-												<label for=""></label>
-												<select class="form-control custom-select selectpenangkar"
-													name="penangkar_id" id="penangkar_id">
-													<option value="" hidden>--pilih penangkar</option>
-													@foreach ($masterpenangkars as $penangkar)
-														<option value="{{$penangkar->id}}">
-															{{$penangkar->nama_lembaga}} - {{$penangkar->nama_pimpinan}}
-														</option>
-													@endforeach
-												</select>
-												<small id="helpId" class="text-muted">Pilih Penangkar</small>
-											</div>
-											<div class="form-group">
-												<label for=""></label>
-												<input type="text" name="varietas" id="varietas"
-													class="form-control " placeholder="misal: Lumbu Kuning"
-													aria-describedby="helpId">
-												<small id="helpId" class="text-muted">Varietas yang ditanam</small>
-											</div>
-											<div class="form-group">
-												<label for=""></label>
-												<input type="text" name="ketersediaan" id="ketersediaan"
-													class="form-control " placeholder="misal: Jan-Feb"
-													aria-describedby="helpId">
-												<small id="helpId" class="text-muted">Help text</small>
-											</div>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-outline-secondary btn-sm"
-											data-dismiss="modal">
-												<i class="fal fa-times-circle text-danger fw-500"></i> Close
-											</button>
-											<button class="btn btn-primary btn-sm" type="submit">
-												<i class="fal fa-save"></i> Save changes
-											</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
                     </div>
                 </div>
             </div>
+		</div>
+	</div>
+	
+	{{-- Modal Penangkar --}}
+	<div class="modal fade" id="modalPenangkar"
+		tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-right" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div>
+						<h5 class="modal-title" id="myModalLabel">Tambah Penangkar</h5>
+						<small id="helpId" class="text-muted">Tambah Daftar Penangkar Benih berlabel</small>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form action="{{route('admin.task.penangkarmitra.store')}}"
+					method="POST" enctype="multipart/form-data">
+					@csrf
+					<div class="modal-body">
+						<input type="text" name="commitmentbackdate_id" id="commitmentbackdate_id"
+							class="form-control " placeholder="" aria-describedby="helpId"
+							value="{{$commitment->id}}" hidden>
+						<input type="text" name="no_ijin" id="no_ijin"
+							class="form-control " placeholder="" aria-describedby="helpId"
+							value="{{$commitment->no_ijin}}">
+						<div class="form-group">
+							<label for=""></label>
+							<select class="form-control custom-select selectpenangkar"
+								name="penangkar_id" id="penangkar_id" required>
+								<option value="" hidden>--pilih penangkar</option>
+								@foreach ($masterpenangkars as $penangkar)
+									<option value="{{$penangkar->id}}">
+										{{$penangkar->nama_lembaga}} - {{$penangkar->nama_pimpinan}}
+									</option>
+								@endforeach
+							</select>
+							<small id="helpId" class="text-muted">Pilih Penangkar</small>
+						</div>
+						<div class="form-group">
+							<label for=""></label>
+							<input type="text" name="varietas" id="varietas"
+								class="form-control " placeholder="misal: Lumbu Kuning"
+								aria-describedby="helpId">
+							<small id="helpId" class="text-muted">Varietas yang ditanam</small>
+						</div>
+						<div class="form-group">
+							<label for=""></label>
+							<input type="text" name="ketersediaan" id="ketersediaan"
+								class="form-control " placeholder="misal: Jan-Feb"
+								aria-describedby="helpId">
+							<small id="helpId" class="text-muted">Help text</small>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline-secondary btn-sm"
+						data-dismiss="modal">
+							<i class="fal fa-times-circle text-danger fw-500"></i> Close
+						</button>
+						<button class="btn btn-primary btn-sm" type="submit">
+							<i class="fal fa-save"></i> Save changes
+						</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 
@@ -201,6 +208,25 @@
 <!-- start script for this page -->
 @section('scripts')
 @parent
+
+<script>
+    $(document).ready(function() {
+        $(function() {
+            $(".selectpenangkar").select2({
+                placeholder: "--Pilih Kelompoktani",
+				dropdownParent:'#modalPenangkar'
+            });
+
+			@isset($penangkarmitra->id)
+			$(".selecteditpenangkar").select2({
+                placeholder: "--Pilih Kelompoktani",
+				dropdownParent:'#editPenangkar{{$penangkarmitra->id}}'
+            });
+			@endisset
+        });
+    });
+</script>
+
 <script>
 	$(document).ready(function()
 	{

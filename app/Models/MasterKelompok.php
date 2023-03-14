@@ -46,4 +46,9 @@ class MasterKelompok extends Model
 	{
 		return $this->hasMany(MasterAnggota::class);
 	}
+
+	public function pksmitra()
+	{
+		return $this->hasMany(PksMitra::class, 'master_kelompok_id', 'id');
+	}
 }

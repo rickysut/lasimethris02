@@ -233,8 +233,8 @@
 								class="btn btn-default btn-sm mr-1" role="button">
 								<i class="fa fa-times-circle text-danger"></i> Cancel
 							</a>
-							<button class="btn btn-danger btn-sm" type="submit">
-								<i class="fa fa-save"></i> Update
+							<button class="btn btn-primary btn-sm" type="submit">
+								<i class="fa fa-save"></i> Save
 							</button>
 						</div>
 					</div>

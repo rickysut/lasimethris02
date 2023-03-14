@@ -17,6 +17,7 @@ return new class extends Migration
 			$table->id();
 			$table->unsignedBigInteger('commitmentbackdate_id');
 			$table->bigInteger('master_kelompok_id')->nullable();
+			$table->string('no_ijin')->nullable();
 			$table->string('no_pks')->nullable();
 			$table->string('tgl_mulai')->nullable();
 			$table->string('tgl_akhir')->nullable();
@@ -32,7 +33,7 @@ return new class extends Migration
 			$table->timestamps();
 			$table->softDeletes();
 
-			$table->foreign('commitment_backdate_id')->references('id')->on('commitment_backdates')->onDelete('cascade');
+			$table->foreign('commitmentbackdate_id')->references('id')->on('commitment_backdates')->onDelete('cascade');
 		});
 	}
 

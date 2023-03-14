@@ -17,12 +17,13 @@ return new class extends Migration
 			$table->id();
 			$table->BigInteger('penangkar_id')->nullable();
 			$table->unsignedBigInteger('commitmentbackdate_id')->nullable();
+			$table->string('no_ijin')->nullable();
 			$table->string('varietas')->nullable();
 			$table->string('ketersediaan')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 
-			$table->foreign('commitment_backdate_id')->references('id')->on('commitment_backdates')->onDelete('cascade');
+			$table->foreign('commitmentbackdate_id')->references('id')->on('commitment_backdates')->onDelete('cascade');
 		});
 	}
 

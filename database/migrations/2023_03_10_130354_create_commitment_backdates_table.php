@@ -16,6 +16,7 @@ return new class extends Migration
 		Schema::create('commitment_backdates', function (Blueprint $table) {
 			$table->id();
 			$table->unsignedBigInteger('user_id');
+			$table->string('npwp')->nullable();
 			$table->string('no_ijin')->unique()->nullable();
 			$table->string('periodetahun')->nullable();
 			$table->string('tgl_ijin')->nullable();

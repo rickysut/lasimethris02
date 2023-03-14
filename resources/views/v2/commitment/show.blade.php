@@ -97,59 +97,6 @@
 					</div>
 				</div>
 			</div>
-			{{-- <div class="card-header">
-				@switch($commitment->status)
-					@case(1)
-						<div class="row">
-							<div class="col-md-12 my-1">
-								Menunggu Review Verifikasi 
-							</div>
-							<div class="col-md-12 my-1">
-								No Dokumen:
-								<a href="" title="Lihat Pengajuan">
-									<i class="fal fa-arrow-alt-right"></i>
-									&nbsp;{{ $commitment->no_doc }}
-								</a>
-							</div>
-						</div>
-						@break
-					@case(2)
-						<div class="row">
-							<div class="col-md-12 my-1">
-								Data Sudah Diverifikasi
-							</div>
-							<div class="col-md-12 my-1">
-								<a href="#" class="btn btn-xs btn-success" data-toggle="tooltip"
-									data-original-title="Ajukan Penerbitan Surat Keterangan Lunas">
-									<i class="fal fa-badge-check"></i>
-									Ajukan SKL
-								</a>
-							</div>
-						</div>
-						@break
-					@case(3)
-						Pengajuan SKL
-						@break
-					@case(4)
-						Review SKL
-						@break
-					@case(5)
-						<div class="row">
-							<div class="col-md-12 my-1">
-								SKL telah diterbitkan
-							</div>
-							<div class="col-md-12 my-1">
-								<a href="#" class="btn btn-xs btn-success">
-									<i class="fas fa-award"></i>
-									Lihat/Unduh SKL
-								</a>
-							</div>
-						</div>
-						@break
-					@default
-					
-				@endswitch 
-			</div> --}}
 			<div class="panel" id="panel-1">
 				<div class="panel-hdr">
 					<h2>
@@ -337,26 +284,45 @@
 								<tr>
 									<th>No. Perjanjian</th>
 									<th>Poktan Mitra</th>
-									<th>Tanggal Perjanjian</th>
-									<th>Luas (ha)</th>
-									<th>Volume (ton)</th>
+									<th>Rencana Kerja</th>
+									<th>Tindakan</th>
 								</tr>
 							</thead>
 							<tbody>
-								{{-- @isset($poktans)
-								@foreach ( $poktans as $poktan )
-								
-									<tr>
-										<td>{{ $poktan->nama_kelompok }}</td>
-										<td>{{ $poktan->nama_pimpinan }}</td>
-										<td>{{ $poktan->hp_pimpinan }}</td>
-										<td style="text-align: center;">{{ $poktan->jum_petani }}</td>
-										<td>{{ $poktan->id_kecamatan }}</td>
-										<td style="text-align: center;">{{ $poktan->luas }}</td>
-										
-									</tr>    
+								@foreach ($pksmitras as $pksmitra)
+								<tr>
+									<td>{{$pksmitra->no_pks}}</td>
+									<td>{{$pksmitra->masterkelompok->nama_kelompok}}</td>
+									<td>
+										<div class="row">
+											<div class="col-2">
+												<i class="fal fa-ruler-combined"></i>
+											</div>
+											<div class="col-9">
+												{{$pksmitra->luas_rencana}} ha
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-2">
+												<i class="fal fa-weight-hanging"></i>
+											</div>
+											<div class="col-9">
+												{{$pksmitra->luas_rencana*6}} ton
+											</div>
+										</div>
+									</td>
+									<td>
+										<a href="{{route('admin.task.pksmitra.show', $pksmitra->id)}}"
+											title="Data Laporan Realisasi" class="btn btn-xs btn-icon btn-primary">
+											<i class="fal fa-seedling"></i>
+										</a>
+										<a href="{{route('admin.task.pksmitra.edit', $pksmitra->id)}}"
+											title="Edit/Ubah Data Perjanjian" class="btn btn-xs btn-icon btn-warning">
+											<i class="fal fa-edit"></i>
+										</a>
+									</td>
+								</tr>
 								@endforeach
-								@endisset --}}
 							</tbody>
 						</table>
 						
@@ -380,7 +346,7 @@
 							<thead>
 								<th>Penangkar</th>
 								<th>Pimpinan</th>
-								<th>Variets</th>
+								<th>Varietas</th>
 								<th>Ketersediaan</th>
 							</thead>
 							<tbody>
@@ -676,7 +642,7 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-plus"></i>',
+					text: '<i class="fa fa-cart-plus"></i>',
 					titleAttr: 'Tambah Penangkar Mitra',
 					className: 'btn btn-info btn-sm btn-icon ml-2',
 					action: function(e, dt, node, config) {
@@ -686,6 +652,13 @@
 			]
 		});
 
+	});
+</script>
+
+<script>
+	$(document).ready(function()
+	{
+		
 		$('#tblPks').dataTable(
 		{
 			responsive: true,
@@ -754,8 +727,8 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-plus"></i>',
-					titleAttr: 'Tambah Penangkar Mitra',
+					text: '<i class="fa fa-signature"></i>',
+					titleAttr: 'Buat Perjanjian Baru',
 					className: 'btn btn-info btn-sm btn-icon ml-2',
 					action: function(e, dt, node, config) {
 						window.location.href = '{{ route('admin.task.commitments.pksmitra', $commitment->id) }}';
@@ -765,5 +738,4 @@
 		});
 	});
 </script>
-
 @endsection

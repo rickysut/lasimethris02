@@ -25,39 +25,65 @@
                         <!-- datatable start -->
                         <table id="tblPks" class="table table-sm table-bordered table-hover table-striped w-100">
                             <thead>
-								<th>Penangkar</th>
-								<th>Pimpinan</th>
+								<th>No Perjanjian</th>
+								<th>Poktan Mitra</th>
+								<th>Masa berlaku</th>
+								<th>Rencana</th>
 								<th>Tindakan</th>
 							</thead>
 							<tbody>
 								@foreach ($pksmitras as $pksmitra)
 								<tr>
+									<td> {{$pksmitra->no_pks}} </td>
 									<td> {{$pksmitra->masterkelompok->nama_kelompok}} </td>
-									<td> {{$pksmitra->masterkelompok->nama_pimpinan}} </td>
+									<td> {{$pksmitra->tgl_mulai}} s.d {{$pksmitra->tgl_akhir}} </td>
 									<td>
+										<div class="row col">
+											<div class="col-2">
+												<i class="fal fa-ruler-combined"></i>
+											</div>
+											<div class="col-9">
+												{{$pksmitra->luas_rencana}} ha
+											</div>
+										</div>
+										<div class="row col">
+											<div class="col-2">
+												<i class="fal fa-weight-hanging"></i>
+											</div>
+											<div class="col-9">
+												{{$pksmitra->luas_rencana*6}} ha
+											</div>
+										</div>
+									</td>
+									<td>
+										<a href="{{route('admin.task.pksmitra.show', $pksmitra->id)}}"
+											title="Buat Laporan Realisasi" class="btn btn-xs btn-icon btn-primary">
+											<i class="fal fa-seedling"></i>
+										</a>
 										<button type="button" class="btn btn-icon btn-xs btn-warning"
 											data-toggle="modal" data-target="#editPks{{$pksmitra->id}} ">
 											<i class="fal fa-edit"></i>
 										</button>
-										<form action="{{ route('admin.task.pksmitra.destroy', $commitment->id) }}"
+										<form action="{{ route('admin.task.pksmitra.destroy', $pksmitra->id) }}"
 											method="POST" style="display: inline-block;">
 											@csrf
 											@method('DELETE')
-											<button type="submit" class="btn btn-icon btn-xs btn-danger" title="Hapus data penangkar"
-												onclick="return confirm('Are you sure you want to delete this item?');">
+											<button type="submit" class="btn btn-icon btn-xs btn-danger ml-3"
+											title="Hapus data Perjanjian"
+												onclick="return confirm('Anda yakin akan menghapus data ini?');">
 												<i class="fal fa-trash-alt"></i>
 											</button>
 										</form>
 									</td>
-									{{-- Modal edit Penangkar --}}
+									{{-- Modal edit PKS --}}
 									<div class="modal fade" id="editPks{{$pksmitra->id}}"
 										tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 										<div class="modal-dialog modal-dialog-right" role="document">
 											<div class="modal-content">
-												<div class="modal-header">
+												<div class="modal-header card-header">
 													<div>
-														<h5 class="modal-title" id="myModalLabel">Tambah Penangkar</h5>
-														<small id="helpId" class="text-muted">Tambah Daftar Penangkar Benih berlabel</small>
+														<h4 class="modal-title fw-500" id="myModalLabel">Ubah data Perjanjian</h4>
+														<small id="helpId" class="text-muted">Ubah/Perbarui Data Perjanjian Kerjasama</small>
 													</div>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 														<span aria-hidden="true">&times;</span>
@@ -71,36 +97,85 @@
 														<input type="text" name="commitmentbackdate_id" id="commitmentbackdate_id"
 															class="form-control " placeholder="" aria-describedby="helpId"
 															value="{{$commitment->id}}" hidden>
+														<input type="text" name="no_ijin" id="no_ijin"
+															class="form-control " placeholder="" aria-describedby="helpId"
+															value="{{$commitment->no_ijin}}">
 														<div class="form-group">
-															<label for=""></label>
-															<select class="form-control custom-select" name="penangkar_id" id="penangkar_id">
-																<option value="{{ isset($pksmitra) ? $pksmitra->masterkelompok->id : '' }}">
-																	{{ isset($pksmitra) ? $pksmitra->penangkar_id . ' . ' . $pksmitra->masterkelompok->nama_lembaga . ' - ' . $pksmitra->masterkelompok->nama_pimpinan : 'Load Record' }}
-																</option>
-																@foreach ($masterkelompoks as $poktan)
-																	<option value="{{$poktan->id}}">
-																		{{$poktan->id}}. {{$poktan->nama_kelompok}} - {{$poktan->nama_pimpinan}}
+															<label for="">Nomor PKS</label>
+															<input type="text" name="no_pks" id="no_pks"
+																class="form-control " placeholder="misal: 001/PKS/PTABC/V/2022"
+																value="{{ old('no_pks', $pksmitra->no_pks) }}"
+																aria-describedby="helpId">
+															<small id="helpId" class="text-muted">Nomor Perjanjian Kerjasama dengan Poktan Mitra</small>
+														</div>
+														<div class="form-group">
+															<label for="master_kelompok_id">Kelompok Tani</label>
+																<select class="form-control custom-select selecteditpoktan"
+																	name="master_kelompok_id" id="master_kelompok_id">
+																	<option value="{{ isset($pksmitra) ? $pksmitra->masterkelompok->id : '' }}">
+																		{{ isset($pksmitra) ? $pksmitra->masterkelompok->id. ' . ' . 
+																		$pksmitra->masterkelompok->nama_kelompok . ' - ' . 
+																		$pksmitra->masterkelompok->nama_pimpinan : 'Load Record' }}
 																	</option>
-																@endforeach
-															</select>
-															
-															<small id="helpId" class="text-muted">Pilih Penangkar</small>
+																	@foreach ($masterkelompoks as $poktan)
+																		<option value="{{$poktan->id}}">
+																			{{$poktan->id}}. {{$poktan->nama_kelompok}} - {{$poktan->nama_pimpinan}}
+																		</option>
+																	@endforeach
+																</select>
+															<small id="helpId" class="text-muted">Kelompoktani Mitra pelaksanaan wajib tanam-produksi</small>
+														</div>
+														<div class="row d-flex">
+															<div class="form-group col-md-6">
+																<label for="">Tanggal Perjanjian</label>
+																<input type="date" name="tgl_mulai" id="tanggal_mulai"
+																	value="{{ old('tgl_mulai', $pksmitra->tgl_mulai) }}"
+																	class="form-control " placeholder="tanggal mulai perjanjian"
+																	aria-describedby="helpId">
+																<small id="helpId" class="text-muted">Tanggal mulai berlaku perjanjian</small>
+															</div>
+															<div class="form-group col-md-6">
+																<label for="">Tanggal Akhir</label>
+																<input type="date" name="tgl_akhir" id="tgl_akhir"
+																	value="{{ old('tgl_akhir', $pksmitra->tgl_akhir) }}"
+																	class="form-control " placeholder="tanggal akhir perjanjian"
+																	aria-describedby="helpId">
+																<small id="helpId" class="text-muted">Tanggal berakhirnya perjanjian kerjasama</small>
+															</div>
+														</div>
+														<div class="row d-flex">
+															<div class="form-group col-md-4">
+																<label for="">Luas Rencana Tanam</label>
+																<input type="text" name="luas_rencana" id="luas_rencana"
+																	value="{{ old('luas_rencana', $pksmitra->luas_rencana) }}"
+																	class="form-control " placeholder="dalam satuan hektar (ha)"
+																	aria-describedby="helpId">
+																{{-- <small id="helpId" class="text-muted">Luas rencana tanam yang dikerjasamakan. Dalam satuan hektar(ha)</small> --}}
+															</div>
+															<div class="form-group col-md-4">
+																<label for="">Varietas</label>
+																<input type="text" name="varietas" id="varietas"
+																	class="form-control " placeholder="varietas yang akan ditanam"
+																	value="{{ old('varietas', $pksmitra->varietas) }}"
+																	aria-describedby="helpId">
+																{{-- <small id="helpId" class="text-muted">Varietas yang akan ditanam di lahan kerjasama.</small> --}}
+															</div>
+															<div class="form-group col-md-4">
+																<label for="">Periode Tanam</label>
+																<input type="text" name="periode_tanam" id="periode_tanam"
+																	class="form-control " placeholder="misal: Jan-Feb"
+																	value="{{ old('periode_tanam', $pksmitra->periode_tanam) }}"
+																	aria-describedby="helpId">
+																{{-- <small id="helpId" class="text-muted">Jadwal Periode pelaksanaan penanaman.</small> --}}
+															</div>
 														</div>
 														<div class="form-group">
-															<label for=""></label>
-															<input type="text" name="varietas" id="varietas"
-															value="{{ old('varietas', $pksmitra->varietas) }}"
-																class="form-control " placeholder="misal: Lumbu Kuning"
+															<label for="">Salinan Perjanjian Kerjasama</label>
+															<input type="file" name="attachment" id="attachment"
+																class="form-control " placeholder="unggah lampiran"
+																value="{{ old('attachment', $pksmitra->attachment) }}"
 																aria-describedby="helpId">
-															<small id="helpId" class="text-muted">Varietas yang ditanam</small>
-														</div>
-														<div class="form-group">
-															<label for=""></label>
-															<input type="text" name="ketersediaan" id="ketersediaan"
-																value="{{ old('ketersediaan', $pksmitra->id) }}"
-																class="form-control " placeholder="misal: Jan-Feb"
-																aria-describedby="helpId">
-															<small id="helpId" class="text-muted">Jadwal ketersediaan</small>
+															{{-- <small id="helpId" class="text-muted">Unggah hasil pindai Salinan Perjanjian Kerjasama. Berkas dalam bentuk PDF. Ukuran maks 4 megabytes (mb). </small> --}}
 														</div>
 													</div>
 													<div class="modal-footer">
@@ -119,74 +194,116 @@
 								</tr>
 								@endforeach
 							</tbody>
-                        </table>
-						{{-- Modal Penangkar --}}
-						<div class="modal fade" id="modalPks"
-							tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-right" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<div>
-											<h5 class="modal-title" id="myModalLabel">Tambah Penangkar</h5>
-											<small id="helpId" class="text-muted">Tambah Daftar Penangkar Benih berlabel</small>
-										</div>
-										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-										</button>
-									</div>
-									<form action="{{route('admin.task.pksmitra.store')}}"
-										method="POST" enctype="multipart/form-data">
-										@csrf
-										<div class="modal-body">
-											<input type="text" name="commitmentbackdate_id" id="commitmentbackdate_id"
-												class="form-control " placeholder="" aria-describedby="helpId"
-												value="{{$commitment->id}}" hidden>
-											<div class="form-group">
-												<label for=""></label>
-												<select class="form-control custom-select selectpenangkar"
-													name="penangkar_id" id="penangkar_id">
-													<option value="" hidden>--pilih penangkar</option>
-													@foreach ($masterkelompoks as $poktan)
-														<option value="{{$poktan->id}}">
-															{{$poktan->nama_kelompok}} - {{$poktan->nama_pimpinan}}
-														</option>
-													@endforeach
-												</select>
-												<small id="helpId" class="text-muted">Pilih Penangkar</small>
-											</div>
-											<div class="form-group">
-												<label for=""></label>
-												<input type="text" name="varietas" id="varietas"
-													class="form-control " placeholder="misal: Lumbu Kuning"
-													aria-describedby="helpId">
-												<small id="helpId" class="text-muted">Varietas yang ditanam</small>
-											</div>
-											<div class="form-group">
-												<label for=""></label>
-												<input type="text" name="ketersediaan" id="ketersediaan"
-													class="form-control " placeholder="misal: Jan-Feb"
-													aria-describedby="helpId">
-												<small id="helpId" class="text-muted">Help text</small>
-											</div>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-outline-secondary btn-sm"
-											data-dismiss="modal">
-												<i class="fal fa-times-circle text-danger fw-500"></i> Close
-											</button>
-											<button class="btn btn-primary btn-sm" type="submit">
-												<i class="fal fa-save"></i> Save changes
-											</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-                    </div>
-                </div>
-            </div>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+	{{-- Modal New PKS --}}
+<div class="modal fade" id="modalPks"
+	tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-right" role="document">
+		<div class="modal-content">
+			<div class="modal-header card-header">
+				<div>
+					<h4 class="modal-title fw-500" id="myModalLabel">Kerjasama baru</h4>
+					<small id="helpId" class="text-muted">Tambah Daftar Kerjasama (PKS) baru</small>
+				</div>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form action="{{route('admin.task.pksmitra.store')}}"
+				method="POST" enctype="multipart/form-data">
+				@csrf
+				<div class="modal-body">
+					<input type="text" name="commitmentbackdate_id" id="commitmentbackdate_id"
+						class="form-control " placeholder="" aria-describedby="helpId"
+						value="{{$commitment->id}}" hidden>
+					<input type="text" name="no_ijin" id="no_ijin"
+						class="form-control " placeholder="" aria-describedby="helpId"
+						value="{{$commitment->no_ijin}}">
+					<div class="form-group">
+						<label for="">Nomor PKS</label>
+						<input type="text" name="no_pks" id="no_pks"
+							class="form-control " placeholder="misal: 001/PKS/PTABC/V/2022"
+							aria-describedby="helpId" required>
+						<small id="helpId" class="text-muted">Nomor Perjanjian Kerjasama dengan Poktan Mitra</small>
+					</div>
+					<div class="form-group">
+						<label for="">Pilih Kelompok Tani</label>
+						<select class="form-control custom-select selectpoktan"
+							name="master_kelompok_id" id="master_kelompok_id" required>
+							<option value="" hidden>--pilih kelompoktani</option>
+							@foreach ($masterkelompoks as $poktan)
+								<option value="{{$poktan->id}}">
+									{{$poktan->id}}. {{$poktan->nama_kelompok}} - {{$poktan->nama_pimpinan}}
+								</option>
+							@endforeach
+						</select>
+						<small id="helpId" class="text-muted">Kelompoktani Mitra pelaksanaan wajib tanam-produksi</small>
+					</div>
+					<div class="row d-flex">
+						<div class="form-group col-md-6">
+							<label for="">Tanggal Perjanjian</label>
+							<input type="date" name="tgl_mulai" id="tanggal_mulai"
+								class="form-control " placeholder="tanggal mulai perjanjian"
+								aria-describedby="helpId">
+							<small id="helpId" class="text-muted">Tanggal mulai berlaku perjanjian.</small>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="">Tanggal Akhir</label>
+							<input type="date" name="tgl_akhir" id="tgl_akhir"
+								class="form-control " placeholder="tanggal akhir perjanjian"
+								aria-describedby="helpId">
+							<small id="helpId" class="text-muted">Tanggal berakhirnya perjanjian.</small>
+						</div>
+					</div>
+					<div class="row d-flex">
+						<div class="form-group col-md-4">
+							<label for="">Luas Rencana Tanam</label>
+							<input type="text" name="luas_rencana" id="luas_rencana"
+								class="form-control " placeholder="dalam satuan hektar (ha)"
+								aria-describedby="helpId">
+							{{-- <small id="helpId" class="text-muted">Luas rencana tanam yang dikerjasamakan. Dalam satuan hektar(ha)</small> --}}
+						</div>
+						<div class="form-group col-md-4">
+							<label for="">Varietas</label>
+							<input type="text" name="varietas" id="varietas"
+								class="form-control " placeholder="varietas yang akan ditanam"
+								aria-describedby="helpId">
+							{{-- <small id="helpId" class="text-muted">Varietas yang akan ditanam di lahan kerjasama.</small> --}}
+						</div>
+						<div class="form-group col-md-4">
+							<label for="">Periode Tanam</label>
+							<input type="text" name="periode_tanam" id="periode_tanam"
+								class="form-control " placeholder="misal: Jan-Feb"
+								aria-describedby="helpId">
+							{{-- <small id="helpId" class="text-muted">Jadwal Periode pelaksanaan penanaman.</small> --}}
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="">Salinan Perjanjian Kerjasama</label>
+						<input type="file" name="attachment" id="attachment"
+							class="form-control " placeholder="unggah lampiran"
+							aria-describedby="helpId">
+						<small id="helpId" class="text-muted">Unggah hasil pindai Salinan Perjanjian Kerjasama. Berkas dalam bentuk PDF. Ukuran maks 4 megabytes (mb). </small>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary btn-sm"
+					data-dismiss="modal">
+						<i class="fal fa-times-circle text-danger fw-500"></i> Close
+					</button>
+					<button class="btn btn-primary btn-sm" type="submit">
+						<i class="fal fa-save"></i> Save changes
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 	
 
@@ -197,6 +314,25 @@
 <!-- start script for this page -->
 @section('scripts')
 @parent
+
+<script>
+    $(document).ready(function() {
+        $(function() {
+            $(".selectpoktan").select2({
+                placeholder: "--Pilih Kelompoktani",
+				dropdownParent:'#modalPks'
+            });
+
+			@isset($pksmitra->id)
+			$(".selecteditpoktan").select2({
+                placeholder: "--Pilih Kelompoktani",
+				dropdownParent:'#editPks{{$pksmitra->id}} '
+            });
+			@endisset
+        });
+    });
+</script>
+
 <script>
 	$(document).ready(function()
 	{
