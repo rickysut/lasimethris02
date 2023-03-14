@@ -26,7 +26,7 @@ class PostsController extends Controller
         abort_if(Gate::denies('feeds_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
 
-        if (\Auth::user()->roleaccess == '1')
+        if (Auth::user()->roleaccess == '1')
             $posts = Post::whereNotNull('published_at')
                 ->withCount(['readposts as view_counter' => function ($query) {
                     $query->where('read_flag', 1);

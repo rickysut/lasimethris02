@@ -11,99 +11,97 @@ use Illuminate\Support\Facades\Auth;
 class ProfileController extends Controller
 {
 
-    use SimeviTrait;
+	use SimeviTrait;
 
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
 
-        $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
-        
-        $module_name = 'Profile' ;
-        $page_title = 'Myprofile';
-        $page_heading = 'Myprofile' ;
-        $heading_class = 'fa fa-user';
+		$access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
 
-        $data_user = Auth::user()::find(auth()->id())->data_user;
+		$module_name = 'Profile';
+		$page_title = 'Myprofile';
+		$page_heading = 'Myprofile';
+		$heading_class = 'fa fa-user';
 
-        $provinsi = $this->getAPIProvinsiAll($access_token);
-        $kabupaten = $this->getAPIKabupatenProp($access_token, $data_user->provinsi);
-        $kecamatan = $this->getAPIKecamatanKab($access_token, $data_user->kabupaten);
-        $desa = $this->getAPIDesaKec($access_token, $data_user->kecamatan);
+		$data_user = Auth::user()::find(auth()->id())->data_user;
 
-        return view('admin.profiles.index', compact('module_name', 'page_title', 'page_heading', 'heading_class',
-    'access_token', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'data_user'));
-    
-    }
+		$provinsi = $this->getAPIProvinsiAll($access_token);
+		$kabupaten = $this->getAPIKabupatenProp($access_token, $data_user->provinsi);
+		$kecamatan = $this->getAPIKecamatanKab($access_token, $data_user->kabupaten);
+		$desa = $this->getAPIDesaKec($access_token, $data_user->kecamatan);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+		return view('admin.profiles.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'access_token', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'data_user'));
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		//
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
+		//
+	}
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		//
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id)
+	{
+		//
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		//
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		//
+	}
 }

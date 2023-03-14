@@ -14,7 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Smartadmin'),
-    'simevi_url' => 'http://simevi.test/api/',
+    'simevi_url' => 'http://simevi.hortikultura.pertanian.go.id/api/',
     'simevi_user' => 'admin',
     'simevi_pwd' => 'password',
     /*
