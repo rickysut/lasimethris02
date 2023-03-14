@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->string('npwp', 50);
             $table->string('no_riph');
-            $table->string('id_poktan')->unique();
+            $table->string('id_poktan');
             $table->string('id_kabupaten')->nullable();
             $table->string('id_kecamatan')->nullable();
             $table->string('id_kelurahan')->nullable();
@@ -26,6 +26,11 @@ return new class extends Migration
             $table->string('nama_pimpinan')->nullable();
             $table->string('hp_pimpinan')->nullable();
             $table->timestamps();
+            $table->foreign('no_riph')
+                ->references('no_ijin')
+                ->on('pull_riphs')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

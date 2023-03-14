@@ -138,7 +138,7 @@
                                         '<td class="'+nomor+' text-right "></td>'+
                                         '<td class="text-center">'+
                                         '<a class="btn btn-xs btn-primary " data-toggle="tooltip" title data-original-title="Lihat Rincian" href='+urlView+'>'+
-                                        '    <i class="fal fa-plus-circle"></i>&nbsp;PKS</a>'+
+                                        '    <i class="fal fa-eye"></i>&nbsp;View</a>'+
                                         '</td></tr>');
         
                                 last = group;

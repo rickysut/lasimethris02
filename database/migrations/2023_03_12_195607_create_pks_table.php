@@ -13,18 +13,24 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('poktans');
-        Schema::create('poktans', function (Blueprint $table) {
+        Schema::create('pks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('npwp', 50);
+            $table->string('npwp');
             $table->string('no_riph');
-            $table->string('id_petani')->unique();
-            $table->string('id_poktan');
-            $table->string('nama_petani')->nullable();
-            $table->string('ktp_petani')->nullable();
-            $table->double('luas_lahan')->nullable();
-            $table->string('periode_tanam')->nullable();
+            $table->string('no_perjanjian');
+            $table->date('tgl_perjanjian_start');
+            $table->date('tgl_perjanjian_end');
+            $table->integer('jumlah_anggota');
+            $table->integer('luas_rencana');
+            $table->string('varietas_tanam');
+            $table->string('periode_tanam');
+            $table->string('provinsi');
+            $table->string('kabupaten');
+            $table->string('kecamatan');
+            $table->string('desa');
+            $table->string('berkas_pks');
             $table->timestamps();
+            $table->softDeletes();
             $table->foreign('no_riph')
                 ->references('no_ijin')
                 ->on('pull_riphs')
@@ -40,6 +46,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('poktans');
+        Schema::dropIfExists('pks');
     }
 };
