@@ -19,6 +19,7 @@
         "jquery": "^3.6.3",
         "jquery-mask-plugin": "^1.14.16",
         "jqvmap": "^1.0.1",
+        "leaflet": "^1.9.3",
         "toastr": "^2.1.4"
     }
 }

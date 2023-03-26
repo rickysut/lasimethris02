@@ -201,7 +201,7 @@ class PostsController extends Controller
         $post->body = $detail;
         $post->exerpt = $request->input('exerpt');
         $post->tags = $request->input('tags');
-        $post->category_id = $request->input('category');
+        $post->category_id = $request->input('category_id');
         $post->user_id = $request->input('author');
         $post->priority = $request->input('priority');
         $post->is_active = $request->input('is_active');

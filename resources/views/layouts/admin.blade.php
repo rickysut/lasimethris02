@@ -44,6 +44,9 @@
         <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/fa-regular.css') }}">
         <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/fa-solid.css') }}">
         <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/fa-brands.css') }}">
+
+		{{-- //leaflet --}}
+		<link rel="stylesheet" media="screen, print" href="{{ asset('css/leaflet/leaflet.css') }}">
 		
 
 		<!-- coreui -->
@@ -124,11 +127,8 @@
 		<script src="{{ asset('js/app.js') }}"></script>
 		
 		<!-- Smartadmin core -->
-		
-		
 		<script src="{{ asset('js/vendors.bundle.js') }}"></script>
-		
-        <script src="{{ asset('js/app.bundle.js?v=1.1') }}"></script>
+		<script src="{{ asset('js/app.bundle.js?v=1.1') }}"></script>
 		<!-- Smartadmin plugin -->
 		<script src="{{ asset('js/smartadmin/datagrid/datatables/datatables.bundle.js') }}"></script>
 		<script src="{{ asset('js/smartadmin/datagrid/datatables/datatables.export.js') }}"></script>
@@ -141,6 +141,11 @@
 		<script src="{{ asset('js/formplugins/summernote/summernote.js') }}"></script>
 		<!-- Smartadmin misc -->
 		<script src="{{ asset('js/smartadmin/miscellaneous/nestable/nestable.js') }}"></script>
+
+		{{-- leaflet --}}
+		<script src="{{ asset('js/leaflet/leaflet.js') }}"></script>
+
+		
 		<!-- smartadmin statistics -->
 		<script src="{{ asset('js/smartadmin/statistics/c3/c3.js') }}"></script>
 		<script src="{{ asset('js/smartadmin/statistics/chartist/chartist.js') }}"></script>
@@ -152,7 +157,6 @@
 		
 		<script src="{{ asset('js/toastr.js') }}"></script>
 
-
 		<!-- coreui -->
 		<script src="{{ asset('js/main.js?v=1.0.2') }}"></script>
 		<script src="{{ asset('js/pdfmake/pdfmake.min.js') }}"></script>
@@ -161,7 +165,6 @@
 		
 		<!-- search bar -->
 		<script type="text/javascript">
-			
 
 			console.log("Init Language");
 			if (!$.i18n) {

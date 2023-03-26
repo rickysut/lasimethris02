@@ -127,8 +127,8 @@ class AnggotaMitraController extends Controller
 				$anggotamitra->altitude = $request->input('altitude');
 				$anggotamitra->luas_kira = $request->input('luas_kira');
 				$anggotamitra->polygon = $request->input('polygon');
-
 				break;
+
 			case 'form2':
 				$anggotamitra->tgl_tanam = $request->input('tgl_tanam');
 				$anggotamitra->luas_tanam = $request->input('luas_tanam');
@@ -180,6 +180,7 @@ class AnggotaMitraController extends Controller
 				//# code...
 				break;
 		}
+		// dd($anggotamitra);
 		// dd($anggotamitra);
 		$anggotamitra->save();
 

@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 @section('styles')
 <link rel="stylesheet" media="screen, print" href="{{ asset('css/miscellaneous/lightgallery/lightgallery.bundle.css') }}">
+<link rel="stylesheet" media="screen, print" href="{{ asset('css/leaflet/leaflet.draw.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.css" />
+<script src="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.js"></script>
 @endsection
 @section('content')
 @include('partials.breadcrumb')
@@ -40,14 +43,24 @@
 						<div class="panel-content card-header">
 							<div class="row">
 								<div class="form-group col-md-12">
-									<label class="form-label" for="gmap">Buat Peta Polygon bidang lahan dari lokasi yang dipilih<sup class="text-danger"> *</sup></label>
-									<iframe id="gmap" src="https://www.google.com/maps/d/embed?mid=1sTXQ7FGmyNhF9ROGa2ZRtQxwu0Jp48o&ehbc=2E312F" width="100%" height="300px"></iframe>
+									<label class="form-label" for="gmap">
+									  Pilih lokasi dan Buat Peta Polygon bidang lahan dari lokasi yang dipilih<sup class="text-danger"> *</sup>
+									</label>
+									<div id="myMap" style="height: 500px; width: 100%;"></div>
 									<span class="help-block">Keterangan cara menentukan titik lokasi dan membuat polygon</span>
-								</div>
+								  </div>
 							</div>
 						</div>
 						<div class="panel-content">
 							<div class="row">
+								<div class="input-group input-group-sm mb-3 col-12">
+									<input type="text" class="form-control" placeholder="cari lokasi..."
+										aria-label="search place" id="search-input">
+									<div class="input-group-append">
+										<button class="btn btn-warning"
+										type="button" id="search-button"><i class="fas fa-search"></i></button>
+									</div>
+								</div>
 								<div class="form-group col-md-3">
 									<label>Nama Lokasi <sup class="text-danger"> **</sup></label>
 									<div class="input-group">
@@ -67,8 +80,8 @@
 											<span class="input-group-text"><i class="fal fa-map-marker"></i></span>
 										</div>
 										<input type="text" value="{{ old('latitude', $anggotamitras->latitude) }}"
-											name="latitude" id="latitude" readonly
-											class="disabled font-weight-bold form-control form-control-sm bg-white" />
+											name="latitude" id="latitude"
+											class="font-weight-bold form-control form-control-sm bg-white" />
 									</div>
 									<span class="help-block">Koordinat Lintang lokasi</span>
 								</div>
@@ -79,8 +92,8 @@
 											<span class="input-group-text"><i class="fal fa-map-marker-alt"></i></span>
 										</div>
 										<input type="text" value="{{ old('longitude', $anggotamitras->longitude) }}"
-											name="longitude" id="longitude" readonly
-											class="disabled font-weight-bold form-control form-control-sm bg-white" />
+											name="longitude" id="longitude"
+											class="font-weight-bold form-control form-control-sm bg-white" />
 									</div>
 									<span class="help-block">Koordinat Bujur lokasi</span>
 								</div>
@@ -103,8 +116,8 @@
 											<span class="input-group-text"><i class="fal fa-draw-polygon"></i></span>
 										</div>
 										<input type="text" value="{{ old('polygon', $anggotamitras->polygon) }}"
-										name="polygon" id="polygon" readonly
-										class="disabled font-weight-bold form-control form-control-sm bg-white" />
+										name="polygon" id="polygon"
+										class="font-weight-bold form-control form-control-sm bg-white" />
 									</div>
 									<span class="help-block">Kurva bidang lahan yang ditanami.</span>
 								</div>
@@ -115,8 +128,8 @@
 											<span class="input-group-text"><i class="fal fa-ruler-combined"></i></span>
 										</div>
 										<input type="text" value="{{ old('luas_kira', $anggotamitras->luas_kira) }}"
-											name="luas_kira" id="luas_kira" readonly
-											class="disabled font-weight-bold form-control form-control-sm bg-white" />
+											name="luas_kira" id="luas_kira"
+											class="font-weight-bold form-control form-control-sm bg-white" />
 									</div>
 									<span class="help-block">Luas bidang diukur oleh sistem.</span>
 								</div>
@@ -451,7 +464,18 @@
 <!-- start script for this page -->
 @section('scripts')
 <script src="{{ asset('js/miscellaneous/lightgallery/lightgallery.bundle.js') }}"></script>
+
+
+<script src="{{ asset('js/leaflet/leaflet.draw.js') }}"></script>
 @parent
+
+{{-- add leaflet to page --}}
+<script src="{{ asset('js/leaflet/myMap.js') }}"></script>
+
+{{-- <script src="{{ asset('js/leaflet/drawPolygon.js') }}"></script> --}}
+
+<script src="{{ asset('js/leaflet/locationsearch.js') }}"></script>
+
 <!-- gallery Tanam -->
 <script>
     $(document).ready(function() {
@@ -480,7 +504,7 @@
     });
 </script>
 <!-- gallery Tanam -->
-<!-- gallery Tanam -->
+<!-- gallery Produksi -->
 <script>
     $(document).ready(function() {
         var $initScope = $('#js-galleryProduksi');
@@ -507,5 +531,5 @@
         });
     });
 </script>
-<!-- gallery Tanam -->
+<!-- gallery Produksi -->
 @endsection
