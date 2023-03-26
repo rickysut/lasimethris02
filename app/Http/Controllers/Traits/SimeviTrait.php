@@ -23,8 +23,6 @@ trait SimeviTrait
         $response = Http::withToken($token)->withHeaders([
             'Accept' => 'application/json'
         ])->get(config('app.simevi_url').'provinsis');
-
-        
         return $response->json();
     }
 

@@ -27,10 +27,10 @@
     <!-- You can add your own stylesheet here to override any styles that comes before it
 		<link rel="stylesheet" media="screen, print" href="css/your_styles.css">-->
     <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/datagrid/datatables/datatables.bundle.css') }}">
-    <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/formplugins/bootstrap-datepicker/bootstrap-datepicker.css') }}">
-    <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/formplugins/dropzone/dropzone.css') }}">
-    <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/formplugins/select2/select2.bundle.css') }}">
-    <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/formplugins/summernote/summernote.css') }}">
+    <link rel="stylesheet" media="screen, print" href="{{ asset('css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css') }}">
+    <link rel="stylesheet" media="screen, print" href="{{ asset('css/formplugins/dropzone/dropzone.css') }}">
+    <link rel="stylesheet" media="screen, print" href="{{ asset('css/formplugins/select2/select2.bundle.css') }}">
+    <link rel="stylesheet" media="screen, print" href="{{ asset('css/formplugins/summernote/summernote.css') }}">
     <link rel="stylesheet" media="screen, print" href="{{ asset('css/miscellaneous/nestable/nestable.css') }}">
     <link rel="stylesheet" media="screen, print" href="{{ asset('css/miscellaneous/reactions/reactions.css') }}">
     <link rel="stylesheet" media="screen, print" href="{{ asset('css/smartadmin/skins/skin-master.css') }}">
