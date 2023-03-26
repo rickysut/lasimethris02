@@ -1,7 +1,17 @@
 @extends('layouts.admin')
+@section('styles')
+<style>
+	.img-cropped {
+    object-fit: cover;
+    object-position: center center;
+    width: 70px;
+    height: 70px;
+}
+</style>
+@endsection
 @section('content')
 @include('partials.breadcrumb')
-{{-- @include('partials.subheader') --}}
+@include('partials.subheader')
 @can('feeds_access')
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -46,181 +56,128 @@
     @else
     @endif
     {{-- available articles --}}
-    <div class="row">
-        <div class="col-12">
-            <div id="panel-1" class="panel">
-                <div class="panel-hdr">
-                    <h2>
-                        <i class="subheader-icon fal fa-ballot-check mr-1"></i>Artike| <span class="fw-300"><i>Berita</i></span>
-                    </h2>
-                    
-                    <div class="panel-toolbar">
-                        @can('feeds_create')
-                        <a href="{{ route('admin.posts.create') }}"
-                            class="mr-1 btn btn-primary btn-xs"><i class="fal fa-plus mr-1"></i>
-                            Artikel Baru
-                        </a>
-                        @endcan
-                        @include('partials.globaltoolbar')
+
+<div class="row d-flex flex-row">
+    <div class="col-md-8">
+        <div class="row">
+            <div class="card-deck d-flex mb-3">
+                @foreach ($posts->slice(0,2) as $post)
+                <div class="card">
+                    @if (is_null($post->img_cover))
+                        <img src="{{$defaultimg}}"alt=""  class="card-img-top img-fluid"
+                        alt="Card image cap">
+                    @else
+                        <img src="{{ url('storage/img/post_img/' . $post->img_cover) }}" class="card-img-top img-fluide"
+                            alt="Card image cap">
+                    @endif
+                    <div class="card-body">
+                        <h3 class="text-muted"><a href="{{ route('admin.posts.show', $post->id) }}">{{$post->title}}</a></h3>
+                        <div class="opacity-60">
+                            <span class="text-muted">Posted by: </span><span class="fw-900">{{$post->user->name}}</span> | {{$post->created_at}}
+                        </div>
+                        <span class="badge text-white fw-500" style="background-color:{{$post->category->hexcolor}};">{{$post->category->name}}</span>
+                        <p class="card-text mt-2">{{$post->exerpt}}</p>
                     </div>
-                    
+                    <div class="card-footer d-flex justify-content-between">
+                        <small class="text-muted">updated at: {{$post->updated_at}}</small>
+                        <span>
+                            <span><i class="fas fa-eye mr-1 text-warning"></i>{{ $post->view_counter }}</span>
+                            <span><i class="fas fa-star mr-1 text-warning"></i>{{ $post->stars_counter }}</span>
+                        </span>
+                    </div>
                 </div>
-                <div class="panel-container show">
-                    <div class="panel-content">
-                        <div class="table-responsive">
-                            <table id="templateFeed" class="table table-sm table-hover table-striped table-bordered  dt-feeds w-100">
-                                <thead class="thead-dark">
-                
-                                    <th hidden>created at</th>
-                                    <th style="width: 50%">Title</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Action</th>
-                                </thead>
-                                <tbody>
-                                    @foreach ($posts as $post)
-                                        <tr>
-                                            <td hidden>{{ $post->created_at }}</td>
-                                            <td>
-                                                <a href="{{ route('admin.posts.show', $post->id) }}" class="fs-lg fw-500 mr-2">
-                                                    {{ $post->title }}
-                                                </a>
-                                                <div>
-                                                    <div class="text-muted fs-xs">
-                                                        created by:
-                                                        <span class="fw-700 mr-1 text-info">
-                                                            {{ $post->user->name }}
-                                                        </span>
-                                                        <span>on
-                                                            <i class="fal fa-calendar-day mr-1"></i>
-                                                            {{ $post->created_at }}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    @if (!empty($post->published_at))
-                                                        <a class="badge btn-sm btn-success text-white"
-                                                            title="telah dipublikasikan">Published</a>
-                                                    @else
-                                                        <a class="badge btn-sm btn-warning text-white"
-                                                            title="belum dipublikasikan">Unpublished</a>
-                                                    @endif
-                                                </div>
-                                            </td>
-                                            <td class="d-flex align-items-center">
-                                                @can('feeds_edit')
-                                                    <a href="{{ route('admin.posts.edit', $post->id) }}"
-                                                        class="badge btn-sm btn-info btn-icon mr-1" role="button"
-                                                        title="Ubah Artikel">
-                                                        <i class="fal fa-edit"></i>
-                                                    </a>
-                                                @endcan
-                                                @can('feeds_delete')
-                                                    <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <button type="submit" class="btn btn-sm btn-danger btn-icon"
-                                                            title="hapus Artikel">
-                                                            <i class="fal fa-trash-alt"></i>
-                                                        </button>
-                                                    </form>
-                                                @endcan
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                @endforeach
+            </div>
+            <div class="card-deck d-flex mb-3">
+                @foreach ($posts->slice(3,2) as $post)
+                <div class="card">
+                    @if (is_null($post->img_cover))
+                        <img src="{{$defaultimg}}"alt=""  class="card-img-top img-fluid"
+                        alt="Card image cap">
+                    @else
+                        <img src="{{ url('storage/img/post_img/' . $post->img_cover) }}" class="card-img-top img-fluide"
+                            alt="Card image cap">
+                    @endif
+                    <div class="card-body">
+                        <h3 class="text-muted"><a href="{{ route('admin.posts.show', $post->id) }}">{{$post->title}}</a></h3>
+                        <div class="opacity-60">
+                            <span class="text-muted">Posted by: </span><span class="fw-900">{{$post->user->name}}</span> | {{$post->created_at}}
+                        </div>
+                        <span class="badge text-white fw-500" style="background-color:{{$post->category->hexcolor}};">{{$post->category->name}}</span>
+                        <p class="card-text mt-2">{{$post->exerpt}}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <small class="text-muted">updated at: {{$post->updated_at}}</small>
+                        <span>
+                            <span><i class="fas fa-eye mr-1 text-warning"></i>{{ $post->view_counter }}</span>
+                            <span><i class="fas fa-star mr-1 text-warning"></i>{{ $post->stars_counter }}</span>
+                        </span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-12 mb-5">
+                <div class="container">
+                    <div class="input-group">
+                        <input id="search-input" type="text" class="form-control" placeholder="Search Posts" aria-label="search posts" aria-describedby="search-input">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fal fa-search"></i></span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-md-12 mb-5">
+                <div class="container" id="recent-post">
+                    <label class="text-muted h4 text-uppercase" for="recent-post" style="opacity: 0.6">Recent Post</label>
+                    @foreach ($posts->slice(5,5) as $post)
+                    <div class="mb-2">
+                        <div style="display: flex; flex: 1 1 auto;">
+                            <div class="img-square-wrapper" style="overflow: hidden;">
+                                @if (is_null($post->img_cover))
+                                    <img src="{{$defaultimg}}" alt="Card image cap" class="rounded img-cropped">
+                                @else
+                                    <img src="{{ url('storage/img/post_img/' . $post->img_cover) }}"  class="img-cropped rounded"
+                                        alt="Card image cap">
+                                @endif
+                            </div>
+                            <div class="col p-2">
+                                <div class="d-flex justify-content-between">
+                                    <a class="fw-500 h5 text-muted d-block text-truncate" href="{{ route('admin.posts.show', $post->id) }}">{{ $post->title }}</a>
+                                </div>
+                                <span class="fs-xs">{{ $post->published_at }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                    <a href="{{ route('admin.allblogs') }}" class="text-right">More Posts...</a>
+                </div>
+                {{-- <div class="border-bottom border-secondary mt-3"></div> --}}
+            </div>
+            <div class="col-md-12 mb-5">
+                <div class="container" id="categories">
+                    <label class="text-muted h4 text-uppercase" for="recent-post" style="opacity: 0.6">Categories</label>
+                    @foreach ($categories as $category)
+                    <div class="d-flex flex-row align-items-center mb-2">
+                        <div class='icon-stack display-4 flex-shrink-0'>
+                            <i class="fas fa-square icon-stack-3x opacity-30" style="color:{{$category->hexcolor}}"></i>
+                            <i class="fas fa-graduation-cap icon-stack-1x opacity-100" style="color:{{$category->hexcolor}}"></i>
+                        </div>
+                        <div class="ml-2">
+                            <span class="text-muted fw-500">
+                                <a href="{{ route('admin.categories.show', $category->id) }}">{{$category->name}}</a>
+                            </span>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
-    {{-- deleted articles --}}
-    @if (\Auth::user()->roleaccess == '1')
-        <div class="row">
-            <div class="col-md-12">
-                <div id="panel-1" class="panel">
-                    <div class="panel-hdr">
-                        <h2>
-                            <i class="subheader-icon fal fa-ballot-check mr-1"></i>Deleted Articles |
-                            <span class="fw-300 ml-1"><i>Daftar Artikel dihapus.</i></span>
-                        </h2>
-                        <div class="panel-toolbar">
-                            @include('partials.globaltoolbar')
-                        </div>
-                    </div>
-
-                    
-                    <div class="panel-container show">
-                        <div class="panel-content">
-                            <div class="table">
-                                <div class="table dataTables_wrapper dt-bootstrap4">
-                                    <table id="deleted_feeds" class="table table-sm table-bordered table-striped table-hover ajaxTable datatable deleted_feeds w-100">
-                                        <thead class="thead-dark">
-                                            <th style="width: 50%">title</th>
-                                            <th style="width: 20%">Deleted at</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($delposts as $post)
-                                                <tr>
-                                                    <td>
-                                                        
-                                                        {{ $post->title }}
-                                                        
-                                                        <div>
-                                                            <div class="text-muted fs-xs">
-                                                                created by:
-                                                                <span class="fw-700 mr-1 text-info">
-                                                                    {{ $post->user->name }}
-                                                                </span>
-                                                                <span>on
-                                                                    <i class="fal fa-calendar-day mr-1"></i>
-                                                                    {{ $post->created_at }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>{{ $post->deleted_at }}</td>
-                                                    <td>
-                                                        <div>
-                                                            @if (!empty($post->published_at))
-                                                                <a class="badge btn-sm btn-success text-white"
-                                                                    title="telah dipublikasikan">Published</a>
-                                                            @else
-                                                                <a class="badge btn-sm btn-warning text-white"
-                                                                    title="belum dipublikasikan">Unpublished</a>
-                                                            @endif
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        @can('feeds_delete')
-                                                            <form action="{{ route('admin.posts.restore', $post->id) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('put')
-                                                                <button type="submit" class="btn btn-sm btn-warning btn-icon"
-                                                                    title="hapus Artikel">
-                                                                    <i class="fal fa-undo"></i>
-                                                                </button>
-                                                            </form>
-                                                        @endcan
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
+</div>
 @endcan
 @endsection
 

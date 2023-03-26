@@ -242,8 +242,8 @@
             {{-- user task --}}
             @can('user_task_access')
                 <li class="nav-title">{{ __('PROSES RIPH')}}</li>
-                <li>
-                    @can('pull_access')
+                
+                @can('pull_access')
                     <li class="c-sidebar-nav-item {{ request()->is('admin/task/pull') ? 'active' : '' }}">
                         <a href="{{ route('admin.task.pull') }}"
                             data-filter-tags="{{ strtolower(trans('cruds.pullSync.title_lang')) }}">
@@ -265,23 +265,44 @@
                     </li>
                 @endcan
                 @can('kelompoktani_access')
-                    <li class="c-sidebar-nav-item {{ request()->is('admin/kelompoktani') ? 'active' : '' }}">
-                        <a href="{{ route('admin.task.kelompoktani.index') }}"
+                    <li class="{{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/kelompoktani/*') || request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active open' : '' }}">
+                        <a href="#" title="Kelompok tani"
                             data-filter-tags="{{ strtolower(trans('cruds.kelompoktani.title_lang')) }}">
-                            <i class="fa-fw fal fa-users c-sidebar-nav-icon">
-
-                            </i>
-                            {{ trans('cruds.kelompoktani.title_lang') }}
+                            <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+                            <span class="nav-link-text"
+                            data-i18n="nav.administation_sub1">{{ trans('cruds.kelompoktani.title_lang') }}</span>
+                            
                         </a>
+                        <ul>
+                            @can('poktan_access')
+                            <li
+                                class="c-sidebar-nav-item {{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/kelompoktani/*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.task.kelompoktani') }}" title="Daftar poktan"
+                                    data-filter-tags="{{ strtolower(trans('cruds.daftarpoktan.title_lang')) }}">
+                                    <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+                                    {{ trans('cruds.daftarpoktan.title_lang') }}
+                                </a>
+                            </li>
+                            @endcan    
+                            @can('pks_access')
+                            <li
+                                class="c-sidebar-nav-item {{ request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.task.pks.index') }}" title="Daftar PKS"
+                                    data-filter-tags="{{ strtolower(trans('cruds.daftarpks.title_lang')) }}">
+                                    <i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+                                    {{ trans('cruds.daftarpks.title_lang') }}
+                                </a>
+                            </li>
+                            @endcan     
+                        </ul>
                     </li>
                 @endcan
-                </li>
+                
             @endcan
 
-
-            @can('verifikasi_access')
-                <li
-                    class="{{ request()->is('admin/task/pengajuan*') || request()->is('admin/task/skl*') ? 'active open' : '' }} ">
+            {{-- permohonan --}}
+            @can('permohonan_access')
+                <li class="{{ request()->is('admin/task/pengajuan*') || request()->is('admin/task/skl*') ? 'active open' : '' }} ">
                     <a href="#" title="Verifikasi & SKL"
                         data-filter-tags="{{ strtolower(trans('cruds.verifikasi.title_lang')) }}">
                         <i class="fa-fw fal fa-ballot"></i>
@@ -300,7 +321,7 @@
                                 </a>
                             </li>
                         @endcan
-                        @can('skl_access')
+                        @can('skl_access')  
                             <li
                                 class="c-sidebar-nav-item {{ request()->is('admin/task/skl') || request()->is('admin/task/skl/*') ? 'active' : '' }}">
                                 <a href="{{ route('admin.task.skl.index') }}" title="Skl"
@@ -316,7 +337,7 @@
                 </li>
             @endcan
 
-            {{-- berkas --}}
+            {{-- pengelolaan berkas --}}
             @can('folder_access')
                 <li
                     class="{{ request()->is('admin/task/berkas*') || request()->is('admin/task/galeri*') || request()->is('admin/task/template*') ? 'active open' : '' }} ">
@@ -369,10 +390,33 @@
             @can('feedmsg_access')
                 <li class="nav-title">BERITA & PESAN</li>
                 @can('feeds_access')
-                    <li
-                        class="c-sidebar-nav-item {{ request()->is('admin/posts') || request()->is('admin/posts/*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.posts.index') }}" data-filter-tags="posts">
-                            <i class="fal fa-rss c-sidebar-nav-icon"></i>Artikel/Berita</a>
+                    <li class="{{ request()->is('admin/posts*') || request()->is('admin/categories*') ? 'active open' : '' }}">
+                        <a href="#" title="Artikel/Berita"
+                            data-filter-tags="Artikel/Berita">
+                            <i class="fa-fw fal fa-rss c-sidebar-nav-icon"></i>
+                            <span class="nav-link-text"
+                            data-i18n="nav.administation_sub1">Artikel/Berita</span>
+                        </a>
+                        <ul>
+                            @can('feeds_access')
+                            <li
+                                class="c-sidebar-nav-item {{ request()->is('admin/categories') || request()->is('admin/categories/*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.categories.index') }}" title="Categories"
+                                    data-filter-tags="categories">
+                                    <i class="fa-fw fal fa-rss c-sidebar-nav-icon"></i>
+                                    Categories
+                                </a>
+                            </li>
+                            <li
+                                class="c-sidebar-nav-item {{ request()->is('admin/posts') || request()->is('admin/posts/*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.posts.index') }}" title="Posts"
+                                    data-filter-tags="Posts">
+                                    <i class="fa-fw fal fa-rss c-sidebar-nav-icon"></i>
+                                    Articles
+                                </a>
+                            </li>
+                            @endcan
+                        </ul>
                     </li>
                 @endcan
                 @can('messenger_access')
@@ -474,7 +518,7 @@
                         <a href="{{ route('admin.task.template') }}"
                             data-filter-tags="{{ strtolower(trans('cruds.mastertemplate.title_lang')) }}">
                             <i class="fal fa-file-upload c-sidebar-nav-icon"></i>{{ trans('cruds.mastertemplate.title_lang') }}
-                        </a>x
+                        </a>
                     </li>
                 @endcan
 

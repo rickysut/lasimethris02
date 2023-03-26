@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('npwp')->unique();
             $table->string('keterangan')->nullable();
             $table->string('nama')->nullable();
-            $table->string('no_ijin')->nullable();
+            $table->string('no_ijin')->unique();
             $table->integer('periodetahun')->nullable();
             $table->date('tgl_ijin')->nullable();
             $table->date('tgl_akhir')->nullable();
@@ -37,6 +37,7 @@ return new class extends Migration
             $table->string('formRpo')->nullable();
             $table->string('formLa')->nullable();
             $table->string('no_doc')->nullable();
+            $table->text('datariph')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

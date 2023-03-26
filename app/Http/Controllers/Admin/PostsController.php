@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\StarredPost;
+use App\Models\ReadPost;
 use Carbon\Carbon;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 use Illuminate\Http\Request;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 use Gate;
 // use Yajra\DataTables\Facades\DataTables;
 
@@ -22,119 +25,220 @@ class PostsController extends Controller
     {
         abort_if(Gate::denies('feeds_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        
-        if (\Auth::user()->roleaccess != '1')
-            
-                $posts = Post::whereNotNull('published_at')->get();
-            else
-                $posts = Post::all();
-            
-            
-            
+
+        if (\Auth::user()->roleaccess == '1')
+            $posts = Post::whereNotNull('published_at')
+                ->withCount(['readposts as view_counter' => function ($query) {
+                    $query->where('read_flag', 1);
+                }])
+                ->withCount(['starredpost as stars_counter' => function ($query) {
+                    $query->whereNotNull('updated_at');
+                }])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        else
+            $posts = Post::all();
+
+        // $user = Category::with('post')->get();
+        // dd($posts);
         $categories = Category::all();
         $users = User::all();
-        $user = User::with('post')->get();
-        $user = Category::with('post')->get();
-        
-        $module_name = 'Post' ;
+        $author = User::with('post')->get();
+        $category = Category::with('post')->get();
+        $starred = StarredPost::all();
+
+        $defaultimg = url('storage/img/post_img/default.jpg');
+
+        $module_name = 'Post';
         $page_title = 'Artikel/Berita';
-        $page_heading = 'Artikel/Berita' ;
+        $page_heading = 'Artikel/Berita';
         $heading_class = 'fal fa-rss';
 
-        
+
         $delposts = Post::onlyTrashed()->get();
-        
-        return view('admin.posts.index', compact('module_name','page_title','users', 'page_heading', 'heading_class', 'categories','user', 'posts', 'delposts'));
+
+        return view('admin.posts.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories', 'users', 'author', 'posts', 'defaultimg', 'delposts'));
     }
 
-    public function show(Post $id)
+    public function allblogs()
     {
-        // dd($id);
-        // $post = Post::find($id->id);
-        // dd($id);
-        $post = $id;
-        $module_name = 'Post' ;
+        abort_if(Gate::denies('feeds_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        if (\Auth::user()->roleaccess != '1')
+            $posts = Post::whereNotNull('published_at')
+                ->withCount(['readposts as view_counter' => function ($query) {
+                    $query->where('read_flag', 1);
+                }])
+                ->withCount(['starredpost as stars_counter' => function ($query) {
+                    $query->whereNotNull('updated_at');
+                }])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        else
+            $posts = Post::all();
+        $categories = Category::all();
+        $users = User::all();
+        $author = User::with('post')->get();
+        $category = Category::with('post')->get();
+        $starred = StarredPost::all();
+
+        $defaultimg = url('storage/img/post_img/default.jpg');
+
+        $module_name = 'Post';
         $page_title = 'Artikel/Berita';
-        $page_heading = 'Lihat Artikel/Berita' ;
+        $page_heading = 'Index Artikel/Berita';
         $heading_class = 'fal fa-rss';
-        
-        $user = User::all();
-        return view('admin.posts.show', compact('module_name','user','page_title','page_heading','heading_class','post'));
+
+
+        $delposts = Post::onlyTrashed()->get();
+
+        return view('admin.posts.blogslist', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories', 'users', 'author', 'posts', 'defaultimg', 'delposts'));
     }
 
-    
+    public function show(Request $request, $id)
+    {
+        $module_name = 'Post';
+        $page_title = 'Artikel/Berita';
+        $page_heading = 'Artikel/Berita';
+        $heading_class = 'fal fa-rss';
+
+        $categories = Category::all();
+        $post = Post::findOrFail($id);
+        $starredPosts = StarredPost::with('posts')->where('user_id', $id)->get();
+        $starredpost = StarredPost::all();
+
+        $posts = Post::whereNotNull('published_at')
+            ->withCount(['readposts as view_counter' => function ($query) {
+                $query->where('read_flag', 1);
+            }])
+            ->withCount(['starredpost as stars_counter' => function ($query) {
+                $query->whereNotNull('updated_at');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        // Trigger the read flag for the current user and post
+        $readpost = Readpost::firstOrNew([
+            'user_id' => auth()->user()->id,
+            'post_id' => $post->id,
+        ]);
+        $readpost->read_flag = 1;
+        $readpost->read_count = $readpost->read_count + 1;
+        $readpost->save();
+
+        return view('admin.posts.show', compact('post', 'readpost', 'starredpost', 'posts', 'starredPosts', 'categories', 'module_name', 'page_title', 'page_heading', 'heading_class'));
+    }
+
+
     public function create()
     {
         // dd($request->all());
         $users = user::all();
         $categories = Category::all();
 
-        $module_name = 'Post' ;
+        $module_name = 'Post';
         $page_title = 'Artikel/Berita';
-        $page_heading = 'Tambah Artikel/Berita' ;
+        $page_heading = 'Tambah Artikel/Berita';
         $heading_class = 'fal fa-rss';
-        
-        return view('admin.posts.create', compact('module_name','page_title','page_heading','heading_class','users','categories'));
+
+        return view('admin.posts.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'users', 'categories'));
     }
 
     public function edit($id)
     {
         $post = Post::find($id);
         $categories = Category::all();
+        $users  = User::with('post')->get();
+        $defaultimg = url('storage/img/post_img/default.jpg');
 
-        $module_name = 'Post' ;
+        $module_name = 'Post';
         $page_title = 'Artikel/Berita';
-        $page_heading = 'Ubah Artikel/Berita' ;
+        $page_heading = 'Perbarui Artikel/Berita';
         $heading_class = 'fal fa-rss';
 
-        return view('admin.posts.edit', compact('module_name','page_title','page_heading','heading_class','categories', 'post'));
+        return view('admin.posts.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'categories', 'post', 'users', 'defaultimg'));
+    }
+
+    public function store(Request $request)
+    {
+        //dd($request->all());
+        $detail = $request->summernoteInput;
+
+        $post = new Post();
+        $post->title = $request->input('title');
+        $post->body = $detail;
+        $post->category_id = $request->input('category');
+        $post->user_id = $request->input('author');
+        $post->priority = $request->input('priority');
+        $post->is_active = $request->input('is_active');
+        $post->visibility = $request->input('visibility');
+        $post->exerpt = $request->input('exerpt');
+        $post->tags = $request->input('tags');
+        $author = User::find($request->input('author'));
+
+        if ($request->hasFile('img_cover')) {
+            $image = $request->file('img_cover');
+            $image_name = ($author->id) . '_' . $post->id . '_' . time() . '.' . $image->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('img/post_img', $image, $image_name);
+            $post->img_cover = $image_name;
+        }
+
+        $draft = $request->input('draft');
+        if ($draft == 'on') {
+            $post->published_at = Carbon::now();
+        }
+        // dd($post);
+        $post->save();
+        return redirect()->route('admin.posts.index')
+            ->with('success', 'Post created');
     }
 
     public function update(Request $request, Post $post)
     {
-        
-        //dd($request->all());
         $detail = $request->summernoteInput;
-        $dom = new \DomDocument('1.0', 'UTF-8');
-        libxml_use_internal_errors(true);
-        @$dom->loadHtml($detail, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-        $images = $dom->getelementsbytagname('img');
-        $bs64='base64';//variable to check the image is base64 or not
-        foreach($images as $k => $img){
-            $data = $img->getattribute('src');
-            
-            if (strpos($data,$bs64) == true)
-            {
-                $data = base64_decode($data);
-                $image_name= time().$k.'.png';
 
-                $path = Storage::disk('public')->putFileAs('posts/img', $img->getattribute('src'), $image_name);
-                $img->removeattribute('src');
-                $img->setattribute('src', '/'.$path);
-            }
-            else
-            {
-                $image_name="/".$data;
-                $img->setAttribute('src', $image_name);
-            }
-            
+        $post->title = $request->input('title');
+        // dd($request->input('title'));
+        $post->body = $detail;
+        $post->exerpt = $request->input('exerpt');
+        $post->tags = $request->input('tags');
+        $post->category_id = $request->input('category');
+        $post->user_id = $request->input('author');
+        $post->priority = $request->input('priority');
+        $post->is_active = $request->input('is_active');
+        $post->visibility = $request->input('visibility');
+        $author = User::find($request->input('author'));
+
+        if ($request->hasFile('img_cover')) {
+            $image = $request->file('img_cover');
+            $image_name = ($author->id) . '_' . $post->id . '_' . time() . '.' . $image->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('img/post_img', $image, $image_name);
+            $post->img_cover = $image_name;
         }
-        $detail = $dom->savehtml();
-        $active = $request->input('is_active');
 
-        //$attribute = [];
-        $attribute = array(
-            'title' => $request->input('title'), 
-            'body' => $detail ,
-            'category_id' => $request->input('category_id') , 
-            'tags' => $request->input('tags'),
-            'user_id' => auth()->id(),
-            'published_at' => (($active == 'on') ? Carbon::now() : null) );
-        
-        //dd($attribute);
-        $post->update($attribute);
-        
+        $draft = $request->input('draft');
+        if ($draft == 'on') {
+            $post->published_at = Carbon::now();
+        } else {
+            $post->published_at = null;
+        }
+
+        $post->update();
+
         return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully');
+    }
+
+    public function star(Post $post)
+    {
+        $user = Auth::user();
+        $user->starredPosts()->attach($post->id);
+        return back()->withSuccess('Post starred successfully!');
+    }
+
+    public function unstar(Post $post)
+    {
+        $user = Auth::user();
+        $user->starredPosts()->detach($post->id);
+        return back()->withSuccess('Post unstarred successfully!');
     }
 
     public function delete(Request $request, Post $post)
@@ -146,55 +250,13 @@ class PostsController extends Controller
         return redirect()->route('admin.posts.index')->with('success', 'Post updated successfully');
     }
 
-    public function store(Request $request)
-    {
-        // dd($request->all());
-        $detail = $request->summernoteInput;
-        $dom = new \domdocument();
-        @$dom->loadHtml($detail, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-        $images = $dom->getelementsbytagname('img');
-        foreach($images as $k => $img){
-            $data = $img->getattribute('src');
-
-            list($type, $data) = explode(';', $data);
-            list(, $data)      = explode(',', $data);
-
-            $data = base64_decode($data);
-            $image_name= time().$k.'.png';
-
-            $path = Storage::disk('public')->putFileAs('posts/img', $img->getattribute('src'), $image_name);
-            $img->removeattribute('src');
-            $img->setattribute('src', '/'.$path);
-        }
-        $detail = $dom->savehtml();
-        
-
-        $post = new Post();
-        $post->title = $request->input('title');
-        $post->body = $detail;
-        $post->category_id = $request->input('category_id');
-        $post->tags = $request->input('tags');
-        $post->user_id = auth()->id();
-        $active = $request->input('is_active');
-        if ($active == 'on') {
-            $post->published_at = Carbon::now();
-        }
-        
-        
-        $post->save();
-        
-        return redirect()->route('admin.posts.index')
-                        ->with('success', 'Post created');
-        
-    }
-
 
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
         $post->delete();
         return redirect()->route('admin.posts.index')
-                         ->with('success','Post deleted successfully');
+            ->with('success', 'Post deleted successfully');
     }
 
     public function restore($id)
@@ -203,5 +265,4 @@ class PostsController extends Controller
         $post->restore();
         return redirect()->route('admin.posts.index')->with('success', 'Post restored successfully');
     }
-
 }

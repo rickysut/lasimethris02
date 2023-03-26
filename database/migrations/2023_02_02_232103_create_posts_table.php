@@ -17,19 +17,23 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('title');
-            $table->string('slug')->nullable();
+            $table->string('slug');
+            $table->text('body');
+            $table->text('exerpt');
+            $table->text('tags');
             $table->string('img_cover')->nullable();
-            $table->longtext('body');
-            $table->text('tags')->nullable();
-            $table->timestamp('published_at')->nullable();
+            $table->string('visibility')->nullable();
+            $table->integer('priority')->nullable();
+            $table->string('is_active')->nullable();
             $table->timestamps();
+            $table->timestamp('published_at')->nullable();
             $table->softDeletes();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

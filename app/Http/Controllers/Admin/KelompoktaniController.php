@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Kelompoktani;
+use App\Models\Poktan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\SimeviTrait;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\DataTables;
@@ -13,135 +14,17 @@ use App\Http\Requests\MassDestroyKelompoktaniRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\JsonResponse;
 use Tests\Browser\KecamatanTest;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class KelompoktaniController extends Controller
 {
     private $access_token;
-    private $provinsis;
-    private $kecamatans;
-    private $kabupatens;
-    private $desas;
+    
+    use SimeviTrait;
+
 
     
-    
-    protected function getAPIAccessToken($username, $pass){
-        $response = Http::asForm()->post(config('app.simevi_url').'getToken', [
-            'username' => $username,
-            'password' => $pass
-        ]);
-
-        $access_token = $response->json('access_token');
-        return $access_token;
-    }
-
-    protected function getAPIProvinsi($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'provinsis');
-
-        
-        return $response->json();
-    }
-
-    protected function getAPIKabupaten($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatens');
-
-        
-        return $response->json();
-    }
-
-
-    protected function getAPIKecamatan($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatans');
-
-        
-        return $response->json();
-    }
-
-
-    protected function getAPIDesa($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desas');
-
-        
-        return $response->json();
-    }
-
-    protected function searchProp($json , $str){
-        
-        foreach ($json['data'] as $item) {
-                      
-            if ($item['kd_prop'] == $str) {
-                return $item['nm_prop'];
-            }
-        }
-    }
-
-    protected function searchKab($json , $str){
-        foreach ($json['data'] as $item) {
-            if ($item['kd_kab'] == $str) {
-                return $item['nama_kab'];
-            }
-        }
-    }
-
-    protected function searchKec($json , $str){
-        foreach ($json['data'] as $item) {
-            if ($item['kd_kec'] == $str) {
-                return $item['nm_kec'];
-            }
-        }
-    }
-
-    protected function searchDesa($json , $str){
-        foreach ($json['data'] as $item) {
-            if ($item['kd_desa'] == $str) {
-                return $item['nm_desa'];
-            }
-        }
-    }
-
-    public function getAPIKabupatenProp($token, $provinsi){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatenwithprop/'.$provinsi);
-
-        
-        return $response->json();
-    }
-
-    public function getAPIKecamatanKab($token, $kabupaten){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatanwithkab/'.$kabupaten);
-
-        
-        return $response->json();
-    }
-
-    public function getAPIDesaKec($token, $kecamatan){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desawithkec/'.$kecamatan);
-
-        
-        return $response->json();
-    }
-
-    public function __construct()
-    {
-        $this->access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
-        $this->provinsis = $this->getAPIProvinsi($this->access_token);
-        $this->kabupatens = $this->getAPIKabupaten($this->access_token);
-        $this->kecamatans = $this->getAPIKecamatan($this->access_token);
-        $this->desas = $this->getAPIDesa($this->access_token);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -149,86 +32,68 @@ class KelompoktaniController extends Controller
      */
     public function index(Request $request)
     {
-        abort_if(Gate::denies('kelompoktani_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('poktan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         
         if ($request->ajax()) {
-            $user_id = Auth::user()->id;
-            
-            $user = Auth::user()::find(Auth::user()->id)->with('roles');
-            if (!auth()->user()->isAdmin){
-                $query = Kelompoktani::where('user_id', $user_id)->select(sprintf('%s.*', (new Kelompoktani())->table));
-            } else
-                $query = Kelompoktani::select(sprintf('%s.*', (new Kelompoktani())->table));
-            
-            $table = Datatables::of($query);
+            $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
 
-            $table->addColumn('placeholder', '&nbsp;');
+            $query = 'select g.no_riph, g.id_kecamatan, g.nama_kelompok, g.nama_pimpinan, g.hp_pimpinan, count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+            from poktans p, group_tanis g
+            where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan
+            GROUP BY g.nama_kelompok';
+
+            
+            $table = Datatables::of(DB::select(DB::raw($query)));
             $table->addColumn('actions', '&nbsp;');
 
+            
             $table->editColumn('actions', function ($row) {
-                $viewGate = 'kelompoktani_show';
-                $editGate = 'kelompoktani_edit';
-                $deleteGate = 'kelompoktani_delete';
-                $crudRoutePart = 'task.kelompoktani';
-
-                return view('partials.datatablesActions', compact(
-                'viewGate',
-                'editGate',
-                'deleteGate',
-                'crudRoutePart',
-                'row'
-            ));
+                $nomor = Str::replace('.', '', $row->no_riph);
+                $nomor = Str::replace('/', '', $nomor);
+                $urlView = route('admin.task.kelompoktani.show', $nomor );
+                return '';
+                // '<a class="btn btn-xs btn-primary " data-toggle="tooltip" title data-original-title="view" href='.$urlView.'>'.
+                // '    <i class="fal fa-eye"></i></a>';
             });
 
-            $table->editColumn('id', function ($row) {
-                return $row->id ? $row->id : '';
-            });
-            $table->editColumn('user_id', function ($row) {
-                return $row->user_id ? $row->user_id : '';
-            });
-            $table->editColumn('cpcl_id', function ($row) {
-                return $row->cpcl_id ? $row->cpcl_id : '';
-            });
-            $table->editColumn('no_poktan', function ($row) {
-                return $row->no_poktan ? $row->no_poktan : '';
-            });
-            $table->editColumn('nama_poktan', function ($row) {
-                return $row->nama_poktan ? $row->nama_poktan : '';
-            });
-            $table->editColumn('provinsi', function ($row) {
-                $provinsi = $this->searchProp($this->provinsis, $row->provinsi);
-                return $row->provinsi ? ($provinsi ?? $row->provinsi) : '';
-            });
-            $table->editColumn('kabupaten', function ($row) {
-                $kabupaten = $this->searchKab($this->kabupatens, $row->kabupaten);
-                return $row->kabupaten ? ($kabupaten ?? $row->kabupaten) : '';
-            });
-            $table->editColumn('kecamatan', function ($row) {
-                $kecamatan = $this->searchKec($this->kecamatans, $row->kecamatan);
-                return $row->kecamatan ? ($kecamatan ?? $row->kecamatan ) : '';
-            });
-            $table->editColumn('desa', function ($row) {
-                $desa = $this->searchDesa($this->desas, $row->desa);
-                return $row->desa ? ($desa ?? $row->desa)  : '';
-            });
-            $table->editColumn('jumlah_anggota', function ($row) {
-                return $row->jumlah_anggota ? $row->jumlah_anggota : 0;
-            });
-            $table->editColumn('luas_lahan', function ($row) {
-                return $row->luas_lahan ? number_format($row->luas_lahan, 2, ',', '.') : 0;
-            });
-            $table->editColumn('alamat', function ($row) {
-                return $row->alamat ? $row->alamat : '';
-            });
-            $table->editColumn('no_hp', function ($row) {
-                return $row->no_hp ? $row->no_hp : '';
-            });
-            $table->editColumn('pimpinan', function ($row) {
-                return $row->pimpinan ? $row->pimpinan : '';
+            
+            $table->editColumn('no_riph', function ($row) {
+                return $row->no_riph ? $row->no_riph : '';
             });
             
-            $table->rawColumns(['actions', 'placeholder']);
+            $table->editColumn('id_kecamatan', function ($row) {
+                $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+                $datakecamatan = $this->getAPIKecamatan($access_token, $row->id_kecamatan);
+                if($datakecamatan['data'][0]){
+                    return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
+                } 
+                return $row->id_kecamatan ? $row->id_kecamatan : '';
+            });
+            
+            $table->editColumn('nama_kelompok', function ($row) {
+                return $row->nama_kelompok ? $row->nama_kelompok : '';
+            });
+
+            $table->editColumn('nama_pimpinan', function ($row) {
+                return $row->nama_pimpinan ? $row->nama_pimpinan : '';
+            });
+
+            $table->editColumn('hp_pimpinan', function ($row) {
+                return $row->hp_pimpinan ? $row->hp_pimpinan : '';
+            });
+            
+            
+            $table->editColumn('jum_petani', function ($row) {
+                return $row->jum_petani ? $row->jum_petani  : '';
+            });
+            
+            $table->editColumn('luas', function ($row) {
+                return $row->luas ? number_format($row->luas, 2, '.', ',') : 0;
+            });
+            
+            
+            $table->rawColumns(['actions']);
 
             return $table->make(true);
         }
@@ -322,34 +187,146 @@ class KelompoktaniController extends Controller
      * @param  \App\Models\Kelompoktani  $kelompoktani
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $nomor)
     {
-        $poktan = Kelompoktani::findOrFail($id);
-        if ($poktan){
+        abort_if(Gate::denies('poktan_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        if ($request->ajax()) {
+            $realno = Str::substr($nomor, 0, 4) . '/' . Str::substr($nomor, 4, 2) . '.' . Str::substr($nomor, 6, 3) . '/' . Str::substr($nomor, 9, 1) . '/' . Str::substr($nomor, 10, 2) . '/' . Str::substr($nomor, 12, 4);
+            $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
+
+            $query = 'select g.no_riph, g.id_kecamatan, g.nama_kelompok, g.nama_pimpinan, g.hp_pimpinan, g.id_poktan, count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+            from poktans p, group_tanis g
+            where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan and g.no_riph = p.no_riph and p.no_riph = "'.
+            $realno .'"'. 'GROUP BY g.nama_kelompok';
+
             
-            if ($poktan->provinsi){
-                $provinsi = $this->searchProp($this->provinsis, $poktan->provinsi);
-                $poktan->provinsi = $provinsi ;
-            }
-            if ($poktan->kabupaten){
-                $kabupaten = $this->searchKab($this->kabupatens, $poktan->kabupaten);
-                $poktan->kabupaten = $kabupaten ;
-            }
-            if ($poktan->kecamatan){
-                $kecamatan = $this->searchKec($this->kecamatans, $poktan->kecamatan);
-                $poktan->kecamatan = $kecamatan ;
-            }
-            if ($poktan->desa){
-                $desa = $this->searchDesa($this->desas, $poktan->desa);
-                $poktan->desa = $desa ;
-            }
+            $table = Datatables::of(DB::select(DB::raw($query)));
+            $table->addColumn('actions', '&nbsp;');
+
+            
+            $table->editColumn('actions', function ($row) {
+                $riph = Str::replace('.', '', $row->no_riph);
+                $riph = Str::replace('/', '', $riph);
+                $nomor = $row->id_poktan;
+                $urlView = route('admin.task.kelompoktani.showtani', [$riph, $nomor] );
+                $urlCreate = route('admin.task.pks.create', [$riph , $nomor] );
+                $urlEdit = route('admin.task.pks.edit', [$riph, $nomor] );
+                
+                return '<a class="btn btn-xs btn-primary btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Tambah PKS"  href='.$urlCreate.'>'.
+                '    <i class="fal fa-plus-circle"></i></a>'.
+                '<a class="btn btn-xs btn-warning btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Edit PKS" href='.$urlEdit.'>'.
+                '    <i class="fal fa-pencil"></i></a>';
+                
+                // '<a class="btn btn-xs btn-success btn-icon" data-toggle="tooltip" title data-original-title="View poktan" href='.$urlView.'>'.
+                // '    <i class="fal fa-pencil"></i></a>';
+            });
+
+            
+            $table->editColumn('no_riph', function ($row) {
+                return $row->no_riph ? $row->no_riph : '';
+            });
+            
+            $table->editColumn('id_kecamatan', function ($row) {
+                $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+                $datakecamatan = $this->getAPIKecamatan($access_token, $row->id_kecamatan);
+                if($datakecamatan['data'][0]){
+                    return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
+                } 
+                return $row->id_kecamatan ? $row->id_kecamatan : '';
+            });
+            
+            $table->editColumn('nama_kelompok', function ($row) {
+                return $row->nama_kelompok ? $row->nama_kelompok : '';
+            });
+
+            $table->editColumn('nama_pimpinan', function ($row) {
+                return $row->nama_pimpinan ? $row->nama_pimpinan : '';
+            });
+
+            $table->editColumn('hp_pimpinan', function ($row) {
+                return $row->hp_pimpinan ? $row->hp_pimpinan : '';
+            });
+            
+            
+            $table->editColumn('jum_petani', function ($row) {
+                return $row->jum_petani ? $row->jum_petani  : '';
+            });
+            
+            $table->editColumn('luas', function ($row) {
+                return $row->luas ? number_format($row->luas, 2, '.', ',') : 0;
+            });
+            
+            
+            $table->rawColumns(['actions']);
+
+            return $table->make(true);
         }
+
+        $realno = Str::substr($nomor, 0, 4) . '/' . Str::substr($nomor, 4, 2) . '.' . Str::substr($nomor, 6, 3) . '/' . Str::substr($nomor, 9, 1) . '/' . Str::substr($nomor, 10, 2) . '/' . Str::substr($nomor, 12, 4);
+
         $module_name = 'Proses RIPH' ;
-        $page_title = 'Detail Kelompok Tani';
-        $page_heading = 'Detail Kelompok Tani' ;
+        $page_title = 'Summary Kelompok Tani';
+        $page_heading = 'Summary Kelompok Tani' ;
         $heading_class = 'fal fa-user-alt';
         
-        return view('admin.kelompoktani.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'poktan'));
+        
+        return view('admin.kelompoktani.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'nomor', 'realno' ));
+    }
+
+    public function showtani(Request $request, $nomor)
+    {
+        if ($request->ajax()) {
+            
+            $query = Poktan::select(sprintf('%s.*', (new Poktan())->table))->where('id_poktan', $nomor);
+            
+            $table = Datatables::of($query);
+
+            // $table->addColumn('placeholder', '&nbsp;');
+            // $table->addColumn('actions', '&nbsp;');
+
+            // $table->editColumn('actions', function ($row) {
+            //     $viewGate = 'poktan_show';
+            //     $editGate = 'poktan_edit';
+            //     $deleteGate = 'poktan_delete';
+            //     $crudRoutePart = 'task.kelompoktani';
+
+            //     return view('partials.datatablesActions', compact(
+            //     'viewGate',
+            //     'editGate',
+            //     'deleteGate',
+            //     'crudRoutePart',
+            //     'row'
+            // ));
+            // });
+
+            $table->editColumn('id_petani', function ($row) {
+                return $row->id_petani ? $row->id_petani : '';
+            });
+            $table->editColumn('nama_petani', function ($row) {
+                return $row->nama_petani ? $row->nama_petani : '';
+            });
+            $table->editColumn('ktp_petani', function ($row) {
+                return $row->ktp_petani ? $row->ktp_petani : '';
+            });
+            $table->editColumn('luas_lahan', function ($row) {
+                return $row->luas_lahan ? number_format($row->luas_lahan, 2, '.', ',') : 0;
+            });
+            $table->editColumn('periode_tanam', function ($row) {
+                return $row->periode_tanam ? $row->periode_tanam : '';
+            });
+            
+            // $table->rawColumns(['actions', 'placeholder']);
+
+            return $table->make(true);
+        }
+
+        $module_name = 'Proses RIPH' ;
+        $page_title = 'Detail petani';
+        $page_heading = 'Detail petani' ;
+        $heading_class = 'fal fa-user-alt';
+        
+        return view('admin.kelompoktani.showtani', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'nomor'));
     }
 
     /**

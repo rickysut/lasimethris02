@@ -16,9 +16,14 @@ use App\Http\Requests\MassDestroyPullriphRequest;
 use App\Models\Pengajuan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Http\Controllers\Api\HelperController;
+use App\Http\Controllers\Traits\SimeviTrait;
+use App\Models\Poktan;
 
 class CommitmentController extends Controller
 {
+    use SimeviTrait;
     /**
      * Display a listing of the resource.
      *
@@ -187,7 +192,7 @@ class CommitmentController extends Controller
                 // dd($pengajuan);
                 $userFiles += array('no_doc' => $pengajuan->no_doc);
                 PullRiph::updateOrCreate(
-                    ['npwp' => $realnpwp],
+                    ['npwp' => $realnpwp, 'no_ijin' => $request->get('no_ijin')],
                     $userFiles
                 ); 
                 
@@ -208,37 +213,7 @@ class CommitmentController extends Controller
         return back()->with('message', 'Sukses mengunggah file..'); 
     }
 
-    protected function pull($npwp, $nomor)
-    {   
-        try {
-            $options = array(
-                'soap_version' => SOAP_1_1,
-                'exceptions' => true,
-                'trace' => 1,
-                'cache_wsdl' => WSDL_CACHE_MEMORY,
-                'connection_timeout' => 25,
-                'style' => SOAP_RPC,
-                'use' => SOAP_ENCODED,
-            );
     
-            $client = new \SoapClient('http://riph.pertanian.go.id/api.php/simethris?wsdl', $options);
-            $parameter = array(
-                'user' => 'simethris',
-                'pass' => 'wsriphsimethris',
-                'npwp' => $npwp,
-                'nomor' =>  $nomor
-            );
-            $response = $client->__soapCall('get_riph', $parameter);
-        } catch (\Exception $e) {
-
-            Log::error('Soap Exception: ' . $e->getMessage());
-            throw new \Exception('Problem with SOAP call');
-        }
-        $res = json_decode(json_encode((array)simplexml_load_string($response)),true);
-       
-        return $res;
-    }
-
     /**
      * Display the specified resource.
      *
@@ -250,18 +225,45 @@ class CommitmentController extends Controller
         $pullRiph = PullRiph::findOrFail($id);
         $pengajuan = Pengajuan::where('no_doc', $pullRiph->no_doc)->get();
         $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
+        $nomor = '';
         if (!empty($npwp))
         {
-        $npwp = str_replace('.', '', $npwp);
-        $npwp = str_replace('-', '', $npwp);
-        $pullData = $this->pull($npwp, $pullRiph->no_ijin);
-        } else $pullData = null;
+            $npwp = str_replace('.', '', $npwp);
+            $npwp = str_replace('-', '', $npwp);
+            $nomor = str_replace('.', '', $pullRiph->no_ijin);
+            $nomor = str_replace('/', '', $nomor);
+            $pullData = $this->pull($npwp, $nomor);
+        } else 
+            $pullData = null;
         
+
+        $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+
+        
+        $data_poktan = [];
+        $poktans = null;
+        if ($pullData){
+
+            $query = 'select g.no_riph, g.id_kecamatan, g.nama_kelompok, g.nama_pimpinan, g.hp_pimpinan, count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+            from poktans p, group_tanis g
+            where p.no_riph = "' . $pullRiph->no_ijin . '"' . ' and p.id_poktan=g.id_poktan
+            GROUP BY g.nama_kelompok';
+            
+
+            $poktans = DB::select(DB::raw($query));
+            
+            foreach($poktans as $poktan){
+                $datakecamatan = $this->getAPIKecamatan($access_token, $poktan->id_kecamatan);
+                $kec = $datakecamatan['data'][0]['nm_kec'];
+                $poktan->kecamatan = $kec ;
+            }
+            
+        }
         $module_name = 'Proses RIPH' ;
         $page_title = 'Data RIPH';
         $page_heading = 'Data RIPH' ;
         $heading_class = 'fal fa-file-invoice';
-        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pullRiph', 'pullData', 'pengajuan'));
+        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pullRiph', 'pullData', 'pengajuan', 'poktans', 'nomor'));
     }
 
     /**

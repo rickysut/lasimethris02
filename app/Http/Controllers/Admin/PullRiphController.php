@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Models\PullRiph;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\GroupTani;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use  App\Models\Poktan;
+use Illuminate\Support\Facades\DB;
 
 class PullRiphController extends Controller
 {
@@ -78,8 +82,45 @@ class PullRiphController extends Controller
      */
     public function store(Request $request)
     {
+        $filepath = '';
+        try {
+            $options = array(
+                'soap_version' => SOAP_1_1,
+                'exceptions' => true,
+                'trace' => 1,
+                'cache_wsdl' => WSDL_CACHE_MEMORY,
+                'connection_timeout' => 25,
+                'style' => SOAP_RPC,
+                'use' => SOAP_ENCODED,
+            );
+    
+            $client = new \SoapClient('http://riph.pertanian.go.id/api.php/simethris?wsdl', $options);
+            $stnpwp = $request->get('npwp');
+            $npwp = str_replace('.', '', $stnpwp);
+            $npwp = str_replace('-', '', $npwp);
+            $noijin =  $request->get('no_ijin');
+            $fijin = str_replace('.', '', $noijin);
+            $fijin = str_replace('/', '', $fijin);
+            $parameter = array(
+                'user' => 'simethris',
+                'pass' => 'wsriphsimethris',
+                'npwp' => $npwp,
+                'nomor' =>  $request->get('no_ijin')
+            );
+            $response = $client->__soapCall('get_riph', $parameter);
+            $datariph = json_encode((array)simplexml_load_string($response));
+            $filepath = 'uploads/'.$npwp . '/' . $fijin . '.json';
+            Storage::disk('public')->put($filepath, $datariph);
+
+        } catch (\Exception $e) {
+
+            Log::error('Soap Exception: ' . $e->getMessage());
+            throw new \Exception('Problem with SOAP call');
+        }
+        
+        
         $riph = PullRiph::updateOrCreate(
-            ['npwp' => $request->get('npwp'), 'no_ijin' => $request->get('no_ijin') ],
+            [ 'npwp' => $stnpwp, 'no_ijin' => $noijin],
             [
                 'keterangan'    => $request->get('keterangan'),
                 'nama'          => $request->get('nama'),
@@ -90,68 +131,68 @@ class PullRiphController extends Controller
                 'volume_riph'   => $request->get('volume_riph'),
                 'volume_produksi'  => $request->get('volume_produksi'),
                 'luas_wajib_tanam' => $request->get('luas_wajib_tanam'),
-                'formRiph'      => $request->get('formRiph'),
-                'formSptjm'     => $request->get('formSptjm'),
-                'logBook'       => $request->get('logBook'),
-                'formRt'        => $request->get('formRt'),
-                'formRta'       => $request->get('formRta'),
-                'formRpo'       => $request->get('formRpo'),
-                'formLa'        => $request->get('formLa'),
-
+                'datariph' => $filepath
             ]
         );
+        $dtjson = json_decode($datariph);
+        if ($riph){
+            //dd($dtjson->riph->wajib_tanam->kelompoktani->loop);
+            // $whereArray = array('npwp',$stnpwp,'no_riph',$noijin );
+            DB::table('group_tanis')->where('npwp', '=', $stnpwp)->where('no_riph', '=',$noijin)->delete();
+            DB::table('poktans')->where('npwp', '=', $stnpwp)->where('no_riph', '=',$noijin)->delete();
+            // GroupTani::where('npwp', '=', $stnpwp , ' and ', 'no_riph', '=', $noijin)->delete();
+            // Poktan::where('no_riph',$noijin)->delete();
+            $lastPoktan = '';
+            foreach ( $dtjson->riph->wajib_tanam->kelompoktani->loop as $poktan )
+            {
+                $nama = trim($poktan->nama_kelompok, ' ');
+                $ktp = preg_replace('/[^0-9\p{Latin}\pP\p{Sc}@\s]+/u', '', $poktan->ktp_petani);
+                $ktp  = trim($ktp , "\u{00a0}");
+                $ktp = trim($ktp , "\u{00c2}");
+                $ktp = trim($ktp , " ");
+                $idpoktan = trim($poktan->id_poktan, ' ');
+                $idpetani = trim($poktan->id_petani, ' ');
+                $group = GroupTani::where('npwp', $stnpwp)->where('no_riph',$noijin)->where('id_poktan' ,$idpoktan)->first();
+                if (!$group){
+                    GroupTani::Create(
+                        [
+                            'npwp' => $stnpwp, 
+                            'no_riph' => $noijin, 
+                            'id_poktan' => $idpoktan,
+                            'id_kabupaten' => trim($poktan->id_kabupaten,' ') ,
+                            'id_kecamatan' => trim($poktan->id_kecamatan, ' ') ,
+                            'id_kelurahan' => (is_string($poktan->id_kelurahan) ? trim($poktan->id_kelurahan, ' '): '') ,
+                            'nama_kelompok' => strtoupper($nama) , 
+                            'nama_pimpinan' => (is_string($poktan->nama_pimpinan) ? trim($poktan->nama_pimpinan, ' ') :'') , 
+                            'hp_pimpinan'   => (is_string($poktan->hp_pimpinan) ? trim($poktan->hp_pimpinan, ' ') : '') ,
+                            'nama_petani'  => trim($poktan->nama_petani,' ') 
+                        ]
+                    ); 
+                    $lastPoktan = $idpoktan; 
+                }
+                Poktan::updateOrCreate(
+                    [
+                        'npwp' => $stnpwp, 
+                        'no_riph' => $noijin, 
+                        'id_petani' => $idpetani,
+                        'id_poktan' => $idpoktan
+                    ],
+                    [
+                        'nama_petani'  => trim($poktan->nama_petani,' ') ,
+                        'ktp_petani' => $ktp,
+                        'luas_lahan'   => trim($poktan->luas_lahan, ' ') ,
+                        'periode_tanam' => trim($poktan->periode_tanam, ' ')
+                    ]
+                );    
+            }
+        }
+        
         return back()->with('message', "Sukses menyimpan data RIPH, lihat daftarnya di menu Komitmen ");  
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\PullRiph  $pullRiph
-     * @return \Illuminate\Http\Response
-     */
-    public function show(PullRiph $pullRiph)
-    {
-        $module_name = 'Proses RIPH' ;
-        $page_title = 'Commitment';
-        $page_heading = 'Rincian Komitmen Wajib Tanam-produksi' ;
-        $heading_class = 'fal fa-file-invoice';
-        return view('admin.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pullRiph'));
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\PullRiph  $pullRiph
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(PullRiph $pullRiph)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\PullRiph  $pullRiph
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, PullRiph $pullRiph)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\PullRiph  $pullRiph
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(PullRiph $pullRiph)
-    {
-        
-    }
+    
 
     
 }
+
+
