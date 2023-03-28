@@ -3,6 +3,7 @@
 @include('partials.breadcrumb')
 @include('partials.subheader')
 @can('commitment_show')
+@include('partials.sysalert')
 	<div class="row">
 		<div class="col">
 			<div class="panel" id="panel-6">
@@ -43,7 +44,7 @@
 											data-toggle="modal" data-target="#editPenangkar{{$penangkarmitra->id}} ">
 											<i class="fal fa-edit"></i>
 										</button>
-										<form action="{{ route('admin.task.penangkarmitra.destroy', $commitment->id) }}"
+										<form action="{{ route('admin.task.penangkarmitra.destroy', $penangkarmitra->id) }}"
 											method="POST" style="display: inline-block;">
 											@csrf
 											@method('DELETE')

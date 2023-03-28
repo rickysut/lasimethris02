@@ -3,6 +3,7 @@
 @include('partials.breadcrumb')
 @include('partials.subheader')
 @can('commitment_show')
+@include('partials.sysalert')
 	{{-- {{ dd($data_poktan) }} --}}
 	<div class="row">
 		<div class="col-lg-12">

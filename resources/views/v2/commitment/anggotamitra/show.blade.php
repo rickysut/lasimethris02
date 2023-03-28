@@ -1,68 +1,53 @@
 @extends('layouts.admin')
 @section('styles')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ea90fk4RXPswzkOJzd17W3EZx_KNB1M"></script>
 
-{{-- <link rel="stylesheet" media="screen, print" href="{{ asset('css/miscellaneous/lightgallery/lightgallery.bundle.css') }}">
-<link rel="stylesheet" media="screen, print" href="{{ asset('css/leaflet/leaflet.draw.css') }}">
-<link rel="stylesheet" href="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.css" />
-<script src="https://unpkg.com/leaflet-easybutton@2.4.0/src/easy-button.js"></script> --}}
 @endsection
 @section('content')
 @include('partials.breadcrumb')
 @include('partials.subheader')
+@include('partials.sysalert')
 @can('commitment_show')
 	<div class="row">
 		<div class="col-md-12">
 			<div class="panel" id="panel-1">
 				<div class="panel-hdr">
 					<h2>
-						Data <span class="fw-300"><i>Geolokasi</i></span>
+						Data <span class="fw-300">
+							<i>Geolokasi</i>
+						</span>
 					</h2>
 					<div class="panel-toolbar">
-                        <button class="btn btn-xs btn-info mr-1" type="button"
-							data-toggle="modal" data-target=".upload-modal-right" disabled>
-                            <a data-toggle="tooltip" data-offset="0,1"
+						<button class="btn btn-xs btn-info mr-1" type="button"
+							data-toggle="modal" data-target=".upload-modal-right">
+							<a data-toggle="tooltip" data-offset="0,1"
 								title data-original-title="Unggah data tunggal untuk lokasi tanam ini.">
-								<i class="fas fa-upload"></i> Unggah Berkas
+								<i class="fas fa-upload"></i> Unggah
 							</a>
-                        </button>
-						<div class="panel-toolbar">
-							@include('partials.globaltoolbar')
-						</div>
+						</button>
+						@include('partials.globaltoolbar')
                     </div>
 				</div>
 				<div class="panel-container show">
-					<form action="{{route('admin.task.anggotamitra.update', $anggotamitras->id)}}"
-					method="POST" enctype="multipart/form-data">
-					@csrf
-					@method('PUT')
-						<input type="hidden" name="form_action" value="form1">
-						{{-- <input type="text" name="id" value="{{$anggotamitras->id}}">
-						<input type="text" name="pks_mitra_id" value="{{$anggotamitras->id}}">
-						<input type="text" name="commitmentbackdate_id" value="{{$commitment->id}}">
-						<input type="text" name="no_ijin" value="{{$commitment->no_ijin}}">
-						<input type="text" name="master_anggota_id" value="{{$anggotamitras->master_anggota_id}}"> --}}
-						<div class="panel-content card-header">
-							<div class="row">
-								<div class="form-group col-md-12">
-									<label class="form-label" for="gmap">
-									  Pilih lokasi dan Buat Peta Polygon bidang lahan dari lokasi yang dipilih<sup class="text-danger"> *</sup>
-									</label>
-									<div id="myMap" style="height: 500px; width: 100%;"></div>
-									<span class="help-block">Keterangan cara menentukan titik lokasi dan membuat polygon</span>
-								  </div>
+					<div class="panel-content card-header">
+						<div class="row">
+							<div class="form-group col-md-12">
+								<input id="searchBox" placeholder="Search for a location">
+								<input type="file" id="parsekml">
+								<label class="form-label" for="gmap">
+									Pilih lokasi dan Buat Peta Polygon bidang lahan dari lokasi yang dipilih<sup class="text-danger"> *</sup>
+								</label>
+								<div id="myMap" style="height: 500px; width: 100%;"></div>
+								<span class="help-block">Keterangan cara menentukan titik lokasi dan membuat polygon</span>
 							</div>
 						</div>
+					</div>
+					<form action="{{route('admin.task.anggotamitra.update', $anggotamitras->id)}}"
+						method="POST" enctype="multipart/form-data">
+						@csrf
+						@method('PUT')
+						<input type="hidden" name="form_action" value="form1">
 						<div class="panel-content">
 							<div class="row">
-								<div class="input-group input-group-sm mb-3 col-12">
-									<input type="text" class="form-control" placeholder="cari lokasi..."
-										aria-label="search place" id="search-input">
-									<div class="input-group-append">
-										<button class="btn btn-warning"
-										type="button" id="search-button"><i class="fas fa-search"></i></button>
-									</div>
-								</div>
 								<div class="form-group col-md-3">
 									<label>Nama Lokasi <sup class="text-danger"> **</sup></label>
 									<div class="input-group">
@@ -147,6 +132,7 @@
 									class="btn btn-sm btn-info" role="button">
 									<i class="fa fa-door-open mr-1"></i>Kembali
 								</a>
+								
 								<button class="btn btn-sm btn-primary" role="button" type="submit">
 									<i class="fa fa-save mr-1"></i>Simpan
 								</button>
@@ -339,6 +325,7 @@
 		</div>
 	</div>
 
+
 	{{-- modal upload berkas-foto tanam --}}
 	<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modalTanam">
 		<div class="modal-dialog modal-dialog-right">
@@ -457,8 +444,6 @@
 		</div>
 	</div>
 
-	
-
 @endcan
 
 @endsection
@@ -466,70 +451,15 @@
 <!-- start script for this page -->
 @section('scripts')
 <script src="{{ asset('js/miscellaneous/lightgallery/lightgallery.bundle.js') }}"></script>
-
-
-{{-- <script src="{{ asset('js/leaflet/leaflet.draw.js') }}"></script> --}}
 @parent
 
-{{-- add leaflet to page --}}
-{{-- <script src="{{ asset('js/leaflet/myMap.js') }}"></script> --}}
-{{-- <script src="{{ asset('js/leaflet/locationsearch.js') }}"></script> --}}
 
-{{-- google map --}}
-<script>
-	function initMap() {
-	  const map = new google.maps.Map(document.getElementById("myMap"), {
-		center: { lat: -34.397, lng: 150.644 },
-		zoom: 8,
-	  });
-	
-	  const input = document.getElementById("searchInput");
-	  const searchBox = new google.maps.places.SearchBox(input);
-	
-	  map.addListener("bounds_changed", () => {
-		searchBox.setBounds(map.getBounds());
-	  });
-	
-	  let markers = [];
-	
-	  searchBox.addListener("places_changed", () => {
-		const places = searchBox.getPlaces();
-	
-		if (places.length === 0) {
-		  return;
-		}
-	
-		markers.forEach((marker) => {
-		  marker.setMap(null);
-		});
-		markers = [];
-	
-		const bounds = new google.maps.LatLngBounds();
-		places.forEach((place) => {
-		  if (!place.geometry || !place.geometry.location) {
-			console.log("Returned place contains no geometry");
-			return;
-		  }
-	
-		  const marker = new google.maps.Marker({
-			map,
-			title: place.name,
-			position: place.geometry.location,
-		  });
-		  markers.push(marker);
-	
-		  if (place.geometry.viewport) {
-			bounds.union(place.geometry.viewport);
-		  } else {
-			bounds.extend(place.geometry.location);
-		  }
-		});
-		map.fitBounds(bounds);
-	  });
-	}
-	</script>
-	
+<script src="{{ asset('js/gmap/initmap.js') }}"></script>
 
+{{-- <script src="https://cdn.rawgit.com/geocodezip/geoXML3/master/geoxml3.js"></script> --}}
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ea90fk4RXPswzkOJzd17W3EZx_KNB1M&libraries=drawing,places"></script>
+</script>
 <!-- gallery Tanam -->
 <script>
     $(document).ready(function() {

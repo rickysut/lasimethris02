@@ -60,7 +60,7 @@
 		@yield('styles')
     </head>
 
-	<body class="mod-bg-1 mod-nav-link footer-function-fixed">
+	<body class="mod-bg-1 mod-nav-link footer-function-fixed" onload="initMap()">
 		<script src="{{ asset('js/smartadmin/pagesetting.js') }}"></script>
 		<!-- begin page wrapper -->
 		<div class="page-wrapper">

@@ -254,6 +254,36 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
         Route::get('template/{berkas}/edit', 'BerkasController@edittemplate')->name('template.edit');
         Route::put('template/{berkas}', 'BerkasController@updatetemplate')->name('template.update');
         Route::get('template', 'BerkasController@indextemplate')->name('template');
+
+        //route for backdate (v2)
+        //commitment (v2)
+        Route::resource('commitments', 'CommitmentBackdateController');
+        Route::get('commitments/{commitments}/penangkar', 'CommitmentBackdateController@penangkar')->name('commitments.penangkar');
+        Route::get('commitments/{commitments}/pksmitra', 'CommitmentBackdateController@pksmitra')->name('commitments.pksmitra');
+
+        //pks mitra v2
+        Route::resource('pksmitra', 'PksMitraController');
+
+        //route for penangkar mitra v2
+        // Route::resource('penangkarmitra', 'PenangkarMitraController');
+        Route::get('/penangkarmitra/{penangkarmitra}', 'PenangkarMitraController@show')->name('penangkarmitra.show');
+        Route::post('/penangkarmitra/store', 'PenangkarMitraController@store')->name('penangkarmitra.store');
+        Route::put('/penangkarmitra/{penangkarmitra}', 'PenangkarMitraController@update')->name('penangkarmitra.update');
+        Route::delete('/penangkarmitra/{penangkarmitra}', 'PenangkarMitraController@destroy')->name('penangkarmitra.destroy');
+
+        //anggota mitra pks v2
+        Route::get('/anggotamitra/{anggotamitra}', 'AnggotaMitraController@show')->name('anggotamitra.show');
+        Route::post('/anggotamitra/store', 'AnggotaMitraController@store')->name('anggotamitra.store');
+        Route::put('/anggotamitra/{anggotamitra}/update', 'AnggotaMitraController@update')->name('anggotamitra.update');
+        Route::delete('/anggotamitra/{anggotamitra}', 'AnggotaMitraController@destroy')->name('anggotamitra.destroy');
+
+        //kelompok tani v2
+        Route::resource('masterpoktan', 'MasterpoktanController');
+        Route::resource('anggotapoktan', 'AnggotaPoktanController');
+        Route::resource('masterpenangkar', 'MasterPenangkarController');
+        // Route::get('masterpoktan', 'MasterpoktanController@index')->name('masterpoktan');
+
+
     });
 
 

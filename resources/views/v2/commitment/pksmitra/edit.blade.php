@@ -13,7 +13,7 @@
 					</h2>
 					<div class="panel-toolbar">
 						<span class="mr-1">RIPH Nomor:</span>
-							<a href="{{route('admin.task.commitments.show', $commitment->id)}}"
+							<a href="{{route('admin.task.commitments.show', $pksmitra->commitmentbackdate_id)}}"
 								class="fw-500">
 								{{$commitment->no_ijin}}
 							</a>

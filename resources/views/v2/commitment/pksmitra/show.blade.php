@@ -2,7 +2,9 @@
 @section('content')
 @include('partials.breadcrumb')
 @include('partials.subheader')
+
 @can('commitment_show')
+@include('partials.sysalert')
 	<div class="row">
 		<div class="col">
 			<div class="panel" id="panel-1">
@@ -83,6 +85,15 @@
 											data-toggle="tooltip" >
 											<i class="fal fa-map"></i>
 										</a>
+										<form action="{{ route('admin.task.anggotamitra.destroy', $anggotamitra->id) }}"
+											method="POST" style="display: inline-block;">
+											@csrf
+											@method('DELETE')
+											<button type="submit" class="ml-3 btn btn-icon btn-xs btn-danger" title="Hapus data lokasi ini"
+												onclick="return confirm('Are you sure you want to delete this item?');">
+												<i class="fal fa-trash-alt"></i>
+											</button>
+										</form>
 									</td>
 								</tr>
 								@endforeach
