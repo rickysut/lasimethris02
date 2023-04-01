@@ -55,7 +55,13 @@
 										</div>
 									</div>
 								</td>
-								<td>{{$commitment->status}}</td>
+								<td>
+									@if (is_null($commitment->status))
+										<small><span class="badge badge-danger">No Status</span></small>
+									@else
+									{{$commitment->status}}
+									@endif
+								</td>
 								<td>
 									<a href="{{ route('admin.task.commitments.show', $commitment->id) }}"
 										class="btn btn-icon btn-xs btn-info"
@@ -67,20 +73,35 @@
 										title="Data Penangkar Mitra">
 										<i class="fal fa-seedling"></i>
 									</a>
-									<a href="{{ route('admin.task.commitments.edit', $commitment->id) }}"
-										class="btn btn-icon btn-xs btn-warning"
-										title="Ubah Data Komitmen">
-										<i class="fal fa-edit"></i>
-									</a>
-									<form action="{{ route('admin.task.commitments.destroy', $commitment->id) }}"
-										method="POST" style="display: inline-block;">
-										@csrf
-										@method('DELETE')
-										<button type="submit" class="ml-3 btn btn-icon btn-xs btn-danger" title="Hapus data komitment"
-											onclick="return confirm('Are you sure you want to delete this item?');">
-											<i class="fal fa-trash-alt"></i>
-										</button>
-									</form>
+									@if (is_null($commitment->status))
+										<a href="{{ route('admin.task.commitments.edit', $commitment->id) }}"
+											class="btn btn-icon btn-xs btn-warning"
+											title="Ubah Data Komitmen">
+											<i class="fal fa-edit"></i>
+										</a>
+									@else
+										<a href="{{ route('admin.task.commitments.read', $commitment->id) }}"
+											class="btn btn-icon btn-xs btn-warning"
+											title="Lihat Data Komitmen">
+											<i class="fal fa-eye"></i>
+										</a>
+									@endif
+									@if (is_null($commitment->status))
+										<form action="{{ route('admin.task.commitments.destroy', $commitment->id) }}"
+											method="POST" style="display: inline-block;">
+											@csrf
+											@method('DELETE')
+											<button type="submit" class="ml-3 btn btn-icon btn-xs btn-danger" title="Hapus data komitment"
+												onclick="return confirm('Are you sure you want to delete this item?');">
+												<i class="fal fa-trash-alt"></i>
+											</button>
+										</form>
+									@else
+										<span class="btn btn-icon btn-xs btn-default disabled"
+											title="Tidak dapat dihapus">
+											<i class="fas fa-trash-alt"></i>
+										</span>
+									@endif
 								</td>
 							</tr>
 								
@@ -185,4 +206,3 @@
 </script>
 
 @endsection
-

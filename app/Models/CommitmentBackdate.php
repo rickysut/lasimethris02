@@ -38,6 +38,8 @@ class Commitmentbackdate extends Model
 		'formRta',
 		'formRpo',
 		'formLa',
+		'pengajuan_id',
+		'no_pengajuan',
 		'skl',
 	];
 
@@ -65,5 +67,10 @@ class Commitmentbackdate extends Model
 	public function penangkarmitra()
 	{
 		return $this->hasMany(PenangkarMitra::class);
+	}
+
+	public function pengajuanV2()
+	{
+		return $this->hasOne(PengajuanV2::class);
 	}
 }

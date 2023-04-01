@@ -84,12 +84,12 @@ class AnggotaMitraController extends Controller
 		$page_heading = 'Laporan Realisasi';
 		$heading_class = 'fal fa-farm';
 
-		$commitment = CommitmentBackdate::with('pksmitra.anggotamitras')->findOrFail($id);
-		$masterkelompok = MasterKelompok::findOrFail($id);
-		$pksmitra = PksMitra::findOrFail($id);
-		$masteranggotas = MasterAnggota::where('master_kelompok_id', $pksmitra->master_kelompok_id)->get();
+		// $commitment = CommitmentBackdate::with('pksmitra.anggotamitras')->findOrFail($id);
+		// $masterkelompok = MasterKelompok::findOrFail($id);
 		$anggotamitras = AnggotaMitra::findOrFail($id);
-		return view('v2.commitment.anggotamitra.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggotamitras', 'commitment', 'masterkelompok', 'pksmitra', 'masteranggotas'));
+		// $pksmitra = PksMitra::where('id', $anggotamitras->pks_mitra_id)->get();
+		// $masteranggotas = MasterAnggota::where('master_kelompok_id', $pksmitra->master_kelompok_id)->get();
+		return view('v2.commitment.anggotamitra.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggotamitras'));
 	}
 
 	/**
@@ -101,6 +101,7 @@ class AnggotaMitraController extends Controller
 	public function edit($id)
 	{
 		//
+
 	}
 
 	/**
@@ -208,6 +209,6 @@ class AnggotaMitraController extends Controller
 
 		//execute delete when request are false and redirects back
 		$anggotamitra->delete();
-		return redirect()->route('admin.task.anggotamitra.index')->with('success', 'Record ' . $anggotamitra->id . ' deleted successfully.');
+		return redirect()->route('admin.task.pksmitra.show', $anggotamitra->pks_mitra_id)->with('success', 'Data ' . $anggotamitra->nama_lokasi . ' deleted successfully.');
 	}
 }

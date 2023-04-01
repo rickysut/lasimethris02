@@ -5,95 +5,116 @@
 @can('commitment_show')
 @include('partials.sysalert')
     {{-- {{ dd($data_poktan) }} --}}
-    <div class="row">
+	<div class="row">
 		<div class="col-md-3">
 			<div class="panel" id="panel-1">
 				<div class="panel-hdr">
-					<h2>Data Verifikasi</h2>
+					<h2>Status Data</h2>
 				</div>
 				<div class="panel-container">
 					<div class="panel-content">
 						@switch($commitment->status)
 							@case(1)
-								<ul class="list-group">
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Status</span>
-										<span class="fw-500 text-info">Menunggu hasil review</span>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Tindakan</span>
-										<span><i class="fal fa-hourglass fw-500 mr-1"></i>(menunggu)</span>
-									</li>
-								</ul>
+								<div class="row">
+									<div class="col-12 text-center mb-1">
+										<span class="icon-stack icon-stack-sm">
+											<i class="base-7 icon-stack-3x color-warning-700"></i>
+											<i class="fal fa-hourglass icon-stack-1x text-white"></i>
+										</span>
+									</div>
+									<div class="col-12 text-center">
+										<span class="fw-700">Verifikasi diproses.</span>
+									</div>
+								</div><hr>
+								<p class="small help-block">Pengajuan Verifikasi Anda telah diterima dan dalam proses.<br> Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
+								</p>
 								@break
 							@case(2)
-								<ul class="list-group">
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Status</span>
-										<span class="fw-500 text-success">Verifikasi Selesai & Sesuai</span>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Tindakan</span>
-										<a href="#" class="btn btn-xs btn-success" data-toggle="tooltip"
-											data-original-title="Ajukan Penerbitan Surat Keterangan Lunas">
-											<i class="fal fa-badge-check"></i>
-											Ajukan SKL
-										</a>
-									</li>
-								</ul>
+								<div class="row">
+									<div class="col-12 text-center mb-1">
+										<span class="icon-stack icon-stack-sm">
+											<i class="base-7 icon-stack-3x color-success-700"></i>
+											<i class="fal fa-badge-check icon-stack-1x text-white"></i>
+										</span>
+									</div>
+									<div class="col-12 text-center">
+										<span class="fw-700">Verifikasi selesai dan sesuai</span>
+									</div>
+								</div><hr>
+								<a href="#" class="btn btn-xs btn-success d-block" data-toggle="tooltip"
+									data-original-title="Ajukan Penerbitan Surat Keterangan Lunas">
+									Ajukan SKL
+								</a>
 								@break
 							@case(3)
-								<ul class="list-group">
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Status</span>
-										<span class="fw-500 text-warning">Pengajuan Penerbitan SKL</span>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Tindakan</span>
-										<span><i class="fal fa-hourglass fw-500 mr-1"></i>(menunggu)</span>
-									</li>
-								</ul>
+								<div class="row">
+									<div class="col-12 text-center mb-1">
+										<span class="icon-stack icon-stack-sm">
+											<i class="base-7 icon-stack-3x color-primary-500"></i>
+											<i class="fal fa-hourglass icon-stack-1x text-white"></i>
+										</span>
+									</div>
+									<div class="col-12 text-center">
+										<span class="fw-700">Pemeriksaan SKL.</span>
+									</div>
+								</div><hr>
+								<p class="small help-block">Pengajuan penerbitan SKL Anda dalam proses pemeriksaan.<br>Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
+								</p>
 								@break
 							@case(4)
-								<ul class="list-group">
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Status</span>
-										<span class="fw-500 text-primary">Review Pengajuan SKL</span>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Tindakan</span>
-										<span><i class="fal fa-hourglass fw-500 mr-1"></i>(menunggu)</span>
-									</li>
-								</ul>
+								<div class="row">
+									<div class="col-12 text-center mb-1">
+										<i class="fal fa-file-certificate fa-4x text-danger"></i>
+									</div>
+									<div class="col-12 text-center">
+										<span class="fw-700">SKL TERBIT</span>
+									</div>
+								</div><hr>
+								<a href="#" class="btn btn-xs btn-danger d-block">
+									Lihat SKL
+								</a>
 								@break
 							@case(5)
-								<ul class="list-group">
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Status</span>
-										<span class="fw-500 text-success">SKL diterbitkan</span>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Tindakan</span>
-										<a href="#" class="btn btn-xs btn-success">
-											<i class="fas fa-award"></i>
-											Lihat SKL
-										</a>
-									</li>
-								</ul>
+								<div class="row">
+									<div class="col-12 text-center mb-1">
+										<i class="fas fa-exclamation-circle fa-2x text-warning"></i>
+									</div>
+									<div class="col-12 text-center">
+										<span class="fw-700">Perbaikan Data</span>
+									</div>
+								</div><hr>
+								<p class="small help-block">Pemeriksaan data Anda telah selesai dengan hasil PERBAIKAN.<br>Silahkan perbaiki data-data yang diperlukan, lalu ajukan pemeriksaan ulang.
+								</p><hr>
+								<a href="#" class="btn btn-xs btn-danger d-block"
+									data-toggle="modal" data-target="#verifikasiModal">
+									Ajukan Pemeriksaan Ulang
+								</a>
 								@break
 							@default
-								<ul class="list-group">
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Status</span>
-										<span class="fw-500 text-danger">Belum Mengajukan</span>
-									</li>
-									<li class="list-group-item">
-										<a href="#" class="btn btn-xs btn-danger d-block"
-											data-toggle="modal" data-target="#verifikasiModal">
-											Ajukan Verifikasi
-										</a>
-									</li>
-								</ul>
+								<div class="row">
+									<div class="col-12 text-center">
+										<span class="icon-stack icon-stack-sm">
+											<i class="base-7 icon-stack-2x color-danger-600"></i>
+											<i class="fal fa-times icon-stack-1x text-white"></i>
+										</span>
+									</div>
+									<div class="col-12 text-center">
+										<span class="fw-700 small">Anda belum mengajukan verifikasi</span>
+									</div>
+								</div><hr>
+								<form action="{{ route('admin.task.commitments.createpengajuan', $commitment->id) }}" method="POST" enctype="multipart/form-data">
+									@csrf
+									@method('PUT')
+									<input type="text" value="{{($commitment->id)}}"
+										id="commitmentbackdate_id" name="commitmentbackdate_id">
+									<button type="submit">ajukan</button>
+								</form>
+
+
+								<a href="#" class="btn btn-xs btn-danger d-block"
+									data-toggle="modal" data-target="#verifikasiModal">
+									Ajukan Review dan Verifikasi
+								</a>
 						@endswitch
 					</div>
 				</div>
@@ -483,22 +504,26 @@
 				</div>
 			</div>
 			<div class="modal-body">
-				<form action="{{ route('admin.task.commitment.store') }}" method="POST" enctype="multipart/form-data">
+				<form action="{{ $commitment->status == null ? route('admin.task.commitments.createpengajuan', $commitment->id) : route('admin.task.commitments.pengajuanulang', $commitment->id) }}" method="POST" enctype="multipart/form-data">
+
 					@csrf
+					@method('PUT')
 					<div class="row">
 						<div class="form-group col">
 							<label class="form-label h6">RIPH</label>
 							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formRiph" required>
-								<label class="custom-file-label" for="formRiph">Pilih file...</label>
+								<input type="file" class="custom-file-input" name="formRiph" value="{{ old('formRiph', $commitment->formRiph) }}">
+								<label class="custom-file-label {{ $commitment->formRiph ? 'text-primary fw-400' : 'text-muted' }}" for="formRiph">
+									{{ $commitment->formRiph ? $commitment->formRiph : 'Pilih file...' }}
+								  </label>
 							</div>
 							<span class="help-block">Surat Persetujuan RIPH. (.jpg / .pdf).</span>
 						</div>
 						<div class="form-group col">
 							<label class="form-label h6">Form SPTJM</label>
 							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formSptjm" required>
-								<label class="custom-file-label" for="formSptjm">Pilih file...</label>
+								<input type="file" class="custom-file-input" name="formSptjm" value="{{ old('formSptjm', $commitment->formSptjm) }}">
+								<label class="custom-file-label" for="formSptjm">{{ $commitment->formSptjm ? $commitment->formSptjm : 'Pilih file...' }}</label>
 							</div>
 							<span class="help-block">Form Pertanggungjawaban Mutlak. (.jpg / .pdf).</span>
 						</div>
@@ -507,16 +532,16 @@
 						<div class="form-group col">
 							<label class="form-label h6">Logbook</label>
 							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="logBook" required>
-								<label class="custom-file-label" for="logBook">Pilih file...</label>
+								<input type="file" class="custom-file-input" name="logbook" value="{{ old('logbook', $commitment->logbook) }}">
+								<label class="custom-file-label" for="logbook">{{ $commitment->logbook ? $commitment->logbook : 'Pilih file...' }}</label>
 							</div>
-							<span class="help-block">Logbook. (.jpg / .pdf).</span>
+							<span class="help-block">logbook. (.jpg / .pdf).</span>
 						</div>
 						<div class="form-group col">
 							<label class="form-label h6">Form-RT</label>
 							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formRt" required>
-								<label class="custom-file-label" for="formRt">Pilih file...</label>
+								<input type="file" class="custom-file-input" name="formRt" value="{{ old('formRt', $commitment->formRt) }}">
+								<label class="custom-file-label" for="formRt">{{ $commitment->formRt ? $commitment->formRt : 'Pilih file...' }}</label>
 							</div>
 							<span class="help-block">Form Rencana Tanam. (.jpg / .pdf).</span>
 						</div>        
@@ -526,16 +551,16 @@
 						<div class="form-group col">
 							<label class="form-label h6">Form-RTA</label>
 							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formRta" required>
-								<label class="custom-file-label" for="formRta">Pilih file...</label>
+								<input type="file" class="custom-file-input" name="formRta" value="{{ old('formRta', $commitment->formRta) }}">
+								<label class="custom-file-label" for="formRta">{{ $commitment->formRta ? $commitment->formRta : 'Pilih file...' }}</label>
 							</div>
 							<span class="help-block">Form Realisasi tanam. (.jpg / .pdf).</span>
 						</div>
 						<div class="form-group col">
 							<label class="form-label h6">Form RPO</label>
 							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formRpo" required>
-								<label class="custom-file-label" for="formRpo">Pilih file...</label>
+								<input type="file" class="custom-file-input" name="formRpo" value="{{ old('formRpo', $commitment->formRpo) }}">
+								<label class="custom-file-label" for="formRpo">{{ $commitment->formRpo ? $commitment->formRpo : 'Pilih file...' }}</label>
 							</div>
 							<span class="help-block">Form Realisasi Produksi. (.jpg / .pdf).</span>
 						</div>
@@ -544,8 +569,8 @@
 						<div class="form-group col">
 							<label class="form-label h6">Form LA</label>
 							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formLa" required>
-								<label class="custom-file-label" for="formLa">Pilih file...</label>
+								<input type="file" class="custom-file-input" name="formLa" value="{{ old('formLa', $commitment->formLa) }}">
+								<label class="custom-file-label" for="formLa">{{ $commitment->formLa ? $commitment->formLa : 'Pilih file...' }}</label>
 							</div>
 							<span class="help-block">Form Laporan Akhir. (.jpg / .pdf).</span>
 						</div>

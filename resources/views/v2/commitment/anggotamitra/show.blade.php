@@ -1,5 +1,8 @@
 @extends('layouts.admin')
 @section('styles')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ea90fk4RXPswzkOJzd17W3EZx_KNB1M&libraries=drawing,geometry"></script>
+{{-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> --}}
 
 @endsection
 @section('content')
@@ -17,10 +20,10 @@
 						</span>
 					</h2>
 					<div class="panel-toolbar">
-						<button class="btn btn-xs btn-info mr-1" type="button"
-							data-toggle="modal" data-target=".upload-modal-right">
+						<button class="btn btn-xs btn-default mr-1" type="button"
+							data-toggle="modal" data-target="#modalKml">
 							<a data-toggle="tooltip" data-offset="0,1"
-								title data-original-title="Unggah data tunggal untuk lokasi tanam ini.">
+								title data-original-title="Unggah data geolokasi dalam format kml untuk lokasi ini.">
 								<i class="fas fa-upload"></i> Unggah
 							</a>
 						</button>
@@ -31,13 +34,68 @@
 					<div class="panel-content card-header">
 						<div class="row">
 							<div class="form-group col-md-12">
-								<input id="searchBox" placeholder="Search for a location">
-								<input type="file" id="parsekml">
 								<label class="form-label" for="gmap">
-									Pilih lokasi dan Buat Peta Polygon bidang lahan dari lokasi yang dipilih<sup class="text-danger"> *</sup>
+									Pilih lokasi dan Buat Peta Polygon bidang lahan dari lokasi yang dipilih
+									<sup class="text-danger"> *</sup>
 								</label>
 								<div id="myMap" style="height: 500px; width: 100%;"></div>
-								<span class="help-block">Keterangan cara menentukan titik lokasi dan membuat polygon</span>
+							</div>
+						</div>
+					</div>
+					<div class="panel-content card-header">
+						<form id="location-search-form">
+							<div class="form-group mb-5" title="Cari lokasi yang diinginkan">
+								<div class="input-group bg-white shadow-inset-2">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-transparent border-right-0 py-1 px-3 text-success">
+											<i class="fal fa-search"></i>
+										</span>
+									</div>
+									<input id="searchBox" placeholder="cari lokasi..."
+										class="form-control border-left-0 bg-transparent pl-0" >
+									<div class="input-group-append">
+										<button class="btn btn-default waves-effect waves-themed"
+											type="submit">Search</button>
+									</div>
+								</div>
+								<span class="help-block">Cari lokasi di peta</span>
+							</div>
+						</form>
+						<div class="row d-flex flex-row justify-content-between">
+							<div class="col-md-6">
+								<div class="form-group">
+									<div class="input-group bg-white shadow-inset-2">
+										<div class="input-group-prepend">
+											<span class="input-group-text bg-transparent border-right-0 py-1 px-3 text-success">
+												<i class="fal fa-upload"></i>
+											</span>
+										</div>
+										<div class="custom-file">
+											<input type="file" id="kml_file" placeholder="ambil berkas KML..." onchange="kml_parser()"
+												class="custom-file-input border-left-0 bg-transparent pl-0" >
+											<label class="custom-file-label text-muted" for="inputGroupFile01">ambil berkas KML...</label>
+										</div>
+									</div>
+									<span class="help-block">Unggah berkas KML</span>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<div class="input-group bg-grey shadow-inset-2">
+										<div class="input-group-prepend">
+											<span class="input-group-text bg-transparent border-right-0 py-1 px-3 text-success">
+												<i class="fal fa-globe"></i>
+											</span>
+										</div>
+										<input id="kml-url" placeholder="paste link" onchange="link_parser()"
+											class="form-control border-left-0 bg-transparent pl-0" disabled>
+										<div class="input-group-append">
+											<button class="btn btn-default waves-effect waves-themed"
+												onclick="link_parser()" disabled>Open</button>
+										</div>
+									</div>
+									<span class="help-block">Dalam pengembangan, belum dapat difungsikan!</span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -55,7 +113,7 @@
 											<span class="input-group-text"><i class="fal fa-map-signs"></i></span>
 										</div>
 										<input type="text" value="{{ old('nama_lokasi', $anggotamitras->nama_lokasi) }}"
-											name="nama_lokasi" id="nama_lokasi"
+											name="nama_lokasi" id="nama_lokasi" readonly
 											class="font-weight-bold form-control form-control-sm bg-white" />
 									</div>
 									<span class="help-block">berikan Nama/ID untuk lokasi ini.</span>
@@ -67,7 +125,7 @@
 											<span class="input-group-text"><i class="fal fa-map-marker"></i></span>
 										</div>
 										<input type="text" value="{{ old('latitude', $anggotamitras->latitude) }}"
-											name="latitude" id="latitude"
+											name="latitude" id="latitude" readonly
 											class="font-weight-bold form-control form-control-sm bg-white" />
 									</div>
 									<span class="help-block">Koordinat Lintang lokasi</span>
@@ -103,7 +161,7 @@
 											<span class="input-group-text"><i class="fal fa-draw-polygon"></i></span>
 										</div>
 										<input type="text" value="{{ old('polygon', $anggotamitras->polygon) }}"
-										name="polygon" id="polygon"
+										name="polygon" id="polygon" readonly
 										class="font-weight-bold form-control form-control-sm bg-white" />
 									</div>
 									<span class="help-block">Kurva bidang lahan yang ditanami.</span>
@@ -115,7 +173,7 @@
 											<span class="input-group-text"><i class="fal fa-ruler-combined"></i></span>
 										</div>
 										<input type="text" value="{{ old('luas_kira', $anggotamitras->luas_kira) }}"
-											name="luas_kira" id="luas_kira"
+											name="luas_kira" id="luas_kira" readonly
 											class="font-weight-bold form-control form-control-sm bg-white" />
 									</div>
 									<span class="help-block">Luas bidang diukur oleh sistem.</span>
@@ -325,7 +383,6 @@
 		</div>
 	</div>
 
-
 	{{-- modal upload berkas-foto tanam --}}
 	<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="modalTanam">
 		<div class="modal-dialog modal-dialog-right">
@@ -452,68 +509,75 @@
 @section('scripts')
 <script src="{{ asset('js/miscellaneous/lightgallery/lightgallery.bundle.js') }}"></script>
 @parent
+{{-- <script src="{{ asset('js/gmap/geoxml3.js') }}"></script> --}}
+{{-- <script src="{{ asset('js/gmap/ProjectedOverlay.js') }}"></script> --}}
+<script src="{{ asset('js/gmap/map.js') }}"></script>
+<script src="{{ asset('js/gmap/location-search.js') }}"></script>
+<script src="{{ asset('js/gmap/kml_parser.js') }}"></script>
+<script src="{{ asset('js/gmap/link_parser.js') }}"></script>
 
-
-<script src="{{ asset('js/gmap/initmap.js') }}"></script>
+<script>
+	window.addEventListener('load', function() {
+		initMap();
+	});
+</script>
 
 {{-- <script src="https://cdn.rawgit.com/geocodezip/geoXML3/master/geoxml3.js"></script> --}}
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ea90fk4RXPswzkOJzd17W3EZx_KNB1M&libraries=drawing,places"></script>
-</script>
 <!-- gallery Tanam -->
-<script>
-    $(document).ready(function() {
-        var $initScope = $('#js-galleryTanam');
-        if ($initScope.length) {
-            $initScope.justifiedGallery({
-                border: -1,
-                rowHeight: 75,
-                margins: 8,
-                waitThumbnailsLoad: true,
-                randomize: false,
-            }).on('jg.complete', function() {
-                $initScope.lightGallery({
-                    thumbnail: true,
-                    animateThumb: true,
-                    showThumbByDefault: true,
-                });
-            });
-        };
-        $initScope.on('onAfterOpen.lg', function(event) {
-            $('body').addClass("overflow-hidden");
-        });
-        $initScope.on('onCloseAfter.lg', function(event) {
-            $('body').removeClass("overflow-hidden");
-        });
-    });
-</script>
+	<script>
+		$(document).ready(function() {
+			var $initScope = $('#js-galleryTanam');
+			if ($initScope.length) {
+				$initScope.justifiedGallery({
+					border: -1,
+					rowHeight: 75,
+					margins: 8,
+					waitThumbnailsLoad: true,
+					randomize: false,
+				}).on('jg.complete', function() {
+					$initScope.lightGallery({
+						thumbnail: true,
+						animateThumb: true,
+						showThumbByDefault: true,
+					});
+				});
+			};
+			$initScope.on('onAfterOpen.lg', function(event) {
+				$('body').addClass("overflow-hidden");
+			});
+			$initScope.on('onCloseAfter.lg', function(event) {
+				$('body').removeClass("overflow-hidden");
+			});
+		});
+	</script>
 <!-- gallery Tanam -->
 <!-- gallery Produksi -->
-<script>
-    $(document).ready(function() {
-        var $initScope = $('#js-galleryProduksi');
-        if ($initScope.length) {
-            $initScope.justifiedGallery({
-                border: -1,
-                rowHeight: 75,
-                margins: 8,
-                waitThumbnailsLoad: true,
-                randomize: false,
-            }).on('jg.complete', function() {
-                $initScope.lightGallery({
-                    thumbnail: true,
-                    animateThumb: true,
-                    showThumbByDefault: true,
-                });
-            });
-        };
-        $initScope.on('onAfterOpen.lg', function(event) {
-            $('body').addClass("overflow-hidden");
-        });
-        $initScope.on('onCloseAfter.lg', function(event) {
-            $('body').removeClass("overflow-hidden");
-        });
-    });
-</script>
+	<script>
+		$(document).ready(function() {
+			var $initScope = $('#js-galleryProduksi');
+			if ($initScope.length) {
+				$initScope.justifiedGallery({
+					border: -1,
+					rowHeight: 75,
+					margins: 8,
+					waitThumbnailsLoad: true,
+					randomize: false,
+				}).on('jg.complete', function() {
+					$initScope.lightGallery({
+						thumbnail: true,
+						animateThumb: true,
+						showThumbByDefault: true,
+					});
+				});
+			};
+			$initScope.on('onAfterOpen.lg', function(event) {
+				$('body').addClass("overflow-hidden");
+			});
+			$initScope.on('onCloseAfter.lg', function(event) {
+				$('body').removeClass("overflow-hidden");
+			});
+		});
+	</script>
 <!-- gallery Produksi -->
 @endsection

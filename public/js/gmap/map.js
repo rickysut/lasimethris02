@@ -1,16 +1,25 @@
+// map.js
+
+// 1. create a new map 'myMap' with initial
+// - center: { lat: -2.5489, lng: 118.0149 },
+// - zoom: 5,
+let myMap;
+
 function initMap() {
-	// Part 1. create a new map with initial center and zoom level
-	var map = new google.maps.Map(document.getElementById("myMap"), {
+	//init the map viewport
+	myMap = new google.maps.Map(document.getElementById("myMap"), {
 		center: { lat: -2.5489, lng: 118.0149 },
 		zoom: 5,
+		mapTypeId: google.maps.MapTypeId.SATELLITE,
 	});
 
-	// an array to store the markers
-	var markers = [];
+	// 2. array to store the marker and polygon
+	const markers = [];
+	const polygons = [];
 
-	// Part 2. create a drawing manager with a marker and polygon mode and add it to the map
+	// 3. setup drawing manager
 	var drawingManager = new google.maps.drawing.DrawingManager({
-		drawingMode: google.maps.drawing.OverlayType.MARKER,
+		drawingMode: google.maps.drawing.OverlayType.DEFAULT,
 		drawingControl: true,
 		drawingControlOptions: {
 			position: google.maps.ControlPosition.TOP_CENTER,
@@ -25,23 +34,29 @@ function initMap() {
 			draggable: true,
 		},
 	});
-	drawingManager.setMap(map);
+	drawingManager.setMap(myMap); //attach draw manager to map
 
-	// Part 3. add a listener for when a marker is completed
+	/** 3. event listener for when a marker is completed
+	 *
+	 * add the marker to the array of markers and make it draggable
+	 * add a listener for when the marker is clicked, center the map on the marker, and update the input fields
+	 * add a listener for when the marker is dragged, update the input fields
+	 */
+
 	google.maps.event.addListener(
 		drawingManager,
 		"markercomplete",
 		function (marker) {
-			// 3.a add the marker to the array of markers and make it draggable
+			// add the marker to the array of markers and make it draggable
 			markers.push(marker);
 			marker.setDraggable(true);
-			// 3.b add a listener for when the marker is clicked, center the map on the marker, and update the input fields
+			//  add a listener for when the marker is clicked, center the map on the marker, and update the input fields
 			google.maps.event.addListener(marker, "click", function () {
-				map.setCenter(marker.getPosition());
+				myMap.setCenter(marker.getPosition());
 				document.getElementById("latitude").value = marker.getPosition().lat();
 				document.getElementById("longitude").value = marker.getPosition().lng();
 			});
-			// 3.c add a listener for when the marker is dragged, update the input fields
+			//  add a listener for when the marker is dragged, update the input fields
 			google.maps.event.addListener(marker, "drag", function () {
 				document.getElementById("latitude").value = marker.getPosition().lat();
 				document.getElementById("longitude").value = marker.getPosition().lng();
@@ -49,22 +64,27 @@ function initMap() {
 		}
 	);
 
-	// Part 4. check if the latitude and longitude inputs have values, and if so, create a marker at that position
+	/** 4. check if the latitude and longitude inputs have values
+	 *
+	 * and if true, create a marker at that position
+	 * add marker
+	 */
+	// check if the latitude and longitude inputs have values, and if so, create a marker at that position
 	var latitude = document.getElementById("latitude").value;
 	var longitude = document.getElementById("longitude").value;
 	if (latitude != "" && longitude != "") {
 		var position = new google.maps.LatLng(latitude, longitude);
 		var marker = new google.maps.Marker({
 			position: position,
-			map: map,
+			map: myMap,
 			draggable: true,
 		});
-		// Part 4.a add the marker to the array of markers, center the map on the marker, and add listeners for click and drag events
+		// add the marker to the array of markers, center the map on the marker, and add listeners for click and drag events
 		markers.push(marker);
-		map.setCenter(position);
-		map.setZoom(18);
+		myMap.setCenter(position);
+		myMap.setZoom(18);
 		google.maps.event.addListener(marker, "click", function () {
-			map.setCenter(marker.getPosition());
+			myMap.setCenter(marker.getPosition());
 		});
 		google.maps.event.addListener(marker, "drag", function () {
 			document.getElementById("latitude").value = marker.getPosition().lat();
@@ -72,7 +92,7 @@ function initMap() {
 		});
 	}
 
-	// check if the polygon inputs have values, and if so, create a polygon using the recorded value in polygon input fields
+	// 5. check if polygon has input value
 	var polygonCoords = document.getElementById("polygon").value;
 	if (polygonCoords != "") {
 		polygonCoords = JSON.parse(polygonCoords);
@@ -84,69 +104,42 @@ function initMap() {
 			fillColor: "#FF0000",
 			fillOpacity: 0.35,
 			editable: true,
-			map: map,
+			map: myMap,
 		});
-		// Part 5.b add a listener for when the polygon is clicked, and update the input field
+		// add a listener for when the polygon is clicked, and update the input field
 		google.maps.event.addListener(polygon, "click", function () {
 			document.getElementById("polygon").value = JSON.stringify(
 				polygon.getPath().getArray()
 			);
 		});
-		// Part 5.c add a listener for when the polygon is edited, and update the input field
+		// add a listener for when the polygon is edited, and update the input field
 		google.maps.event.addListener(polygon.getPath(), "set_at", function () {
 			document.getElementById("polygon").value = JSON.stringify(
 				polygon.getPath().getArray()
 			);
+			// calculate and display the area of the polygon
+			var luas = google.maps.geometry.spherical.computeArea(polygon.getPath());
+			document.getElementById("luas_kira").value = (luas / 10000).toFixed(2);
 		});
 		google.maps.event.addListener(polygon.getPath(), "insert_at", function () {
 			document.getElementById("polygon").value = JSON.stringify(
 				polygon.getPath().getArray()
 			);
+			// calculate and display the area of the polygon
+			var luas = google.maps.geometry.spherical.computeArea(polygon.getPath());
+			document.getElementById("luas_kira").value = (luas / 10000).toFixed(2);
 		});
 	}
 
-	// Part 5. add a listener for when a polygon is completed
+	// Part 9 add a listener for when a polygon is completed
 	google.maps.event.addListener(
 		drawingManager,
 		"polygoncomplete",
 		function (polygon) {
-			// 5.a add the polygon to the map
-			polygon.setMap(map);
+			// add the polygon to the map
+			polygon.setMap(myMap);
 
-			// 5.b add a listener for when the polygon is clicked, and update the input field
-			google.maps.event.addListener(polygon, "click", function () {
-				document.getElementById("polygon").value = JSON.stringify(
-					polygon.getPath().getArray()
-				);
-			});
-
-			// 5.c add a listener for when the polygon is edited, and update the input field
-			google.maps.event.addListener(polygon.getPath(), "set_at", function () {
-				document.getElementById("polygon").value = JSON.stringify(
-					polygon.getPath().getArray()
-				);
-			});
-			google.maps.event.addListener(
-				polygon.getPath(),
-				"insert_at",
-				function () {
-					document.getElementById("polygon").value = JSON.stringify(
-						polygon.getPath().getArray()
-					);
-				}
-			);
-		}
-	);
-
-	// Part 5.a add a listener for when a polygon is completed
-	google.maps.event.addListener(
-		drawingManager,
-		"polygoncomplete",
-		function (polygon) {
-			// 5.a add the polygon to the map
-			polygon.setMap(map);
-
-			// 5.b add a listener for when the polygon is clicked, and update the input field
+			// add a listener for when the polygon is clicked, and update the input field
 			google.maps.event.addListener(polygon, "click", function () {
 				document.getElementById("polygon").value = JSON.stringify(
 					polygon.getPath().getArray()
@@ -156,10 +149,10 @@ function initMap() {
 				var luas = google.maps.geometry.spherical.computeArea(
 					polygon.getPath()
 				);
-				document.getElementById("luas_kira").value = luas.toFixed(2);
+				document.getElementById("luas_kira").value = (luas / 10000).toFixed(2);
 			});
 
-			// 5.c add a listener for when the polygon is edited, and update the input field
+			// add a listener for when the polygon is edited, and update the input field
 			google.maps.event.addListener(polygon.getPath(), "set_at", function () {
 				document.getElementById("polygon").value = JSON.stringify(
 					polygon.getPath().getArray()
@@ -169,7 +162,7 @@ function initMap() {
 				var luas = google.maps.geometry.spherical.computeArea(
 					polygon.getPath()
 				);
-				document.getElementById("luas_kira").value = luas.toFixed(2);
+				document.getElementById("luas_kira").value = (luas / 10000).toFixed(2);
 			});
 
 			google.maps.event.addListener(
@@ -184,7 +177,9 @@ function initMap() {
 					var luas = google.maps.geometry.spherical.computeArea(
 						polygon.getPath()
 					);
-					document.getElementById("luas_kira").value = luas.toFixed(2);
+					document.getElementById("luas_kira").value = (luas / 10000).toFixed(
+						2
+					);
 				}
 			);
 		}

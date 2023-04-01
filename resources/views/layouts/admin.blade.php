@@ -54,13 +54,12 @@
 
 		<link href="{{ asset('css/toastr.css') }}" rel="stylesheet" />
 
-
 		
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		@yield('styles')
     </head>
 
-	<body class="mod-bg-1 mod-nav-link footer-function-fixed" onload="initMap()">
+	<body class="mod-bg-1 mod-nav-link footer-function-fixed">
 		<script src="{{ asset('js/smartadmin/pagesetting.js') }}"></script>
 		<!-- begin page wrapper -->
 		<div class="page-wrapper">
