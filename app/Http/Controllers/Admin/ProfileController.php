@@ -37,37 +37,37 @@ class ProfileController extends Controller
         $page_title = 'Myprofile';
         $page_heading = 'Myprofile' ;
         $heading_class = 'fa fa-user';
-        $this->access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+        // $this->access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
         $this->data_user = Auth::user()::find(auth()->id())->data_user;
-        $until = now()->endOfDay()->subSecond();
-
+        
+        $until = now()->endOfMonth();
         $provinsi = Cache::remember('provinsi', $until, function () {
-            return $this->getAPIProvinsiAll($this->access_token);
+            return $this->getAPIProvinsiAll();
         });
 
         if ($this->data_user){
             if ($this->data_user->provinsi){
                 $kabupaten = Cache::remember('kabupaten', $until, function () {
-                    return $this->getAPIKabupatenProp($this->access_token,$this->data_user->provinsi);
+                    return $this->getAPIKabupatenProp($this->data_user->provinsi);
                 });
             }
     
             if ($this->data_user->kabupaten){
                 $kecamatan = Cache::remember('kecamatan', $until, function () {
-                    return $this->getAPIKecamatanKab($this->access_token, $this->data_user->kabupaten);
+                    return $this->getAPIKecamatanKab($this->data_user->kabupaten);
                 });
             }
     
             if ($this->data_user->kecamatan){
                 $desa = Cache::remember('desa', $until, function () {
-                    return $this->getAPIDesaKec($this->access_token, $this->data_user->kecamatan);
+                    return $this->getAPIDesaKec($this->data_user->kecamatan);
                 });
             }
         }
-        $access_token = $this->access_token;
+        // $access_token = $this->access_token;
         $data_user = $this->data_user;
         return view('admin.profiles.index', compact('module_name', 'page_title', 'page_heading', 'heading_class',
-    'access_token', 'provinsi', 'kabupaten', 'kecamatan', 'desa', 'data_user'));
+        'provinsi', 'kabupaten', 'kecamatan', 'desa', 'data_user'));
     
     }
 
