@@ -51,6 +51,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
 	Route::get('profile', 'ProfileController@index')->name('profile.show');
 	Route::post('profile', 'ProfileController@store')->name('profile.store');
+	Route::post('profile/{id}', 'ProfileController@update')->name('profile.update');
 
 	//posts
 	Route::put('posts/{post}/restore', 'PostsController@restore')->name('posts.restore');

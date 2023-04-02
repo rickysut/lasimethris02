@@ -4,18 +4,19 @@ use App\Http\Controllers\Api\HelperController;
 
 Route::group(['namespace' => 'Api'], function () {
 
-    Route::post('getAPIAccessToken', 'HelperController@getAPIAccessToken');
+    // Route::post('getAPIAccessToken', 'HelperController@getAPIAccessToken');
     // Provinsi
-    Route::get('getAPIProvinsiAll', 'HelperController@getAPIProvinsiAll');
+    Route::get('getAPIProvinsiAll', 'HelperController@getprovinsi');
     //Kabupaten
-    Route::get('getAPIKabupatenAll', 'HelperController@getAPIKabupatenAll');
-    Route::get('getAPIKabupatenProp', 'HelperController@getAPIKabupatenProp');
+    Route::get('getAPIKabupatenAll', 'HelperController@getkabupaten');
+    Route::get('getAPIKabupatenProp', 'HelperController@getKabupatenProp');
     //Kecamatan
-    Route::get('getAPIKecamatanAll', 'HelperController@getAPIKecamatanAll');
-    Route::get('getAPIKecamatanKab', 'HelperController@getAPIKecamatanKab');
-    Route::get('getAPIKecamatan', 'HelperController@getAPIKecamatan');
+    Route::get('getAPIKecamatanAll', 'HelperController@getkecamatan');
+    Route::get('getAPIKecamatanKab', 'HelperController@getKecamatanKab');
+    Route::get('getAPIKecamatan', 'HelperController@getKecamatanKode');
 
     //Desa
-    Route::get('getAPIDesaAll', 'HelperController@getAPIDesaAll');
-    Route::get('getAPIDesaKec', 'HelperController@getAPIDesaKec');
+    Route::get('getAPIDesaAll', 'HelperController@getdesa');
+    Route::get('getAPIDesaKec', 'HelperController@getDesaKec');
+    Route::get('getAPIDesa', 'HelperController@getDesaKode');
 });
