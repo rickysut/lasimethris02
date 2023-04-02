@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Placemark>
+    <name>My Marker</name>
+    <description>My marker description</description>
+    <Point>
+      <coordinates>-122.0822035425683,37.42228990140251,0</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>My Polygon</name>
+    <description>My polygon description</description>
+    <Polygon>
+      <outerBoundaryIs>
+        <LinearRing>
+          <coordinates>
+            -122.087363,37.422569,0
+            -122.087419,37.422239,0
+            -122.086989,37.422194,0
+            -122.086922,37.422524,0
+            -122.087363,37.422569,0
+          </coordinates>
+        </LinearRing>
+      </outerBoundaryIs>
+    </Polygon>
+  </Placemark>
+</kml>
