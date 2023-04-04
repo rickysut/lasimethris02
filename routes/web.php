@@ -262,9 +262,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::get('commitments/{commitments}/penangkar', 'CommitmentBackdateController@penangkar')->name('commitments.penangkar');
 		Route::get('commitments/{commitments}/read', 'CommitmentBackdateController@read')->name('commitments.read');
 		Route::get('commitments/{commitments}/pksmitra', 'CommitmentBackdateController@pksmitra')->name('commitments.pksmitra');
+		Route::get('commitments/{commitments}/createpengajuan', 'CommitmentBackdateController@createpengajuan')->name('commitments.createpengajuan');
 
 		//pengajuan v2
-		Route::put('commitments/{commitments}/createpengajuan', 'CommitmentBackdateController@createpengajuan')->name('commitments.createpengajuan');
+		Route::put('commitments/{commitments}/storepengajuan', 'CommitmentBackdateController@storepengajuan')->name('commitments.storepengajuan');
 		Route::put('commitments/{commitments}/pengajuanulang', 'CommitmentBackdateController@pengajuanulang')->name('commitments.pengajuanulang');
 		Route::get('pengajuanv2', 'PengajuanV2Controller@index')->name('pengajuanv2.index');
 

@@ -1,3 +1,4 @@
+//kml_parser.js
 let marker;
 let polygon;
 
@@ -63,6 +64,7 @@ function kml_parser() {
 		marker.addListener("click", function () {
 			//center the viewport to the marker
 			myMap.setCenter(marker.getPosition());
+			infowindow.open(map, marker);
 			// myMap.setZoom(18);
 			// update the value of the latitude and longitude input fields
 			document.getElementById("latitude").value = marker.getPosition().lat();
@@ -125,6 +127,10 @@ function kml_parser() {
 			// calculate and display the area of the polygon
 			var luas = google.maps.geometry.spherical.computeArea(polygon.getPath());
 			document.getElementById("luas_kira").value = (luas / 10000).toFixed(2);
+		});
+
+		var infowindow = new google.maps.InfoWindow({
+			content: "Hello World!",
 		});
 	};
 

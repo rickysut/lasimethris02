@@ -19,4 +19,9 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('getAPIDesaAll', 'HelperController@getdesa');
     Route::get('getAPIDesaKec', 'HelperController@getDesaKec');
     Route::get('getAPIDesa', 'HelperController@getDesaKode');
+
+    //Data Realisasi v2
+    Route::get('getAPIRealisasiAll', 'RealisasiController@index');
+    Route::get('getAPIAnggotaMitraAll', 'AnggotaMitraController@index');
+    Route::get('getAPIAnggotaMitra/{id}', 'AnggotaMitraController@show');
 });

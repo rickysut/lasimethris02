@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\MasterAnggota;
 use App\Models\MasterKelompok;
@@ -22,6 +23,19 @@ class PksMitraController extends Controller
 	public function index()
 	{
 		//
+		$module_name = 'Commitments';
+		$page_title = 'Index';
+		$page_heading = 'Daftar Komitment';
+		$heading_class = 'fa fa-file-invoice';
+
+		$user = Auth::user();
+		$masterkelompoks = MasterKelompok::all();
+		$pksmitras = $user->commitmentbackdate->flatMap(function ($CommitmentBackdate) {
+			return $CommitmentBackdate->pksmitra;
+		});
+
+		// dd($pksmitras);
+		return view('v2.pksmitra.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pksmitras', 'masterkelompoks'));
 	}
 
 	/**
