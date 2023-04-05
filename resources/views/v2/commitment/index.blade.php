@@ -18,7 +18,7 @@
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table id="datatable" class="table table-bordered table-hover table-striped w-100">
+					<table id="datatable" class="table table-bordered table-hover table-striped table-sm w-100">
 						<thead>
 							<th>No. RIPH</th>
 							<th>Tahun</th>
@@ -26,13 +26,17 @@
 							<th>Tgl. Akhir</th>
 							<th>Vol. Import</th>
 							<th>Kewajiban</th>
-							<th>Status</th>
 							<th>Tindakan</th>
 						</thead>
 						<tbody>
 							@foreach ($commitments as $commitment)
 							<tr>
-								<td>{{$commitment->no_ijin}}</td>
+								<td>
+									<span title="Anda belum mengajukan verifikasi">
+										<i class="fa fa-exclamation-circle text-warning fs-nano"></i>
+									</span>
+									{{$commitment->no_ijin}}
+								</td>
 								<td>{{$commitment->periodetahun}}</td>
 								<td>{{$commitment->tgl_ijin}}</td>
 								<td>{{$commitment->tgl_end}}</td>
@@ -40,7 +44,7 @@
 								<td>
 									<div class="row">
 										<div class="col-2">
-											<i class="fal fa-ruler-combined"></i>
+											ha
 										</div>
 										<div class="col-9">
 											{{ number_format($commitment->volume_riph * 0.05/6, 2, ',','.') }} ha
@@ -48,19 +52,12 @@
 									</div>
 									<div class="row">
 										<div class="col-2">
-											<i class="fal fa-weight-hanging"></i>
+											ton
 										</div>
 										<div class="col-9">
 											{{ number_format($commitment->volume_riph * 0.05, 2, ',','.') }} ton
 										</div>
 									</div>
-								</td>
-								<td>
-									@if (is_null($commitment->status))
-										<small><span class="badge badge-danger">No Status</span></small>
-									@else
-									{{$commitment->status}}
-									@endif
 								</td>
 								<td>
 									<a href="{{ route('admin.task.commitments.show', $commitment->id) }}"
@@ -120,89 +117,81 @@
 @section('scripts')
 @parent
 <script>
-	$(document).ready(function()
-	{
-
-		// initialize datatable
-		$('#datatable').dataTable(
-		{
+	$(document).ready(function() {
+		var table = $('#datatable').DataTable({
 			responsive: true,
 			lengthChange: false,
 			dom:
-				/*	--- Layout Structure 
-					--- Options
-					l	-	length changing input control
-					f	-	filtering input
-					t	-	The table!
-					i	-	Table information summary
-					p	-	pagination control
-					r	-	processing display element
-					B	-	buttons
-					R	-	ColReorder
-					S	-	Select
-
-					--- Markup
-					< and >				- div element
-					<"class" and >		- div with a class
-					<"#id" and >		- div with an ID
-					<"#id.class" and >	- div with an ID and a class
-
-					--- Further reading
-					https://datatables.net/reference/option/dom
-					--------------------------------------
-				 */
-				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+			"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'<'select'>>>" + // Move the select element to the left of the datatable buttons
+				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
 				"<'row'<'col-sm-12'tr>>" +
 				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-			buttons: [
-				/*{
-					extend:    'colvis',
-					text:      'Column Visibility',
-					titleAttr: 'Col visibility',
-					className: 'mr-sm-3'
-				},*/
-				{
-					extend: 'pdfHtml5',
-					text: '<i class="fa fa-file-pdf"></i>',
-					titleAttr: 'Generate PDF',
-					className: 'btn-outline-danger btn-sm btn-icon mr-1'
-				},
-				{
-					extend: 'excelHtml5',
-					text: '<i class="fa fa-file-excel"></i>',
-					titleAttr: 'Generate Excel',
-					className: 'btn-outline-success btn-sm btn-icon mr-1'
-				},
-				{
-					extend: 'csvHtml5',
-					text: '<i class="fal fa-file-csv"></i>',
-					titleAttr: 'Generate CSV',
-					className: 'btn-outline-primary btn-sm btn-icon mr-1'
-				},
-				{
-					extend: 'copyHtml5',
-					text: '<i class="fa fa-copy"></i>',
-					titleAttr: 'Copy to clipboard',
-					className: 'btn-outline-primary btn-sm btn-icon mr-1'
-				},
-				{
-					extend: 'print',
-					text: '<i class="fa fa-print"></i>',
-					titleAttr: 'Print Table',
-					className: 'btn-outline-primary btn-sm btn-icon mr-1'
-				},
-				{
-					text: '<i class="fa fa-plus"></i>',
-					titleAttr: 'Add new Commitment',
-					className: 'btn btn-info btn-sm btn-icon ml-2',
-					action: function(e, dt, node, config) {
-						window.location.href = '{{ route('admin.task.commitments.create') }}';
-					}
-				}
-			]
+				buttons: [
+					/*{
+						extend:    'colvis',
+						text:      'Column Visibility',
+						titleAttr: 'Col visibility',
+						className: 'mr-sm-3'
+					},*/
+					{
+						extend: 'pdfHtml5',
+						text: '<i class="fa fa-file-pdf"></i>',
+						titleAttr: 'Generate PDF',
+						className: 'btn-outline-danger btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'excelHtml5',
+						text: '<i class="fa fa-file-excel"></i>',
+						titleAttr: 'Generate Excel',
+						className: 'btn-outline-success btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'csvHtml5',
+						text: '<i class="fal fa-file-csv"></i>',
+						titleAttr: 'Generate CSV',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'copyHtml5',
+						text: '<i class="fa fa-copy"></i>',
+						titleAttr: 'Copy to clipboard',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'print',
+						text: '<i class="fa fa-print"></i>',
+						titleAttr: 'Print Table',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						text: '<i class="fa fa-calendar-alt"></i>',
+						titleAttr: 'Select Period',
+						className: 'btn btn-info btn-sm btn-icon ml-2',
+						action: function(e, dt, node, config) {
+							window.location.href = '{{ route('admin.task.commitments.create') }}';
+						}
+					}]
+				});
+	
+				// Get the unique values of the "Year" column
+				var years = table.column(1).data().unique().sort();
+	
+				// Create the select element and add the options
+				var select = $('<select>')
+					.addClass('custom-select custom-select-sm col-3 mr-2')
+					.on('change', function() {
+						var year = $.fn.dataTable.util.escapeRegex($(this).val());
+						table.column(1).search(year ? '^' + year + '$' : '', true, false).draw();
+					});
+				
+				$('<option>').val('').text('Pilih Tahun').appendTo(select);
+				$.each(years, function(i, year) {
+					$('<option>').val(year).text(year).appendTo(select);
+				});
+	
+				// Add the select element before the first datatable button
+			$('.dt-buttons').before(select);
 		});
-
-	});
-</script>
+	</script>
 
 @endsection

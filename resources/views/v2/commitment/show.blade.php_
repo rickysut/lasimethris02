@@ -111,8 +111,8 @@
 								</form>
 
 
-								<a href="{{ route('admin.task.commitments.createpengajuan', $commitment->id) }}"
-									class="btn btn-xs btn-danger d-block">
+								<a href="#" class="btn btn-xs btn-danger d-block"
+									data-toggle="modal" data-target="#verifikasiModal">
 									Ajukan Review dan Verifikasi
 								</a>
 						@endswitch

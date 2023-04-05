@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('styles')
+<link rel="stylesheet" media="screen, print" href="{{ asset('css/miscellaneous/lightgallery/lightgallery.bundle.css') }}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ea90fk4RXPswzkOJzd17W3EZx_KNB1M&libraries=drawing,geometry"></script>
 {{-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> --}}
@@ -83,18 +84,18 @@
 								<div class="form-group">
 									<div class="input-group bg-grey shadow-inset-2">
 										<div class="input-group-prepend">
-											<span class="input-group-text bg-transparent border-right-0 py-1 px-3 text-success">
+											<span class="input-group-text border-right-0 py-1 px-3 text-success">
 												<i class="fal fa-globe"></i>
 											</span>
 										</div>
-										<input id="kml-url" placeholder="paste link" onchange="link_parser()"
-											class="form-control border-left-0 bg-transparent pl-0" disabled>
+										<input id="mapId" name="mapId" placeholder="contoh: 1cwFsptUJ7EdW1IoHxFB_VRHsD10TEJ0" class="form-control">
 										<div class="input-group-append">
+											
 											<button class="btn btn-default waves-effect waves-themed"
-												onclick="link_parser()" disabled>Open</button>
+												onclick="link_parser()">Open</button>
 										</div>
 									</div>
-									<span class="help-block">Dalam pengembangan, belum dapat difungsikan!</span>
+									<span class="help-block">Pastikan tautan yang Anda berikan telah diatur agar dapat dilihat oleh publik pada aplikasi google map.</span>
 								</div>
 							</div>
 						</div>

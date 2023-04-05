@@ -7,6 +7,7 @@ use App\Models\Commitment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 use App\Models\User;
 use App\Models\Commitmentbackdate;
@@ -15,9 +16,14 @@ use App\Models\MasterKelompok;
 use App\Models\PenangkarMitra;
 use App\Models\Pengajuan;
 use App\Models\PengajuanV2;
+use App\Http\Controllers\Traits\SimeviTrait;
 
 class CommitmentBackdateController extends Controller
 {
+	// use SimeviTrait;
+
+	// public $access_token = '';
+	// public $data_user;
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -27,8 +33,8 @@ class CommitmentBackdateController extends Controller
 	{
 		//
 		$module_name = 'Commitments';
-		$page_title = 'Commitment';
-		$page_heading = 'Daftar Commitment';
+		$page_title = 'Index';
+		$page_heading = 'Daftar Komitment';
 		$heading_class = 'fa fa-file-invoice';
 
 		$masterpenangkars = MasterPenangkar::all();
@@ -134,6 +140,11 @@ class CommitmentBackdateController extends Controller
 		$page_heading = 'Perjanjian Kerjasama';
 		$heading_class = 'fa fa-file-signature';
 
+		$until = now()->endOfMonth();
+		$provinsi = Cache::remember('provinsi', $until, function () {
+			return $this->getAPIProvinsiAll();
+		});
+
 		$commitment = CommitmentBackdate::with('user')->findOrFail($id);
 		$masterkelompoks = MasterKelompok::all();
 		$commitmentbackdate = CommitmentBackdate::with('pksmitra.masterkelompok')
@@ -198,6 +209,27 @@ class CommitmentBackdateController extends Controller
 		return view('v2.commitment.read', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'masterpenangkars', 'penangkarmitras'));
 	}
 
+	public function createpengajuan($id)
+	{
+		//
+		//load all commitments for current user
+		$commitments = CommitmentBackdate::with('user')->findOrFail($id);
+
+		//load all Master Penangkar for reference in blade view
+		$masterpenangkars = MasterPenangkar::all();
+
+		//load all Penangkar Mitra for current Commitment (commitment_backdate_id)
+		$penangkarmitras = PenangkarMitra::with('commitmentbackdate')->get();
+
+		$module_name = 'Commitments';
+		$page_title = 'Pengajuan Verifikasi';
+		$page_heading = 'Pengajuan Verifikasi Realisasi';
+		$heading_class = 'fal fa-file-invoice';
+
+
+		return view('v2.pengajuanv2.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'masterpenangkars', 'penangkarmitras'));
+	}
+
 	/**
 	 * Update the specified resource in storage.
 	 *
@@ -229,7 +261,7 @@ class CommitmentBackdateController extends Controller
 		return redirect()->route('admin.task.commitments.index')->with('success', 'Data Commitment updated successfully');
 	}
 
-	public function createpengajuan($id, Request $request)
+	public function storepengajuan($id, Request $request)
 	{
 		// Find commitment_backdate id
 		$commitments = CommitmentBackdate::find($id);
@@ -273,6 +305,7 @@ class CommitmentBackdateController extends Controller
 		}
 		$commitments->save();
 		$pengajuan->save();
+
 		return redirect()->route('admin.task.commitments.show', $commitments->id)->with('success', 'Data Pengajuan submitted successfully');
 	}
 
