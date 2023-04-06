@@ -172,7 +172,14 @@
 																<label for="provinsi_id">Provinsi</label>
 																<select class="form-control custom-select selecteditprov"
 																	name="provinsi_id" id="provinsi_id">
-																	<option value=""></option>
+																	<option value="{{ isset($pksmitra) ? $pksmitra->provinsi_id : '' }}">
+																		{{ isset($pksmitra->provinsi) ? $pksmitra->provinsi->nama : 'Load Record' }}
+																	</option>
+																	@foreach ($provinsis as $provinsi)
+																		<option value="{{$provinsi->provinsi_id}}">
+																			{{$provinsi->provinsi_id}} - {{$provinsi->nama}}
+																		</option>
+																	@endforeach
 																</select>
 															</div>
 															<div class="form-group col-md-4">
@@ -314,7 +321,10 @@
 							<label for="provinsi_id">Provinsi</label>
 							<select class="form-control custom-select selecteditprov"
 								name="provinsi_id" id="provinsi_id">
-								<option value=""></option>
+								<option value="" hidden>--pilih provinsi</option>
+								@foreach ($provinsis as $provinsi)
+								<option value="{{$provinsi->provinsi_id}}">{{$provinsi->id}} - {{$provinsi->nama}} </option>
+								@endforeach
 							</select>
 						</div>
 						<div class="form-group col-md-6">
@@ -370,6 +380,33 @@
 <!-- start script for this page -->
 @section('scripts')
 @parent
+
+<script>
+	$(document).ready(function() {
+		// Get the kabupaten select element
+		const $kabupatenSelect = $('#kabupaten_id');
+
+		// Add an event listener to the provinsi select element
+		$('#provinsi_id').on('change', function() {
+			const provinsiId = $(this).val();
+			if (provinsiId) {
+			// Make an AJAX request to fetch the corresponding kabupaten
+			$.get('/api/getKabupatenByProvinsi/' + provinsiId, function(data) {
+				// Clear the kabupaten select element
+				$kabupatenSelect.empty().append('<option value=""></option>');
+				// Populate the kabupaten select element with the fetched data
+				$.each(data, function(key, value) {
+				$kabupatenSelect.append('<option value="' + value.kabupaten_id + '">' + value.nama_kab + '</option>');
+				});
+			});
+			} else {
+			// Clear the kabupaten select element if no provinsi is selected
+			$kabupatenSelect.empty().append('<option value=""></option>');
+			}
+		});
+	});
+</script>
+	
 
 <script>
     $(document).ready(function() {

@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
 
 use App\Models\MasterAnggota;
 use App\Models\MasterKelompok;
 use App\Models\PksMitra;
 use App\Models\AnggotaMitra;
 use App\Models\CommitmentBackdate;
+use App\Models\MasterProvinsi;
 
 class PksMitraController extends Controller
 {
@@ -144,20 +147,29 @@ class PksMitraController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
+
+
 	public function edit($id)
 	{
-		//
+		// ...
 		$module_name = 'Commitments';
 		$page_title = 'Kerjasama';
 		$page_heading = 'Perjanjian Kerjasama';
 		$heading_class = 'fa fa-file-signature';
 
+		// Fetch list of provinces from API
+		$response = Http::get('https://sipedas.pertanian.go.id/api/wilayah/list_pro');
+		$provinsis = collect($response->json())->map(function ($nama, $id) {
+			return ['provinsi_id' => $id, 'nama' => $nama];
+		});
+		// dd($provinsis);
 		$pksmitra = PksMitra::findOrFail($id);
 		$commitment = CommitmentBackdate::findOrFail($pksmitra->commitmentbackdate_id);
 		$masterkelompoks = MasterKelompok::all();
 
-		return view('v2.commitment.pksmitra.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitra'));
+		return view('v2.commitment.pksmitra.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitra', 'provinsis'));
 	}
+
 
 	/**
 	 * Update the specified resource in storage.
@@ -170,9 +182,9 @@ class PksMitraController extends Controller
 	{
 		//
 		$pksmitra = PksMitra::find($id);
-		$pksmitra->commitmentbackdate_id = $request->input('commitmentbackdate_id');
+		// $pksmitra->commitmentbackdate_id = $request->input('commitmentbackdate_id');
 		$pksmitra->master_kelompok_id = $request->input('master_kelompok_id');
-		$pksmitra->no_ijin = $request->input('no_ijin');
+		// $pksmitra->no_ijin = $request->input('no_ijin');
 		$pksmitra->no_perjanjian = $request->input('no_perjanjian');
 		$pksmitra->tgl_perjanjian_start = $request->input('tgl_perjanjian_start');
 		$pksmitra->tgl_perjanjian_end = $request->input('tgl_perjanjian_end');

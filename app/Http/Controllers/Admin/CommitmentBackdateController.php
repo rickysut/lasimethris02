@@ -7,6 +7,7 @@ use App\Models\Commitment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
 use App\Models\User;
@@ -16,6 +17,10 @@ use App\Models\MasterKelompok;
 use App\Models\PenangkarMitra;
 use App\Models\Pengajuan;
 use App\Models\PengajuanV2;
+use App\Models\MasterProvinsi;
+use App\Models\MasterKabupaten;
+use App\Models\MasterKecamatan;
+use App\Models\MasterDesa;
 use App\Http\Controllers\Traits\SimeviTrait;
 
 class CommitmentBackdateController extends Controller
@@ -140,18 +145,13 @@ class CommitmentBackdateController extends Controller
 		$page_heading = 'Perjanjian Kerjasama';
 		$heading_class = 'fa fa-file-signature';
 
-		$until = now()->endOfMonth();
-		$provinsi = Cache::remember('provinsi', $until, function () {
-			return $this->getAPIProvinsiAll();
-		});
-
 		$commitment = CommitmentBackdate::with('user')->findOrFail($id);
 		$masterkelompoks = MasterKelompok::all();
 		$commitmentbackdate = CommitmentBackdate::with('pksmitra.masterkelompok')
 			->findOrFail($id);
 		$pksmitras = $commitmentbackdate->pksmitra;
 
-		return view('v2.commitment.pksmitra.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitras', 'commitmentbackdate'));
+		return view('v2.commitment.pksmitra.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitras', 'commitmentbackdate'));
 	}
 
 
