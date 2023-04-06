@@ -152,9 +152,14 @@
 										<label class="form-label" for="provinsi">Provinsi</label>
 										<div class="input-group">
 											<select class="select2-prov form-control" id="provinsi_id" name="provinsi_id" required>
-												<option></option>
-												<option></option>
-												<option></option>
+												<option value="{{ isset($pksmitra) ? $pksmitra->provinsi_id : '' }}">
+													{{ isset($pksmitra->provinsi) ? $pksmitra->provinsi->nama : '' }}
+												</option>												
+												@foreach ($provinsis as $provinsi)
+													<option value="{{$provinsi->provinsi_id}}">
+														{{$provinsi->provinsi_id}} - {{$provinsi->nama}}
+													</option>
+												@endforeach
 											</select>
 										</div>
 										<div class="help-block">
@@ -167,9 +172,9 @@
 										<label class="form-label" for="kabupaten">Kabupaten/Kota</label>
 										<div class="input-group">
 											<select class="select2-kab form-control" id="kabupaten_id" name="kabupaten_id" required>
-												<option></option>
-												<option></option>
-												<option></option>
+												<option value="{{ isset($pksmitra) ? $pksmitra->kabupaten_id : '' }}">
+													{{ isset($pksmitra->kabupaten_id) ? $pksmitra->kabupaten->nama_kab : '' }}
+												</option>
 											</select>
 										</div>
 										<div class="help-block">
@@ -182,9 +187,9 @@
 										<label class="form-label" for="kecamatan">Kecamatan</label>
 										<div class="input-group">
 											<select class="select2-kec form-control" id="kecamatan_id" name="kecamatan_id" required>
-												<option></option>
-												<option></option>
-												<option></option>
+												<option value="{{ isset($pksmitra) ? $pksmitra->kecamatan_id : '' }}">
+													{{ isset($pksmitra->kecamatan_id) ? $pksmitra->kecamatan->nama_kecamatan : '' }}
+												</option>
 											</select>
 										</div>
 										<div class="help-block">
@@ -194,12 +199,12 @@
 								</div>
 								<div class="col-md-6 mb-3">
 									<div class="form-group">
-										<label class="form-label" for="kelurahan_id">Desa</label>
+										<label class="form-label" for="desa_id">Desa</label>
 										<div class="input-group">
-											<select class="select2-des form-control" id="kelurahan_id" id="kelurahan_id" required>
-												<option></option>
-												<option></option>
-												<option></option>
+											<select class="select2-des form-control" name="kelurahan_id" id="kelurahan_id" required>
+												<option value="{{ isset($pksmitra) ? $pksmitra->kelurahan_id : '' }}">
+													{{ isset($pksmitra->kelurahan_id) ? $pksmitra->desa->nama_desa : '' }}
+												</option>
 											</select>
 										</div>
 										<div class="help-block">
@@ -274,24 +279,97 @@
 @section('scripts')
 @parent
 
+
+
 <script>
     $(document).ready(function() {
         $(function() {
             $(".select2-prov").select2({
-                placeholder: "Province name"
+                placeholder: "--pilih Provinsi"
             });
             $(".select2-kab").select2({
-                placeholder: "Kabupaten name"
+                placeholder: "--pilih Kabupaten"
             });
             $(".select2-kec").select2({
-                placeholder: "Kecamatan name"
+                placeholder: "--pilih Kecamatan"
             });
             $(".select2-des").select2({
-                placeholder: "Desa name"
+                placeholder: "--pilih Desa"
             });
         });
     });
 </script>
+
+<script>
+	$(document).ready(function() {
+		// Get the kabupaten select element
+		const $kabupatenSelect = $('#kabupaten_id');
+
+		// Add an event listener to the provinsi select element
+		$('#provinsi_id').on('change', function() {
+			const provinsiId = $(this).val();
+			if (provinsiId) {
+			// Make an AJAX request to fetch the corresponding kabupaten
+			$.get('/api/getKabupatenByProvinsi/' + provinsiId, function(data) {
+				// Clear the kabupaten select element
+				$kabupatenSelect.empty().append('<option value=""></option>');
+				// Populate the kabupaten select element with the fetched data
+				$.each(data, function(key, value) {
+				$kabupatenSelect.append('<option value="' + value.kabupaten_id + '">' + value.kabupaten_id + ' - ' + value.nama_kab + '</option>');
+				});
+			});
+			} else {
+			// Clear the kabupaten select element if no provinsi is selected
+			$kabupatenSelect.empty().append('<option value=""></option>');
+			}
+		});
+
+		// Get the kecamatan select element
+		const $kecamatanSelect = $('#kecamatan_id');
+
+		// Add an event listener to the provinsi select element
+		$('#kabupaten_id').on('change', function() {
+			const kabupatenId = $(this).val();
+			if (kabupatenId) {
+			// Make an AJAX request to fetch the corresponding kabupaten
+			$.get('/api/getKecamatanByKabupaten/' + kabupatenId, function(data) {
+				// Clear the kabupaten select element
+				$kecamatanSelect.empty().append('<option value=""></option>');
+				// Populate the kabupaten select element with the fetched data
+				$.each(data, function(key, value) {
+				$kecamatanSelect.append('<option value="' + value.kecamatan_id + '">' + value.kecamatan_id + ' - '  + value.nama_kecamatan + '</option>');
+				});
+			});
+			} else {
+			// Clear the kabupaten select element if no provinsi is selected
+			$kecamatanSelect.empty().append('<option value=""></option>');
+			}
+		});
+
+		// Get the kecamatan select element
+		const $desaSelect = $('#kelurahan_id');
+
+		// Add an event listener to the provinsi select element
+		$('#kecamatan_id').on('change', function() {
+			const kecamatanId = $(this).val();
+			if (kecamatanId) {
+			// Make an AJAX request to fetch the corresponding kabupaten
+			$.get('/api/getDesaByKecamatan/' + kecamatanId, function(data) {
+				// Clear the kabupaten select element
+				$desaSelect.empty().append('<option value=""></option>');
+				// Populate the kabupaten select element with the fetched data
+				$.each(data, function(key, value) {
+				$desaSelect.append('<option value="' + value.kelurahan_id + '">' + value.kelurahan_id + ' - '  + value.nama_desa + '</option>');
+				});
+			});
+			} else {
+			// Clear the kabupaten select element if no provinsi is selected
+			$desaSelect.empty().append('<option value=""></option>');
+			}
+		});
+	});
+</script>
+
 <script>
     $("#js-login-btn").click(function(event) {
 

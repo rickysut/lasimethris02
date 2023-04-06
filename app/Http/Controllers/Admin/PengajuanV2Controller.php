@@ -53,18 +53,34 @@ class PengajuanV2Controller extends Controller
 	{
 		//
 		$pengajuan = new PengajuanV2();
-		$tahun = date('Y');
-		$bulan = date('m');
-		$tanggal = date('d');
-		$last_no_pengajuan = PengajuanV2::max('no_pengajuan');
-		$no_pengajuan = $tahun . $bulan . $tanggal . sprintf('%03d', intval(substr($last_no_pengajuan, 4)) + 1);
+		// get current month and year as 2-digit and 4-digit strings
+		$month = date('m');
+		$year = date('Y');
+
+		// retrieve the latest record for the current month and year
+		$latestRecord = PengajuanV2::where('no_pengajuan', 'like', "%/{$month}/{$year}")
+			->orderBy('created_at', 'desc')
+			->first();
+
+		// get the current increment value for n
+		$n = 1;
+		if ($latestRecord) {
+			$parts = explode('/', $latestRecord->no_pengajuan);
+			$n = intval($parts[0]) + 1;
+		}
+
+		// mask the n part to always have 3 digits
+		$nMasked = str_pad($n, 3, '0', STR_PAD_LEFT);
+
+		// generate the new no_pengajuan value with timestamp and masked n
+		$no_pengajuan = "{$nMasked}/PV." . time() . "/simethris/{$month}/{$year}";
 		$pengajuan->no_pengajuan = $no_pengajuan;
 		$pengajuan->commitmentbackdate_id = $request->input('commitmentbackdate_id');
 		$pengajuan->status = '1';
 		// dd($pengajuan);
 		$pengajuan->save();
 		return redirect()->route('admin.task.commitments.show', $pengajuan->commitmentbackdate_id)
-			->with('success', 'Petani  saved successfully');
+			->with('success', 'Permintaan Anda telah kami terima saved successfully');
 	}
 
 	/**

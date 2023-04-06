@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\HelperController;
+use App\Http\Controllers\Api\AnggotaMitraController;
+use App\Http\Controllers\Api\GetWilayahController;
 
 Route::group(['namespace' => 'Api'], function () {
 
@@ -24,4 +26,10 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('getAPIRealisasiAll', 'RealisasiController@index');
     Route::get('getAPIAnggotaMitraAll', 'AnggotaMitraController@index');
     Route::get('getAPIAnggotaMitra/{id}', 'AnggotaMitraController@show');
+
+    //Data wilayah
+    Route::get('getAllProvinsi', 'GetWilayahController@getAllProvinsi');
+    Route::get('getKabupatenByProvinsi/{id}', 'GetWilayahController@getKabupatenByProvinsi');
+    Route::get('getKecamatanByKabupaten/{id}', 'GetWilayahController@getKecamatanByKabupaten');
+    Route::get('getDesaByKecamatan/{id}', 'GetWilayahController@getDesaByKecamatan');
 });

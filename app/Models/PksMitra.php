@@ -57,4 +57,24 @@ class PksMitra extends Model
 	{
 		return $this->hasMany(AnggotaMitra::class, 'pks_mitra_id', 'id');
 	}
+
+	public function provinsi()
+	{
+		return $this->belongsTo(MasterProvinsi::class, 'provinsi_id', 'provinsi_id');
+	}
+
+	public function kabupaten()
+	{
+		return $this->belongsTo(MasterKabupaten::class, 'kabupaten_id', 'kabupaten_id');
+	}
+
+	public function kecamatan()
+	{
+		return $this->belongsTo(MasterKecamatan::class, 'kecamatan_id', 'kecamatan_id');
+	}
+
+	public function desa()
+	{
+		return $this->belongsTo(MasterDesa::class, 'kelurahan_id', 'kelurahan_id');
+	}
 }
