@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 
 class getkeckab implements ShouldQueue
@@ -36,9 +37,11 @@ class getkeckab implements ShouldQueue
     {
         $filepath = 'master/token.json';
         if (Storage::disk('local')->exists($filepath)) {
+            // Log::debug("token ada");
             $pathjson = Storage::disk('local')->path($filepath);
             $token = json_decode(file_get_contents($pathjson), true);
         } else {
+            // Log::debug("token gak ada");
             $job = new gettoken();
             $this->dispatch($job);
             if (Storage::disk('local')->exists($filepath)) {
@@ -50,6 +53,7 @@ class getkeckab implements ShouldQueue
             'Accept' => 'application/json'
         ])->get(config('app.simevi_url').'kecamatanwithkab/'.$this->kd_kab);
 
+        // Log::debug($response);
         $filepath = 'master/keckab_'.$this->kd_kab.'.json';
         if (Storage::disk('local')->exists($filepath)) 
             Storage::disk('local')->delete($filepath); 

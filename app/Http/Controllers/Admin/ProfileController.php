@@ -40,28 +40,20 @@ class ProfileController extends Controller
         // $this->access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
         $this->data_user = Auth::user()::find(auth()->id())->data_user;
         
-        $until = now()->endOfMonth();
-        $provinsi = Cache::remember('provinsi', $until, function () {
-            return $this->getAPIProvinsiAll();
-        });
+        $provinsi = $this->getAPIProvinsiAll();
 
         if ($this->data_user){
             if ($this->data_user->provinsi){
-                $kabupaten = Cache::remember('kabupaten', $until, function () {
-                    return $this->getAPIKabupatenProp($this->data_user->provinsi);
-                });
+                $kabupaten = $this->getAPIKabupatenProp($this->data_user->provinsi);
             }
     
             if ($this->data_user->kabupaten){
-                $kecamatan = Cache::remember('kecamatan', $until, function () {
-                    return $this->getAPIKecamatanKab($this->data_user->kabupaten);
-                });
+                $kecamatan = $this->getAPIKecamatanKab($this->data_user->kabupaten);
+                
             }
     
             if ($this->data_user->kecamatan){
-                $desa = Cache::remember('desa', $until, function () {
-                    return $this->getAPIDesaKec($this->data_user->kecamatan);
-                });
+                $desa = $this->getAPIDesaKec($this->data_user->kecamatan);
             }
         }
         // $access_token = $this->access_token;
