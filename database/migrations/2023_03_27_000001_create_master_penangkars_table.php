@@ -22,7 +22,7 @@ return new class extends Migration
 			$table->string('provinsi_id')->nullable();
 			$table->string('kabupaten_id')->nullable();
 			$table->string('kecamatan_id')->nullable();
-			$table->string('desa_id')->nullable();
+			$table->string('kelurahan_id')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 		});

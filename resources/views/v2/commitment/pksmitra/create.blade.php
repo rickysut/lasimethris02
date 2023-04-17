@@ -20,11 +20,13 @@
 						<span>
 					</div>
 				</div>
-				<form action=" {{route('admin.task.pksmitra.store')}} "
+				<form action=" {{route('admin.task.pksmitra.store')}}"
 					method="POST" enctype="multipart/form-data">
 					@csrf
 					<div class="panel-container show">
 						<div class="panel-content">
+							<input type="text" id="commitmentbackdate_id" name="commitmentbackdate_id" value="{{$commitment->id}}" hidden>
+							<input type="text" id="no_ijin" name="no_ijin" value="{{$commitment->no_ijin}}" hidden>
 							<div class="row d-flex">
 								<div class="col-md-6 mb-3">
 									<div class="form-group">
@@ -66,7 +68,7 @@
 											<div class="input-group-prepend">
 												<span class="input-group-text"><i class="fal fa-calendar-day"></i></span>
 											</div>
-											<input type="text" name="tgl_perjanjian_start" id="tgl_perjanjian_start"
+											<input type="date" name="tgl_perjanjian_start" id="tgl_perjanjian_start"
 												class="form-control " placeholder="tanggal mulai perjanjian"
 												aria-describedby="helpId">
 										</div>
@@ -82,7 +84,7 @@
 											<div class="input-group-prepend">
 												<span class="input-group-text"><i class="fal fa-calendar-day"></i></span>
 											</div>
-											<input type="text" name="tgl_perjanjian_end" id="tgl_perjanjian_end"
+											<input type="date" name="tgl_perjanjian_end" id="tgl_perjanjian_end"
 												class="form-control " placeholder="tanggal akhir perjanjian"
 												aria-describedby="helpId">
 										</div>
@@ -174,9 +176,9 @@
 								</div>
 								<div class="col-md-6 mb-3">
 									<div class="form-group">
-										<label class="form-label" for="desa_id">Desa</label>
+										<label class="form-label" for="kelurahan_id">Desa</label>
 										<div class="input-group">
-											<select class="select2-des form-control" name="kelurahan_id" id="desa_id" required>
+											<select class="select2-des form-control" name="kelurahan_id" id="kelurahan_id" required>
 											</select>
 										</div>
 										<div class="help-block">
@@ -191,8 +193,8 @@
 											<span class="input-group-text" id="inputGroupPrepend3">PKS</span>
 										</div>
 										<div class="custom-file">
-											<input type="file" class="custom-file-input" id="attachment" name="attachment">
-											<label class="custom-file-label" for="attachment">Choose file...</label>
+											<input type="file" class="custom-file-input" id="berkas_pks" name="berkas_pks">
+											<label class="custom-file-label" for="berkas_pks">Choose file...</label>
 										</div>
 									</div>
 									<div class="help-block">Unggah hasil pemindaian berkas Form-5 dalam bentuk pdf.</div>
@@ -205,7 +207,8 @@
 							<a href="{{route('admin.task.commitments.show', $commitment->id)}}" class="btn btn-warning btn-sm">
 								<i class="fal fa-undo mr-1"></i>Batal
 							</a>
-							<button class="btn btn-primary btn-sm" type="submit">
+							<button class="btn btn-primary btn-sm" type="submit"
+								@if ($disabled) disabled @endif>
 								<i class="fal fa-save mr-1"></i>Simpan
 							</button>
 						</div>
@@ -250,18 +253,17 @@
 <script>
 	$(document).ready(function() {
 		const $provinsiSelect = $('#provinsi_id');
-	// Populate the provinsi select element with the fetched data
-	$.get('/api/getAllProvinsi/', function(data) {
-		// Clear the provinsi select element
-		$provinsiSelect.empty().append('<option value=""></option>');
 		// Populate the provinsi select element with the fetched data
-		$.each(data, function(key, value) {
-			$provinsiSelect.append('<option value="' + value.provinsi_id + '">' + value.provinsi_id + ' - ' + value.nama + '</option>');
+		$.get('/api/getAllProvinsi/', function(data) {
+			// Clear the provinsi select element
+			$provinsiSelect.empty().append('<option value=""></option>');
+			// Populate the provinsi select element with the fetched data
+			$.each(data, function(key, value) {
+				$provinsiSelect.append('<option value="' + value.provinsi_id + '">' + value.provinsi_id + ' - ' + value.nama + '</option>');
+			});
 		});
-	});
 		// Get the kabupaten select element
 		const $kabupatenSelect = $('#kabupaten_id');
-
 		// Add an event listener to the provinsi select element
 		$('#provinsi_id').on('change', function() {
 			const provinsiId = $(this).val();
@@ -304,7 +306,7 @@
 		});
 
 		// Get the kecamatan select element
-		const $desaSelect = $('#desa_id');
+		const $desaSelect = $('#kelurahan_id');
 
 		// Add an event listener to the provinsi select element
 		$('#kecamatan_id').on('change', function() {
@@ -316,7 +318,7 @@
 				$desaSelect.empty().append('<option value=""></option>');
 				// Populate the kabupaten select element with the fetched data
 				$.each(data, function(key, value) {
-				$desaSelect.append('<option value="' + value.desa_id + '">' + value.desa_id + ' - '  + value.nama_desa + '</option>');
+				$desaSelect.append('<option value="' + value.kelurahan_id + '">' + value.kelurahan_id + ' - '  + value.nama_desa + '</option>');
 				});
 			});
 			} else {
@@ -325,21 +327,5 @@
 			}
 		});
 	});
-</script>
-
-<script>
-    $("#js-login-btn").click(function(event) {
-
-        // Fetch form to apply custom Bootstrap validation
-        var form = $("#js-login")
-
-        if (form[0].checkValidity() === false) {
-            event.preventDefault()
-            event.stopPropagation()
-        }
-
-        form.addClass('was-validated');
-        // Perform ajax submit here...
-    });
 </script>
 @endsection

@@ -31,4 +31,9 @@ class MasterDesa extends Model
 	{
 		return $this->belongsTo(MasterKecamatan::class, 'kecamatan_id', 'kecamatan_id');
 	}
+
+	// public function pksmitra()
+	// {
+	// 	return $this->hasMany(PksMitra::class, 'kd_desa', 'kelurahan_id');
+	// }
 }

@@ -30,6 +30,7 @@ return new class extends Migration
 			$table->string('kecamatan_id')->nullable();
 			$table->string('kelurahan_id')->nullable();
 			$table->string('berkas_pks')->nullable();
+			$table->string('pengajuan_id')->nullable();
 			$table->integer('status')->nullable();
 			$table->timestamps();
 			$table->softDeletes();

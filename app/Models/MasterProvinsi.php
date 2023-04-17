@@ -24,7 +24,6 @@ class MasterProvinsi extends Model
 		'kd_bast',
 		'lat',
 		'lng',
-		'no_satker',
 	];
 
 	public function kabupaten()
@@ -32,8 +31,8 @@ class MasterProvinsi extends Model
 		return $this->hasMany(MasterKabupaten::class, 'provinsi_id', 'provinsi_id');
 	}
 
-	// public function pksmitra()
-	// {
-	// 	return $this->hasMany(PksMitra::class, 'provinsi_id', 'provinsi_id');
-	// }
+	public function pksmitra()
+	{
+		return $this->hasMany(PksMitra::class, 'provinsi_id', 'provinsi_id');
+	}
 }

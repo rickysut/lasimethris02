@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use App\Models\PengajuanV2;
-use App\Models\CommitmentBackdate;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
+use App\Models\PengajuanV2;
+use App\Models\CommitmentBackdate;
+use App\Models\verif_commitment;
 
 class PengajuanV2Controller extends Controller
 {
@@ -20,9 +22,9 @@ class PengajuanV2Controller extends Controller
 	public function index(Request $request)
 	{
 		//
-		$module_name = 'Commitments';
-		$page_title = 'Commitment';
-		$page_heading = 'Daftar Commitment';
+		$module_name = 'Permohonan';
+		$page_title = 'Verifikasi';
+		$page_heading = 'Daftar Pengajuan Verifikasi';
 		$heading_class = 'fa fa-file-invoice';
 
 		$user = Auth::user();
@@ -44,19 +46,19 @@ class PengajuanV2Controller extends Controller
 	}
 
 	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
+	 * 
 	 */
 	public function store(Request $request)
 	{
-		//
+		//validasi sebelum pengajuan di-submit
+		$request->validate(
+			[]
+		);
+
 		$pengajuan = new PengajuanV2();
 		// get current month and year as 2-digit and 4-digit strings
 		$month = date('m');
 		$year = date('Y');
-
 		// retrieve the latest record for the current month and year
 		$latestRecord = PengajuanV2::where('no_pengajuan', 'like', "%/{$month}/{$year}")
 			->orderBy('created_at', 'desc')
@@ -75,10 +77,22 @@ class PengajuanV2Controller extends Controller
 		// generate the new no_pengajuan value with timestamp and masked n
 		$no_pengajuan = "{$nMasked}/PV." . time() . "/simethris/{$month}/{$year}";
 		$pengajuan->no_pengajuan = $no_pengajuan;
-		$pengajuan->commitmentbackdate_id = $request->input('commitmentbackdate_id');
 		$pengajuan->status = '1';
-		// dd($pengajuan);
+
+		$verifCommitment = new verif_commitment();
+		$verifCommitment->pengajuan_id = $pengajuan->id;
+		$verifCommitment->commitmentbackdate_id = $request->input('commitmentbackdate_id');
+		$verifCommitment->status = $pengajuan->status;
+
+		$commitments = CommitmentBackdate::findOrFail($verifCommitment->commitmentbackdate_id);
+		$commitments->formRiph = $request->input('formRiph');
+
+		$commitments->status = '1';
+		$commitments->pengajuan_id = $pengajuan->id;
+		//tambahkan field-field lain
+
 		$pengajuan->save();
+		$verifCommitment->save();
 		return redirect()->route('admin.task.commitments.show', $pengajuan->commitmentbackdate_id)
 			->with('success', 'Permintaan Anda telah kami terima saved successfully');
 	}

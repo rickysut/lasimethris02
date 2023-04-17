@@ -17,9 +17,9 @@ function initMap() {
 	const markers = [];
 	const polygons = [];
 
-	var infowindow = new google.maps.InfoWindow({
-		content: "Hello World!",
-	});
+	// var infowindow = new google.maps.InfoWindow({
+	// 	content: "Hello World!",
+	// });
 
 	// 3. setup drawing manager
 	var drawingManager = new google.maps.drawing.DrawingManager({

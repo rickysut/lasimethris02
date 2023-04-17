@@ -49,13 +49,13 @@
 										</div>
 									</div>
 								</td>
-								<td>{{$penangkar->provinsi_id}}</td>
-								<td>{{$penangkar->kabupaten_id}}</td>
+								<td>{{$penangkar->provinsi->nama}}</td>
+								<td>{{$penangkar->kabupaten->nama_kab}}</td>
 								<td>
-									<button type="button" class="btn btn-icon btn-xs btn-primary"
-										data-toggle="modal" data-target="#myEditModal{{$penangkar->id}} ">
+									<a href="{{ route('admin.task.masterpenangkar.edit', [$penangkar->id]) }}" class="btn btn-icon btn-xs btn-primary"
+										title="ubah data kelompok">
 										<i class="fal fa-edit"></i>
-									</button>
+									</a>
 									<form action="{{ route('admin.task.masterpenangkar.destroy', $penangkar->id) }}" method="POST" style="display: inline-block;">
 										@csrf
 										@method('DELETE')
@@ -64,208 +64,10 @@
 										</button>
 									</form>
 								</td>
-								{{-- Modal Edit Poktan --}}
-								<div class="modal fade" id="myEditModal{{$penangkar->id}}"
-									tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-									<div class="modal-dialog modal-dialog-right" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<div>
-													<h6 class="modal-title" id="myModalLabel">Ubah Data Penangkar</h6>
-													<h4 class="fw-500 text-primary">{{ $penangkar->nama_lembaga }}</h4>
-												</div>
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true">&times;</span>
-												</button>
-											</div>
-											<form method="POST" action="{{ route('admin.task.masterpenangkar.update', [$penangkar->id]) }}"
-												enctype="multipart/form-data">
-												@csrf
-												@method('PUT')
-												<div class="modal-body">
-													<!-- Add your form fields here to create a new group of farmers -->
-													<div class="form-group">
-														<label for="">Nama Lembaga Penangkar</label>
-														<input type="text" name="nama_lembaga" id="nama_lembaga"
-															value="{{ old('nama_lembaga', $penangkar->nama_lembaga) }}"
-															class="form-control form-control-sm"
-															placeholder="Nama Lembaga Penangkar" aria-describedby="helpId">
-														{{-- <small id="helpId" class="text-muted">Nama Kelompok Tani</small> --}}
-													</div>
-													<div class="form-group">
-														<label for="">Nama Pimpinan</label>
-														<input type="text" name="nama_pimpinan" id="nama_pimpinan"
-															value="{{ old('nama_pimpinan', $penangkar->nama_pimpinan) }}"
-															class="form-control form-control-sm"
-															placeholder="" aria-describedby="helpId">
-														{{-- <small id="helpId" class="text-muted">Nama Pimpinan Kelompok Tani</small> --}}
-													</div>
-													<div class="form-group">
-														<label for="">Nomor Kontak</label>
-														<input type="text" name="hp_pimpinan" id="hp_pimpinan"
-															value="{{ old('hp_pimpinan', $penangkar->hp_pimpinan) }}"
-															class="form-control form-control-sm"
-															placeholder="" aria-describedby="helpId">
-													<small id="helpId" class="text-muted">Nomor kontak aktif yang dapat dihubungi (HP/Telp).</small>
-													</div>
-													<div class="form-group">
-														<label for="">Alamat</label>
-														<textarea name="alamat" id="alamat"
-															class="form-control form-control-sm" rows="2">{{ old('alamat', $penangkar->alamat) }}</textarea>
-														<small id="helpId" class="text-muted">Nomor kontak aktif yang dapat dihubungi (HP/Telp).</small>
-													</div>
-													<div class="row d-flex justify-content-between">
-														<div class="form-group col-md-6">
-															<label for="">Provinsi</label>
-															<select name="provinsi_id" id="provinsi_id" class="custom-select form-control form-control-sm">
-																<option value="" hidden>-- pilih provinsi</option>
-																<option value="{{$penangkar->provinsi_id}}" selected>{{$penangkar->provinsi_id}}</option>
-																<option value=""></option>
-															</select>
-															<small id="helpId" class="text-muted">Provinsi domisili Kelompoktani.</small>
-														</div>
-														<div class="form-group col-md-6">
-															<label for="">Kabupaten</label>
-															<select name="kabupaten_id" id="kabupaten_id" class="custom-select form-control form-control-sm">
-																<option value="" hidden>-- pilih kabupaten</option>
-																<option value="{{$penangkar->kabupaten_id}}" selected>{{$penangkar->kabupaten_id}}</option>
-																<option value=""></option>
-															</select>
-															<small id="helpId" class="text-muted">Kabupaten domisili Kelompoktani.</small>
-														</div>
-													</div>
-													<div class="row d-flex justify-content-between">
-														<div class="form-group col-md-6">
-															<label for="">Kecamatan</label>
-															<select name="kecamatan_id" id="kecamatan_id" class="custom-select form-control form-control-sm">
-																<option value="" hidden>-- pilih kecamatan</option>
-																<option value="{{$penangkar->kecamatan_id}}" selected>{{$penangkar->kecamatan_id}}</option>
-																<option value=""></option>
-															</select>
-															<small id="helpId" class="text-muted">Provinsi domisili Kelompoktani.</small>
-														</div>
-														<div class="form-group col-md-6">
-															<label for="">Kelurahan</label>
-															<select name="desa_id" id="desa_id" class="custom-select form-control form-control-sm">
-																<option value="" hidden>-- pilih kelurahan</option>
-																<option value="{{$penangkar->desa_id}}" selected>{{$penangkar->desa_id}}</option>
-																<option value=""></option>
-															</select>
-															<small id="helpId" class="text-muted">Kelurahan domisili Kelompoktani.</small>
-														</div>
-													</div>
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">
-														<i class="fal fa-times-circle text-danger fw-500"></i> Close
-													</button>
-													<button class="btn btn-primary btn-sm" type="submit">
-														<i class="fal fa-save"></i> Save changes
-													</button>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div>
 							</tr>
 							@endforeach
 						</tbody>
 					</table>
-					{{-- Modal Penangkar --}}
-					<div class="modal fade" id="myModal"
-						tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<div class="modal-dialog modal-dialog-right" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<div>
-										<h5 class="modal-title" id="myModalLabel">Register Data Penangkar</h5>
-										<small id="helpId" class="text-muted">Tambah Daftar Penangkar Benih berlabel</small>
-									</div>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<form method="POST" action="{{ route('admin.task.masterpenangkar.store')}}"
-									enctype="multipart/form-data">
-									@csrf
-									<div class="modal-body">
-										<!-- Add your form fields here to create a new group of farmers -->
-										<div class="form-group">
-											<label for="">Nama Lembaga Penangkar</label>
-											<input type="text" name="nama_lembaga" id="nama_lembaga"
-												class="form-control form-control-sm"
-												placeholder="Nama Lembaga Penangkar" aria-describedby="helpId">
-											{{-- <small id="helpId" class="text-muted">Nama Kelompok Tani</small> --}}
-										</div>
-										<div class="form-group">
-											<label for="">Nama Pimpinan</label>
-											<input type="text" name="nama_pimpinan" id="nama_pimpinan"
-												class="form-control form-control-sm"
-												placeholder="" aria-describedby="helpId">
-											{{-- <small id="helpId" class="text-muted">Nama Pimpinan Kelompok Tani</small> --}}
-										</div>
-										<div class="form-group">
-											<label for="">Nomor Kontak</label>
-											<input type="text" name="hp_pimpinan" id="hp_pimpinan"
-												class="form-control form-control-sm"
-												placeholder="" aria-describedby="helpId">
-										<small id="helpId" class="text-muted">Nomor kontak aktif yang dapat dihubungi (HP/Telp).</small>
-										</div>
-										<div class="form-group">
-											<label for="">Alamat</label>
-											<textarea name="alamat" id="alamat"
-												class="form-control form-control-sm" rows="2"></textarea>
-											<small id="helpId" class="text-muted">Nomor kontak aktif yang dapat dihubungi (HP/Telp).</small>
-										</div>
-										<div class="row d-flex justify-content-between">
-											<div class="form-group col-md-6">
-												<label for="">Provinsi</label>
-												<select name="provinsi_id" id="provinsi_id" class="custom-select form-control form-control-sm">
-													<option value="" hidden>-- pilih provinsi</option>
-													<option value=""></option>
-												</select>
-												<small id="helpId" class="text-muted">Provinsi domisili Penangkar.</small>
-											</div>
-											<div class="form-group col-md-6">
-												<label for="">Kabupaten</label>
-												<select name="kabupaten_id" id="kabupaten_id" class="custom-select form-control form-control-sm">
-													<option value="" hidden>-- pilih kabupaten</option>
-													<option value=""></option>
-												</select>
-												<small id="helpId" class="text-muted">Kabupaten domisili Penangkar.</small>
-											</div>
-										</div>
-										<div class="row d-flex justify-content-between">
-											<div class="form-group col-md-6">
-												<label for="">Kecamatan</label>
-												<select name="kecamatan_id" id="kecamatan_id" class="custom-select form-control form-control-sm">
-													<option value="" hidden>-- pilih kecamatan</option>
-													<option value=""></option>
-												</select>
-												<small id="helpId" class="text-muted">Provinsi domisili Penangkar.</small>
-											</div>
-											<div class="form-group col-md-6">
-												<label for="">Kelurahan</label>
-												<select name="desa_id" id="desa_id" class="custom-select form-control form-control-sm">
-													<option value="" hidden>-- pilih kelurahan</option>
-													<option value=""></option>
-												</select>
-												<small id="helpId" class="text-muted">Kelurahan domisili Penangkar.</small>
-											</div>
-										</div>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">
-											<i class="fal fa-times-circle text-danger fw-500"></i> Close
-										</button>
-										<button class="btn btn-primary btn-sm" type="submit">
-											<i class="fal fa-save"></i> Save changes
-										</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -349,15 +151,11 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-user-plus mr-1"></i>',
-					titleAttr: 'Add Poktan Member',
-					className: 'btn btn-outline-warning btn-sm btn-icon ml-2',
+					text: '<i class="fa fa-plus"></i>',
+					titleAttr: 'Tambah Data Penangkar',
+					className: 'btn btn-info btn-sm btn-icon ml-2',
 					action: function(e, dt, node, config) {
-					// find the modal element
-						var $modal = $('#myModal');
-
-						// trigger the modal's show method
-						$modal.modal('show');
+						window.location.href = '{{ route('admin.task.masterpenangkar.create') }}';
 					}
 				}
 			]

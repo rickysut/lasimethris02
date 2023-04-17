@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\CommitmentBackdate;
 use App\Models\AnggotaMitra;
 use App\Models\RiphAdmin;
 
@@ -35,12 +36,24 @@ class DashboardController extends Controller
                 return view('admin.dashboard.indexverifikator', compact('module_name', 'page_title', 'page_heading', 'heading_class'));
             }
         }
-        if (($roleaccess == 2) || ($roleaccess == 3)) {
+        if (($roleaccess == 2)) {
             $module_name = 'Dashboard';
             $page_title = 'Ringkasan Data';
             $page_heading = 'Dashboard';
             $heading_class = 'fal fa-tachometer';
             return view('admin.dashboard.indexuser', compact('module_name', 'page_title', 'page_heading', 'heading_class'));
+        }
+        if (($roleaccess == 3)) {
+            $module_name = 'Dashboard';
+            $page_title = 'Ringkasan Data';
+            $page_heading = 'Dashboard';
+            $page_desc = 'Pemantauan dan Analisa Kinerja Realisasi Komitmen';
+            $heading_class = 'fal fa-tachometer';
+
+            $periodeTahuns = CommitmentBackdate::all()->groupBy('periodetahun');
+
+
+            return view('v2.dashboard.data', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'page_desc', 'periodeTahuns'));
         }
     }
 
@@ -49,6 +62,7 @@ class DashboardController extends Controller
         $module_name = 'Dashboard';
         $page_title = 'Pemetaan';
         $page_heading = 'Pemetaan';
+        $page_desc = 'Peta Lahan Realisasi Wajib Tanam-Produksi';
         $heading_class = 'fal fa-map-marked-alt';
 
         $anggotaMitras = AnggotaMitra::with([
@@ -59,6 +73,9 @@ class DashboardController extends Controller
             'masteranggota'
         ])->get();
 
-        return view('v2.dashboard.map', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggotaMitras'));
+        $periodeTahuns = CommitmentBackdate::all()->groupBy('periodetahun');
+
+
+        return view('v2.dashboard.map', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggotaMitras', 'page_desc', 'periodeTahuns'));
     }
 }

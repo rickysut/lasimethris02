@@ -109,8 +109,6 @@
 										id="commitmentbackdate_id" name="commitmentbackdate_id">
 									<button type="submit">ajukan</button>
 								</form>
-
-
 								<a href="{{ route('admin.task.commitments.createpengajuan', $commitment->id) }}"
 									class="btn btn-xs btn-danger d-block">
 									Ajukan Review dan Verifikasi
@@ -342,6 +340,17 @@
 											title="Edit/Ubah Data Perjanjian" class="btn btn-xs btn-icon btn-warning">
 											<i class="fal fa-edit"></i>
 										</a>
+										
+										<form action="{{ route('admin.task.pksmitra.destroy', $pksmitra->id) }}"
+											method="POST" style="display: inline-block;">
+											@csrf
+											@method('DELETE')
+											<button type="submit" class="ml-3 btn btn-icon btn-xs btn-danger" title="Hapus data pks"
+												onclick="return confirm('Anda yakin ingin menghapus data ini?');"
+												@if ($disabled) disabled @endif>
+												<i class="fal fa-trash-alt"></i>
+											</button>
+										</form>
 									</td>
 								</tr>
 								@endforeach
@@ -505,7 +514,6 @@
 			</div>
 			<div class="modal-body">
 				<form action="{{ $commitment->status == null ? route('admin.task.commitments.createpengajuan', $commitment->id) : route('admin.task.commitments.pengajuanulang', $commitment->id) }}" method="POST" enctype="multipart/form-data">
-
 					@csrf
 					@method('PUT')
 					<div class="row">
@@ -546,7 +554,6 @@
 							<span class="help-block">Form Rencana Tanam. (.jpg / .pdf).</span>
 						</div>        
 					</div>
-					
 					<div class="row">
 						<div class="form-group col">
 							<label class="form-label h6">Form-RTA</label>
@@ -668,9 +675,9 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-cart-plus"></i>',
+					text: '<i class="fa fa-plus mr-1"></i>Mitra Penangkar',
 					titleAttr: 'Tambah Penangkar Mitra',
-					className: 'btn btn-info btn-sm btn-icon ml-2',
+					className: 'btn btn-info btn-xs ml-2',
 					action: function(e, dt, node, config) {
 						window.location.href = '{{ route('admin.task.commitments.penangkar', $commitment->id) }}';
 					}
@@ -753,9 +760,9 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-signature"></i>',
+					text: '<i class="fa fa-plus mr-1"></i>Perjanjian Baru',
 					titleAttr: 'Buat Perjanjian Baru',
-					className: 'btn btn-info btn-sm btn-icon ml-2',
+					className: 'btn btn-info btn-xs ml-2',
 					action: function(e, dt, node, config) {
 						window.location.href = '{{ route('admin.task.commitments.pksmitra', $commitment->id) }}';
 					}

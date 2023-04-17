@@ -84,12 +84,19 @@ class AnggotaMitraController extends Controller
 		$page_heading = 'Laporan Realisasi';
 		$heading_class = 'fal fa-farm';
 
-		// $commitment = CommitmentBackdate::with('pksmitra.anggotamitras')->findOrFail($id);
+
 		// $masterkelompok = MasterKelompok::findOrFail($id);
-		$anggotamitras = AnggotaMitra::findOrFail($id);
 		// $pksmitra = PksMitra::where('id', $anggotamitras->pks_mitra_id)->get();
 		// $masteranggotas = MasterAnggota::where('master_kelompok_id', $pksmitra->master_kelompok_id)->get();
-		return view('v2.commitment.anggotamitra.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggotamitras'));
+
+		$anggotamitras = AnggotaMitra::findOrFail($id);
+		$commitment = CommitmentBackdate::with('pksmitra.anggotamitras')->findOrFail($anggotamitras->commitmentbackdate_id);
+		if (!$commitment->status) {
+			$disabled = false; // input di-enable
+		} else {
+			$disabled = true; // input di-disable
+		}
+		return view('v2.commitment.anggotamitra.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggotamitras', 'disabled'));
 	}
 
 	/**
@@ -181,12 +188,10 @@ class AnggotaMitraController extends Controller
 				//# code...
 				break;
 		}
-		// dd($anggotamitra);
-		// dd($anggotamitra);
 		$anggotamitra->save();
 
 		return redirect()->route('admin.task.anggotamitra.show', $anggotamitra->id)
-			->with('success', 'Petani  saved successfully');
+			->with('success', 'Data Realisasi berhasil diperbarui');
 	}
 
 	/**
