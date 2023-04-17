@@ -62,20 +62,7 @@ $(document).ready(function() {
 		dom: // Add the modal button inside the 'B' option of the 'dom' string
 		"<'row'<'col-sm-12 col-md-2'fl><'col-sm-12 col-md-8 d-flex'><'col-sm-12 col-md-2 d-flex justify-content-end'B>>" +
 		"<'row'<'col-sm-12 col-md-12'tr>>" +
-		"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
-		buttons: [
-			{
-				text: '<i class="fal fa-plus mr-1"></i>Kelompok Tani baru',
-				className: 'btn btn-primary btn-xs',
-				action: function(e, dt, node, config) {
-				// find the modal element
-					var $modal = $('#myModal');
-
-					// trigger the modal's show method
-					$modal.modal('show');
-				}
-			}
-		]
+		"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>"
 	});
 });
 

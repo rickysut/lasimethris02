@@ -32,9 +32,15 @@
 							@foreach ($commitments as $commitment)
 							<tr>
 								<td>
-									<span title="Anda belum mengajukan verifikasi">
-										<i class="fa fa-exclamation-circle text-warning fs-nano"></i>
-									</span>
+									@if(!empty($commitment->status))
+										<span title="Dalam proses verifikasi">
+											<i class="fas fa-lock text-info fs-nano"></i>
+										</span>
+									@else
+										<span title="Anda belum mengajukan verifikasi">
+											<i class="fa fa-exclamation-circle text-warning fs-nano"></i>
+										</span>
+									@endif
 									{{$commitment->no_ijin}}
 								</td>
 								<td>{{$commitment->periodetahun}}</td>
@@ -78,7 +84,7 @@
 										</a>
 									@else
 										<a href="{{ route('admin.task.commitments.read', $commitment->id) }}"
-											class="btn btn-icon btn-xs btn-warning"
+											class="btn btn-icon btn-xs btn-primary"
 											title="Lihat Data Komitmen">
 											<i class="fal fa-eye"></i>
 										</a>
@@ -94,7 +100,7 @@
 											</button>
 										</form>
 									@else
-										<span class="btn btn-icon btn-xs btn-default disabled"
+										<span class="ml-3 btn btn-icon btn-xs btn-default disabled"
 											title="Tidak dapat dihapus">
 											<i class="fas fa-trash-alt"></i>
 										</span>
@@ -164,9 +170,9 @@
 						className: 'btn-outline-primary btn-sm btn-icon mr-1'
 					},
 					{
-						text: '<i class="fa fa-calendar-alt"></i>',
+						text: '<i class="fa fa-plus mr-1"></i>Komitmen Baru',
 						titleAttr: 'Select Period',
-						className: 'btn btn-info btn-sm btn-icon ml-2',
+						className: 'btn btn-info btn-xs ml-2',
 						action: function(e, dt, node, config) {
 							window.location.href = '{{ route('admin.task.commitments.create') }}';
 						}
@@ -184,7 +190,7 @@
 						table.column(1).search(year ? '^' + year + '$' : '', true, false).draw();
 					});
 				
-				$('<option>').val('').text('Pilih Tahun').appendTo(select);
+				$('<option>').val('').text('Semua Tahun').appendTo(select);
 				$.each(years, function(i, year) {
 					$('<option>').val(year).text(year).appendTo(select);
 				});

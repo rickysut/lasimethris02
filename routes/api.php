@@ -23,8 +23,11 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('getAPIDesa', 'HelperController@getDesaKode');
 
     //Data Realisasi v2
-    Route::get('getAPIRealisasiAll', 'RealisasiController@index');
+    Route::get('getAPIRealisasiAll', 'RealisasiController@getRealisasiAll');
+    Route::get('getAPIRealisasiByYear/{periodetahun}', 'RealisasiController@getRealisasiByYear');
+
     Route::get('getAPIAnggotaMitraAll', 'AnggotaMitraController@index');
+    Route::get('getAPIAnggotaMitraByYear/{periodetahun}', 'AnggotaMitraController@ByYears');
     Route::get('getAPIAnggotaMitra/{id}', 'AnggotaMitraController@show');
 
     //Data wilayah
@@ -32,4 +35,7 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('getKabupatenByProvinsi/{id}', 'GetWilayahController@getKabupatenByProvinsi');
     Route::get('getKecamatanByKabupaten/{id}', 'GetWilayahController@getKecamatanByKabupaten');
     Route::get('getDesaByKecamatan/{id}', 'GetWilayahController@getDesaByKecamatan');
+
+    //data pksmitra
+    Route::get('getApiPksMitraAll', 'getPksMitra@getApiPksMitraAll');
 });

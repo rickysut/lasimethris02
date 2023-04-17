@@ -49,7 +49,8 @@
 											@csrf
 											@method('DELETE')
 											<button type="submit" class="btn btn-icon btn-xs btn-danger" title="Hapus data penangkar"
-												onclick="return confirm('Are you sure you want to delete this item?');">
+												onclick="return confirm('Are you sure you want to delete this item?');"
+												@if ($disabled) disabled @endif>
 												<i class="fal fa-trash-alt"></i>
 											</button>
 										</form>
@@ -112,11 +113,11 @@
 														</div>
 													</div>
 													<div class="modal-footer">
-														<button type="button" class="btn btn-outline-secondary btn-sm"
-														data-dismiss="modal">
+														<button type="button" class="btn btn-warning btn-sm"
+															data-dismiss="modal">
 															<i class="fal fa-times-circle text-danger fw-500"></i> Close
 														</button>
-														<button class="btn btn-primary btn-sm" type="submit">
+														<button class="btn btn-primary btn-sm" type="submit"  @if ($disabled) disabled @endif>
 															<i class="fal fa-save"></i> Save changes
 														</button>
 													</div>
@@ -187,11 +188,11 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-outline-secondary btn-sm"
+						<button type="button" class="btn btn-warning btn-sm"
 						data-dismiss="modal">
 							<i class="fal fa-times-circle text-danger fw-500"></i> Close
 						</button>
-						<button class="btn btn-primary btn-sm" type="submit">
+						<button class="btn btn-primary btn-sm" type="submit"  @if ($disabled) disabled @endif>
 							<i class="fal fa-save"></i> Save changes
 						</button>
 					</div>
@@ -300,9 +301,9 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-user-plus mr-1"></i>',
+					text: '<i class="fa fa-user-plus mr-1"></i>Mitra Penangkar',
 					titleAttr: 'Tambah Penangkar',
-					className: 'btn btn-outline-warning btn-sm btn-icon ml-2',
+					className: 'btn btn-info btn-xs ml-2',
 					action: function(e, dt, node, config) {
 					// find the modal element
 						var $modal = $('#modalPenangkar');

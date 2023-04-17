@@ -38,4 +38,9 @@ class MasterAnggota extends Model
     {
         return $this->belongsTo(MasterKelompok::class);
     }
+
+    public function anggotamitra()
+    {
+        return $this->hasMany(AnggotaMitra::class);
+    }
 }

@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('pengajuan_v2s', function (Blueprint $table) {
             $table->id();
-            $table->string('commitmentbackdate_id');
             $table->string('no_pengajuan');
             $table->string('status');
+            $table->text('note');
             $table->timestamps();
+            $table->date('verif_at');
             $table->softDeletes();
         });
     }

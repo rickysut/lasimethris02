@@ -2,7 +2,7 @@
 @section('styles')
 <link rel="stylesheet" media="screen, print" href="{{ asset('css/miscellaneous/lightgallery/lightgallery.bundle.css') }}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ea90fk4RXPswzkOJzd17W3EZx_KNB1M&libraries=drawing,geometry"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GMAP_API_KEY') }}&libraries=drawing,geometry"></script>
 {{-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> --}}
 
 @endsection
@@ -21,15 +21,8 @@
 						</span>
 					</h2>
 					<div class="panel-toolbar">
-						<button class="btn btn-xs btn-default mr-1" type="button"
-							data-toggle="modal" data-target="#modalKml">
-							<a data-toggle="tooltip" data-offset="0,1"
-								title data-original-title="Unggah data geolokasi dalam format kml untuk lokasi ini.">
-								<i class="fas fa-upload"></i> Unggah
-							</a>
-						</button>
 						@include('partials.globaltoolbar')
-                    </div>
+					</div>
 				</div>
 				<div class="panel-container show">
 					<div class="panel-content card-header">
@@ -192,7 +185,8 @@
 									<i class="fa fa-door-open mr-1"></i>Kembali
 								</a>
 								
-								<button class="btn btn-sm btn-primary" role="button" type="submit">
+								<button class="btn btn-sm btn-primary" role="button" type="submit"
+									@if ($disabled) disabled @endif>
 									<i class="fa fa-save mr-1"></i>Simpan
 								</button>
 							</div>
@@ -207,7 +201,8 @@
 					<h2>Realisasi Wajib Tanam</h2>
 					<div class="panel-toolbar">
 						<button class="btn btn-xs btn-info mr-1" type="button"
-							data-toggle="modal" data-target="#modalTanam">
+							data-toggle="modal" data-target="#modalTanam"
+							@if ($disabled) disabled @endif>
 							<i class="fas fa-upload"></i> Dokumentasi
 						</button>
 					</div>
@@ -241,7 +236,7 @@
 													<span class="input-group-text"><i class="fal fa-ruler-combined"></i></span>
 												</div>
 												<input type="number" value="{{ old('luas_tanam', $anggotamitras->luas_tanam) }}"
-													name="luas_tanam" id="luas_tanam"
+													name="luas_tanam" id="luas_tanam" step="0.01"
 													class="font-weight-bold form-control form-control-sm bg-white" />
 											</div>
 											<span class="help-block">Luas area lahan diukur mandiri.</span>
@@ -288,7 +283,7 @@
 									class="btn btn-sm btn-info" role="button">
 									<i class="fa fa-door-open mr-1"></i>Kembali
 								</a>
-								<button class="btn btn-sm btn-primary" role="button" type="submit">
+								<button class="btn btn-sm btn-primary" role="button" type="submit" @if ($disabled) disabled @endif>
 									<i class="fa fa-save mr-1"></i>Simpan
 								</button>
 							</div>
@@ -304,7 +299,8 @@
 					<h2>Realisasi Wajib Produksi</h2>
 					<div class="panel-toolbar">
 						<button class="btn btn-xs btn-info mr-1" type="button"
-							data-toggle="modal" data-target="#modalProduksi">
+							data-toggle="modal" data-target="#modalProduksi"
+							@if ($disabled) disabled @endif>
 							<i class="fas fa-upload"></i> Dokumentasi
 						</button>
 					</div>
@@ -373,7 +369,7 @@
 									class="btn btn-sm btn-info" role="button">
 									<i class="fa fa-door-open mr-1"></i>Kembali
 								</a>
-								<button class="btn btn-sm btn-primary" role="button" type="submit">
+								<button class="btn btn-sm btn-primary" role="button" type="submit" @if ($disabled) disabled @endif>
 									<i class="fa fa-save mr-1"></i>Simpan
 								</button>
 							</div>
@@ -434,7 +430,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-sm btn-info waves-effect waves-themed" type="submit"><i class="fal fa-save mr-1"></i>Unggah</button>
+						<button class="btn btn-sm btn-info waves-effect waves-themed" type="submit" @if ($disabled) disabled @endif><i class="fal fa-save mr-1"></i>Unggah</button>
 						<button class="btn btn-sm btn-warning waves-effect waves-themed"><i class="fal fa-undo mr-1"></i>Batal</button>
 					</div>
 				</form>
@@ -494,7 +490,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-sm btn-info waves-effect waves-themed" type="submit"><i class="fal fa-save mr-1"></i>Unggah</button>
+						<button class="btn btn-sm btn-info waves-effect waves-themed" type="submit" @if ($disabled) disabled @endif><i class="fal fa-save mr-1"></i>Unggah</button>
 						<button class="btn btn-sm btn-warning waves-effect waves-themed"><i class="fal fa-undo mr-1"></i>Batal</button>
 					</div>
 				</form>

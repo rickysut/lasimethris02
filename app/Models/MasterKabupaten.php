@@ -29,7 +29,7 @@ class MasterKabupaten extends Model
 
 	public function provinsi()
 	{
-		return $this->belongsTo(MasterKabupaten::class, 'provinsi_id', 'provinsi_id');
+		return $this->belongsTo(MasterProvinsi::class, 'provinsi_id', 'provinsi_id');
 	}
 
 	public function kecamatan()
@@ -39,6 +39,6 @@ class MasterKabupaten extends Model
 
 	// public function pksmitra()
 	// {
-	// 	return $this->hasMany(PksMitra::class, 'kabupaten_id', 'kabupaten_id');
+	// 	return $this->hasMany(PksMitra::class, 'kd_kab', 'kabupaten_id');
 	// }
 }

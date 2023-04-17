@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('nama_kelompok')->nullable();
             $table->string('nama_pimpinan')->nullable();
             $table->string('hp_pimpinan')->nullable();
-            $table->string('id_provinsi')->nullable();
-            $table->string('id_kabupaten')->nullable();
-            $table->string('id_kecamatan')->nullable();
-            $table->string('id_kelurahan')->nullable();
+            $table->string('provinsi_id')->nullable();
+            $table->string('kabupaten_id')->nullable();
+            $table->string('kecamatan_id')->nullable();
+            $table->string('kelurahan_id')->nullable();
             $table->timestamps();
             $table->softDeletes()->nullable();
 

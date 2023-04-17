@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\AnggotaMitra;
+use App\Models\Commitment;
 use App\Models\Commitmentbackdate;
 use App\Models\PenangkarMitra;
 use App\Models\PksMitra;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RealisasiController extends Controller
 {
@@ -51,27 +54,107 @@ class RealisasiController extends Controller
 		]);
 	}
 
-
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function create()
+	public function getRealisasibyYear($periodeTahun)
 	{
-		//
+		$currentUser = Auth::user();
+		$users = User::where('id', $currentUser->id)->with(['commitmentbackdate' => function ($query) use ($periodeTahun) {
+			$query->where('periodetahun', $periodeTahun);
+		}, 'commitmentbackdate.pksmitra.anggotamitras'])->get();
+
+		$results = [];
+
+		foreach ($users as $user) {
+			if ($user->commitmentbackdate->count() > 0) {
+				$total_luastanam = $user->commitmentbackdate->flatMap(function ($cb) {
+					return $cb->pksmitra->flatMap(function ($pm) {
+						return $pm->anggotamitras;
+					});
+				})->sum('luas_tanam');
+
+				$total_volume = $user->commitmentbackdate->flatMap(function ($cb) {
+					return $cb->pksmitra->flatMap(function ($pm) {
+						return $pm->anggotamitras;
+					});
+				})->sum('volume');
+
+				$total_anggotamitras = $user->commitmentbackdate->flatMap(function ($cb) {
+					return $cb->pksmitra->flatMap(function ($pm) {
+						return $pm->anggotamitras;
+					});
+				})->count();
+
+				$total_import = $user->commitmentbackdate->sum('volume_riph');
+
+				$total_poktan = $user->commitmentbackdate->flatMap->pksmitra->countBy('master_kelompok_id')->count();
+
+				$count_pksmitra = $user->commitmentbackdate->flatMap->pksmitra->count();
+
+				$results[] = [
+					'id' => $user->id,
+					// 'periode_tahun' => $periodeTahun,
+					'total_import' => $total_import,
+					'total_luastanam' => $total_luastanam,
+					'total_volume' => $total_volume,
+					'total_poktan' => $total_poktan,
+					'count_pksmitra' => $count_pksmitra,
+					'total_anggotamitras' => $total_anggotamitras,
+				];
+			}
+		}
+
+		return response()->json($results);
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
-	public function store(Request $request)
+	public function getRealisasiAll()
 	{
-		//
+		$user = Auth::user();
+		$users = User::where('id', $user->id)
+			->with(['commitmentbackdate.pksmitra.anggotamitras'])
+			->get();
+		$results = [];
+
+		foreach ($users as $u) {
+			if ($u->commitmentbackdate) {
+				$total_luastanam = $u->commitmentbackdate->flatMap(function ($cb) {
+					return $cb->pksmitra->flatMap(function ($pm) {
+						return $pm->anggotamitras;
+					});
+				})->sum('luas_tanam');
+
+				$total_volume = $u->commitmentbackdate->flatMap(function ($cb) {
+					return $cb->pksmitra->flatMap(function ($pm) {
+						return $pm->anggotamitras;
+					});
+				})->sum('volume');
+
+				$total_anggotamitras = $u->commitmentbackdate->flatMap(function ($cb) {
+					return $cb->pksmitra->flatMap(function ($pm) {
+						return $pm->anggotamitras;
+					});
+				})->count();
+				$total_import = $user->commitmentbackdate->sum('volume_riph');
+
+				$total_poktan = $u->commitmentbackdate->flatMap->pksmitra->countBy('master_kelompok_id')->count();
+
+				$count_pksmitra = $u->commitmentbackdate->flatMap->pksmitra->count();
+
+
+				$results[] = [
+					'id' => $u->id,
+					'total_import' => $total_import,
+					'total_luastanam' => $total_luastanam,
+					'total_volume' => $total_volume,
+					'total_poktan' => $total_poktan,
+					'count_pksmitra' => $count_pksmitra,
+					'total_anggotamitras' => $total_anggotamitras,
+				];
+			}
+		}
+
+		return response()->json($results);
 	}
+
+
 
 	/**
 	 * Display the specified resource.
@@ -83,39 +166,5 @@ class RealisasiController extends Controller
 	{
 		//
 
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy($id)
-	{
-		//
 	}
 }

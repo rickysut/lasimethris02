@@ -36,7 +36,9 @@
 								<tr>
 									<td>{{$pksmitra->commitmentbackdate->periodetahun}}</td>
 									<td> {{$pksmitra->no_perjanjian}} </td>
-									<td>{{$pksmitra->commitmentbackdate->no_ijin}}</td>
+									<td>
+										<a href="{{route('admin.task.commitments.show', $pksmitra->commitmentbackdate_id)}}">{{$pksmitra->commitmentbackdate->no_ijin}}</a>
+									</td>
 									<td> {{$pksmitra->masterkelompok->nama_kelompok}} </td>
 									<td> {{$pksmitra->tgl_perjanjian_start}} s.d {{$pksmitra->tgl_perjanjian_end}} </td>
 									<td>
@@ -99,23 +101,27 @@
 														</li>
 														<li class="list-group-item d-flex flex-row justify-content-between align-items-center">
 															<span class="text-muted">Provinsi</span>
-															<h6 class="fw-500 my-0">{{$pksmitra->provinsi_id}}</h6>
+															<h6 class="fw-500 my-0">{{$pksmitra->provinsi->nama}}</h6>
 														</li>
 														<li class="list-group-item d-flex flex-row justify-content-between align-items-center">
 															<span class="text-muted">Kabupaten</span>
-															<h6 class="fw-500 my-0">{{$pksmitra->kabupaten_id}}</h6>
+															<h6 class="fw-500 my-0">{{$pksmitra->kabupaten->nama_kab}}</h6>
 														</li>
 														<li class="list-group-item d-flex flex-row justify-content-between align-items-center">
 															<span class="text-muted">Kecamatan</span>
-															<h6 class="fw-500 my-0">{{$pksmitra->kecamatan_id}}</h6>
+															<h6 class="fw-500 my-0">{{$pksmitra->kecamatan->nama_kecamatan}}</h6>
 														</li>
 														<li class="list-group-item d-flex flex-row justify-content-between align-items-center">
 															<span class="text-muted">Desa/Kelurahan</span>
-															<h6 class="fw-500 my-0">{{$pksmitra->kelurahan_id}}</h6>
+															<h6 class="fw-500 my-0">{{$pksmitra->desa->nama_desa}}</h6>
 														</li>
 														<li class="list-group-item d-flex flex-row justify-content-between align-items-center">
 															<span class="text-muted">Berkas PKS</span>
-															<h6 class="fw-500 my-0">{{$pksmitra->berkas_pks}}</h6>
+															<h6 class="fw-500 my-0">
+																<a href="{{ url('storage/docs/pks/' . $pksmitra->berkas_pks) }}">
+																	{{$pksmitra->berkas_pks}}
+																</a>
+															</h6>
 														</li>
 													</ul>
                                                 </div>
@@ -142,13 +148,16 @@
 @section('scripts')
 @parent
 
+
+
 <script>
 $(document).ready(function() {
 	var table = $('#tblPks').DataTable({
 		responsive: true,
 		lengthChange: false,
+		pageLength:10,
 		dom:
-		"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'<'select'>>>" + // Move the select element to the left of the datatable buttons
+			"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'<'select'>>>" + 
             "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
@@ -188,14 +197,6 @@ $(document).ready(function() {
 					text: '<i class="fa fa-print"></i>',
 					titleAttr: 'Print Table',
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
-				},
-				{
-					text: '<i class="fa fa-calendar-alt"></i>',
-					titleAttr: 'Select Period',
-					className: 'btn btn-info btn-sm btn-icon ml-2',
-					action: function(e, dt, node, config) {
-						window.location.href = '{{ route('admin.task.commitments.create') }}';
-					}
 				}]
 			});
 
@@ -215,6 +216,10 @@ $(document).ready(function() {
 			$.each(years, function(i, year) {
 				$('<option>').val(year).text(year).appendTo(select);
 			});
+
+			// Set the default value to the largest year
+			select.val(years[0]);
+			table.column(0).search('^' + years[0] + '$', true, false).draw();
 
 			// Add the select element before the first datatable button
 		$('.dt-buttons').before(select);
