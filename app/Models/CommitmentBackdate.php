@@ -33,7 +33,7 @@ class Commitmentbackdate extends Model
 		'status',
 		'formRiph',
 		'formSptjm',
-		'logBook',
+		'logbook',
 		'formRt',
 		'formRta',
 		'formRpo',

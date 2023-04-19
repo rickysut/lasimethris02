@@ -434,7 +434,7 @@
 						<div class="form-group col-6">
 							<label class="form-label h6">Surat Pengajuan Verifikasi (jika dipersyaratkan)</label>
 							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" id="formUpload" required>
+								<input type="file" class="custom-file-input" id="formUpload" @if ($disabled) disabled @endif required>
 								<label class="custom-file-label" for="formUpload">pilih berkas...</label>
 							</div>
 							<span class="help-block">Surat Pengajuan verifikasi Data dan Lapangan. Berkas dengan ekstensi jpg/jpeg/pdf dengan ukuran tidak lebih dari 2 megabyte.</span>
@@ -442,14 +442,15 @@
 						<div class="form-group col-6">
 							<label class="form-label h6">Konfirmasi</label>
 							<div class="input-group">
-								<input type="text" class="form-control" placeholder="ketik username Anda di sini" id="validasi" name="validasi" required>
+								<input type="text" class="form-control" placeholder="ketik username Anda di sini" id="validasi" name="validasi" @if ($disabled) disabled @endif required>
 								<div class="input-group-append">
 									<a class="btn btn-danger" href="" role="button"><i class="fal fa-times text-align-center mr-1"></i> Batalkan</a>
 								</div>
 								<form action="{{ route('admin.task.commitments.storepengajuan', $commitments->id) }}" method="POST" enctype="multipart/form-data">
 									@csrf
 									<div class="input-group-append">
-										<button class="btn btn-primary" type="submit" onclick="return validateInput()">
+										<button class="btn btn-primary" type="submit" onclick="return validateInput()"
+											@if ($disabled) disabled @endif>
 											<i class="fas fa-upload text-align-center mr-1"></i> Ajukan
 										</button>
 									</div>

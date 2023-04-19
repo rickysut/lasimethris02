@@ -242,10 +242,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
 		//pengajuan v2
 		Route::get('commitments/{commitments}/createpengajuan', 'CommitmentBackdateController@createpengajuan')->name('commitments.createpengajuan');
+		Route::get('commitments/{commitments}/viewpengajuan', 'CommitmentBackdateController@viewpengajuan')->name('commitments.viewpengajuan');
 		Route::post('commitments/{commitments}/storepengajuan', 'CommitmentBackdateController@storepengajuan')->name('commitments.storepengajuan');
 		Route::get('pengajuanv2/{pengajuan}/pengajuansuccess', 'CommitmentBackdateController@success')->name('commitments.pengajuansuccess');
 		Route::put('commitments/{commitments}/pengajuanulang', 'CommitmentBackdateController@pengajuanulang')->name('commitments.pengajuanulang');
 		Route::get('pengajuanv2', 'PengajuanV2Controller@index')->name('pengajuanv2.index');
+
+		//verifikasi v2
+		Route::get('verifikasi/backdate', 'VerifikasiV2Controller@index')->name('verifikasiv2');
+		Route::get('verifikasi/backdate/online', 'VerifikasiV2Controller@onlinelist')->name('verifikasiv2.online');
+		Route::get('verifikasi/backdate/online/{verifikasi}/check', 'VerifikasiV2Controller@onlinecheck')->name('verifikasiv2.online.check');
+		Route::get('verifikasi/backdate/online/verifcommitment/{verifcommitment}', 'VerifikasiV2Controller@verifcommitment')->name('verifikasiv2.online.verifcommitment');
+		Route::put('verifikasi/backdate/online/verifcommitmentupdate/{verifcommitment}', 'VerifikasiV2Controller@verifcommitmentupdate')->name('verifikasiv2.online.verifcommitmentupdate');
+
+		Route::put('verifikasi/backdate/online/{verifikasi}/update', 'VerifikasiV2Controller@update')->name('verifikasiv2.online.update');
 
 		//pks mitra v2
 		Route::resource('pksmitra', 'PksMitraController');

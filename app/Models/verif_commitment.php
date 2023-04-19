@@ -24,7 +24,7 @@ class verif_commitment extends Model
 		'commitmentbackdate_id',
 		'formRiph',
 		'formSptjm',
-		'logBook',
+		'logbook',
 		'formRt',
 		'formRta',
 		'formRpo',

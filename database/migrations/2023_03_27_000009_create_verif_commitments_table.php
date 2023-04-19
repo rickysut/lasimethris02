@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('commitmentbackdate_id');
             $table->enum('formRiph', ['Sesuai', 'Tidak Sesuai'])->nullable();
             $table->enum('formSptjm', ['Sesuai', 'Tidak Sesuai'])->nullable();
-            $table->enum('logBook', ['Sesuai', 'Tidak Sesuai'])->nullable();
+            $table->enum('logbook', ['Sesuai', 'Tidak Sesuai'])->nullable();
             $table->enum('formRt', ['Sesuai', 'Tidak Sesuai'])->nullable();
             $table->enum('formRta', ['Sesuai', 'Tidak Sesuai'])->nullable();
             $table->enum('formRpo', ['Sesuai', 'Tidak Sesuai'])->nullable();

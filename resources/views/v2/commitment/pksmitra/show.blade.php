@@ -33,7 +33,7 @@
 							<label for="">Kelompoktani</label>
 							<input disabled class="form-control form-control-sm fw-500 text-primary"
 							placeholder="" aria-describedby="helpId"
-							value="{{$masterkelompok->nama_kelompok}}">
+							value="{{$pksmitra->masterkelompok->nama_kelompok}}">
 						</div>
 					</div>
 				</div>

@@ -171,7 +171,7 @@
 					},
 					{
 						text: '<i class="fa fa-plus mr-1"></i>Komitmen Baru',
-						titleAttr: 'Select Period',
+						titleAttr: 'Data Komitmen baru',
 						className: 'btn btn-info btn-xs ml-2',
 						action: function(e, dt, node, config) {
 							window.location.href = '{{ route('admin.task.commitments.create') }}';

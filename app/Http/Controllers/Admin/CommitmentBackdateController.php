@@ -15,8 +15,8 @@ use App\Models\Commitmentbackdate;
 use App\Models\MasterPenangkar;
 use App\Models\MasterKelompok;
 use App\Models\PenangkarMitra;
-use App\Models\Pengajuan;
 use App\Models\PengajuanV2;
+use App\Models\verif_commitment;
 
 class CommitmentBackdateController extends Controller
 {
@@ -120,7 +120,7 @@ class CommitmentBackdateController extends Controller
 		if ($request->hasFile('formRpo')) {
 			$attch = $request->file('formRpo');
 			$attchname = 'formRpo_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
-			Storage::disk('public')->putFileAs('docs/commitmentv2/' . $request->input('periodetahun') . '/' . 'formRpo', $attch, $attchname);
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRpo', $attch, $attchname);
 			$commitments->formRpo = $attchname;
 		}
 
@@ -140,16 +140,18 @@ class CommitmentBackdateController extends Controller
 
 	public function show($id)
 	{
+
 		$module_name = 'Komitmen';
 		$page_title = 'Detail';
 		$page_heading = 'Detail Komitmen';
 		$heading_class = 'fa fa-file-invoice';
 
 		$commitment = CommitmentBackdate::with('user', 'pksmitra.masterkelompok', 'penangkarmitra.masterpenangkar', 'pengajuanv2')
+			->where('user_id', Auth::id())
 			->findOrFail($id);
 		$masterkelompoks = MasterKelompok::all();
 		$masterpenangkars = MasterPenangkar::all();
-		$pengajuanv2 = Pengajuan::all();
+		$pengajuanv2 = PengajuanV2::all();
 		$pksmitras = $commitment->pksmitra;
 		$penangkarmitras = $commitment->penangkarmitra;
 
@@ -167,7 +169,10 @@ class CommitmentBackdateController extends Controller
 	{
 		//
 		//load all commitments for current user
-		$commitments = CommitmentBackdate::with('user')->findOrFail($id);
+		// $commitments = CommitmentBackdate::with('user')->findOrFail($id);
+		$commitments = CommitmentBackdate::with('user')
+			->where('user_id', Auth::id())
+			->findOrFail($id);
 
 		//load all Master Penangkar for reference in blade view
 		$masterpenangkars = MasterPenangkar::all();
@@ -248,7 +253,7 @@ class CommitmentBackdateController extends Controller
 		if ($request->hasFile('formRpo')) {
 			$attch = $request->file('formRpo');
 			$attchname = 'formRpo_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
-			Storage::disk('public')->putFileAs('docs/commitmentv2/' . $request->input('periodetahun') . '/' . 'formRpo', $attch, $attchname);
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRpo', $attch, $attchname);
 			$commitments->formRpo = $attchname;
 		}
 
@@ -268,7 +273,9 @@ class CommitmentBackdateController extends Controller
 	{
 		//
 		//load all commitments for current user
-		$commitments = CommitmentBackdate::with('user')->findOrFail($id);
+		$commitments = CommitmentBackdate::with('user')
+			->where('user_id', Auth::id())
+			->findOrFail($id);
 
 		//load all Master Penangkar for reference in blade view
 		$masterpenangkars = MasterPenangkar::all();
@@ -292,7 +299,9 @@ class CommitmentBackdateController extends Controller
 		$page_heading = 'Penangkar Mitra';
 		$heading_class = 'fa fa-file-invoice';
 
-		$commitment = CommitmentBackdate::with('user')->findOrFail($id);
+		$commitment = CommitmentBackdate::with('user')
+			->where('user_id', Auth::id())
+			->findOrFail($id);
 		$masterpenangkars = MasterPenangkar::all();
 		$commitmentbackdate = CommitmentBackdate::with('penangkarmitra.masterpenangkar')
 			->findOrFail($id);
@@ -314,24 +323,39 @@ class CommitmentBackdateController extends Controller
 		$page_heading = 'Perjanjian Kerjasama';
 		$heading_class = 'fa fa-file-signature';
 
-		$commitment = CommitmentBackdate::with('user')->findOrFail($id);
+		$commitment = CommitmentBackdate::with(['user', 'pksmitra.masterkelompok'])
+			->where('user_id', Auth::id())
+			->findOrFail($id);
+
 		if (!$commitment->status) {
 			$disabled = false; // input di-enable
 		} else {
 			$disabled = true; // input di-disable
 		}
 		$masterkelompoks = MasterKelompok::all();
-		$commitmentbackdate = CommitmentBackdate::with('pksmitra.masterkelompok')
-			->findOrFail($id);
-		$pksmitras = $commitmentbackdate->pksmitra;
+		// $commitmentbackdate = CommitmentBackdate::with('pksmitra.masterkelompok')
+		// 	->findOrFail($id);
+		$pksmitras = $commitment->pksmitra;
 
-		return view('v2.commitment.pksmitra.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitras', 'commitmentbackdate', 'disabled'));
+		return view('v2.commitment.pksmitra.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitras', 'disabled'));
 	}
 
+	//buat pengajuan verifikasi
 	public function createpengajuan($id)
 	{
 		//load all commitments for current user
-		$commitments = CommitmentBackdate::with('user', 'pksmitra.anggotamitras')->findOrFail($id);
+		$commitments = CommitmentBackdate::with(['user', 'pksmitra.anggotamitras'])
+			->where('user_id', Auth::id())
+			->findOrFail($id);
+
+		if (!empty($commitments->status) && $commitments->status != 6) {
+			return redirect()->route('admin.task.commitments.viewpengajuan', $commitments->id);
+			$disabled = true;
+		} else {
+			$disabled = false; // input di-disable
+		}
+
+
 		$total_luastanam = $commitments->pksmitra->flatMap(function ($pm) {
 			return $pm->anggotamitras;
 		})->sum('luas_tanam');
@@ -345,9 +369,39 @@ class CommitmentBackdateController extends Controller
 		$page_heading = 'Pengajuan Verifikasi Realisasi';
 		$heading_class = 'fal fa-file-invoice';
 
-		return view('v2.pengajuanv2.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'total_luastanam', 'total_volume'));
+		return view('v2.pengajuanv2.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'total_luastanam', 'total_volume', 'disabled'));
 	}
 
+	public function viewpengajuan($id)
+	{
+		//load all commitments for current user
+		$commitments = CommitmentBackdate::with(['user', 'pksmitra.anggotamitras'])
+			->where('user_id', Auth::id())
+			->findOrFail($id);
+
+		if (!empty($commitments->status) && $commitments->status != 6) {
+			$disabled = true; // input di-enable
+		} else {
+			$disabled = false; // input di-disable
+		}
+
+		$total_luastanam = $commitments->pksmitra->flatMap(function ($pm) {
+			return $pm->anggotamitras;
+		})->sum('luas_tanam');
+
+		$total_volume = $commitments->pksmitra->flatMap(function ($pm) {
+			return $pm->anggotamitras;
+		})->sum('volume');
+
+		$module_name = 'Komitmen';
+		$page_title = 'Pengajuan Verifikasi';
+		$page_heading = 'Pengajuan Verifikasi Realisasi';
+		$heading_class = 'fal fa-file-invoice';
+
+		return view('v2.pengajuanv2.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'total_luastanam', 'total_volume', 'disabled'));
+	}
+
+	//simpan pengajuan verifikasi
 	public function storepengajuan($id, Request $request)
 	{
 		//validasi sebelum pengajuan di-submit
@@ -402,9 +456,17 @@ class CommitmentBackdateController extends Controller
 		$commitments->pengajuan_id = $pengajuan->id;
 		$commitments->save();
 
+		$verifCommitment = new verif_commitment();
+		$verifCommitment->pengajuan_id = $pengajuan->id;
+		$verifCommitment->commitmentbackdate_id = $commitments->id;
+		$verifCommitment->status = '1';
+		$verifCommitment->verif_at = Carbon::now();
+		$verifCommitment->save();
+
 		return redirect()->route('admin.task.commitments.pengajuansuccess', $pengajuan->id)->with('success', 'Data Pengajuan submitted successfully');
 	}
 
+	//redirect sukses
 	public function success($id)
 	{
 		$module_name = 'Komitmen';
@@ -416,10 +478,18 @@ class CommitmentBackdateController extends Controller
 		return view('v2.pengajuanv2.successaju', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pengajuan'));
 	}
 
+	//saat pengajuan ulang
 	public function pengajuanulang($id, Request $request)
 	{
 		// Find commitment_backdate id
-		$commitment = CommitmentBackdate::find($id);
+
+		$commitment = CommitmentBackdate::with('user')
+			->where('user_id', Auth::id())
+			->findOrFail($id);
+
+		if ($commitment->status != 6) {
+			return redirect()->back()->with('error', 'Halaman ini tidak dapat di akses!');
+		}
 
 		// Update pengajuanv2 status
 		$pengajuan = PengajuanV2::where('no_pengajuan', $request->input('no_pengajuan'))
@@ -458,7 +528,9 @@ class CommitmentBackdateController extends Controller
 
 	public function destroy($id)
 	{
-		$commitments = CommitmentBackdate::withTrashed()->findOrFail($id);
+		$commitments = CommitmentBackdate::withTrashed()
+			->where('user_id', Auth::id())
+			->findOrFail($id);
 		$commitments->penangkarmitra()->delete(); //delete related object here
 		$commitments->pengajuanv2()->delete(); //delete related object here
 		$commitments->pksmitra()->delete();

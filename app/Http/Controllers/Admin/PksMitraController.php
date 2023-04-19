@@ -32,13 +32,13 @@ class PksMitraController extends Controller
 		$heading_class = 'fa fa-file-invoice';
 
 		$user = Auth::user();
-		$masterkelompoks = MasterKelompok::all();
+		// $masterkelompoks = MasterKelompok::all();
 		$pksmitras = $user->commitmentbackdate->flatMap(function ($CommitmentBackdate) {
 			return $CommitmentBackdate->pksmitra;
 		});
 
 		// dd($pksmitras);
-		return view('v2.pksmitra.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pksmitras', 'masterkelompoks'));
+		return view('v2.pksmitra.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pksmitras'));
 	}
 
 	/**
@@ -102,9 +102,14 @@ class PksMitraController extends Controller
 		$heading_class = 'fa fa-dolly';
 
 		$pksmitra = PksMitra::findOrFail($id);
-		$commitment = CommitmentBackdate::with('pksmitra.anggotamitras')->findOrFail($id);
-		$masterkelompoks = MasterKelompok::all();
-		$masterkelompok = MasterKelompok::findOrFail($id);
+		$commitment = CommitmentBackdate::with('pksmitra.anggotamitras')
+			->where('user_id', Auth::id())
+			->where('id', $pksmitra->commitmentbackdate_id)
+			->firstOrFail();
+
+
+		// $masterkelompoks = MasterKelompok::all();
+		// $masterkelompok = MasterKelompok::findOrFail($id);
 		$masteranggotas = MasterAnggota::where('master_kelompok_id', $pksmitra->master_kelompok_id)->get();
 		$anggotamitras = AnggotaMitra::where('pks_mitra_id', $id)->get();
 
@@ -114,7 +119,7 @@ class PksMitraController extends Controller
 			$disabled = true; // input di-disable
 		}
 
-		return view('v2.commitment.pksmitra.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'masterkelompoks', 'masteranggotas', 'pksmitra', 'anggotamitras', 'commitment', 'masterkelompok', 'disabled'));
+		return view('v2.commitment.pksmitra.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'masteranggotas', 'pksmitra', 'anggotamitras', 'commitment', 'disabled'));
 	}
 
 
@@ -133,9 +138,13 @@ class PksMitraController extends Controller
 		$page_title = 'Kerjasama';
 		$page_heading = 'Perjanjian Kerjasama';
 		$heading_class = 'fa fa-file-signature';
+
 		$provinsis = MasterProvinsi::all();
 		$pksmitra = PksMitra::findOrFail($id);
-		$commitment = CommitmentBackdate::findOrFail($pksmitra->commitmentbackdate_id);
+		$commitment = CommitmentBackdate::with('pksmitra.anggotamitras')
+			->where('user_id', Auth::id())
+			->where('id', $pksmitra->commitmentbackdate_id)
+			->firstOrFail();
 		$masterkelompoks = MasterKelompok::all();
 		// dd($masterkelompoks);
 

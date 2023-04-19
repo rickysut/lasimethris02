@@ -9,6 +9,7 @@ use App\Models\MasterAnggota;
 use App\Models\Commitmentbackdate;
 use App\Models\PksMitra;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\Switch_;
 
@@ -84,13 +85,10 @@ class AnggotaMitraController extends Controller
 		$page_heading = 'Laporan Realisasi';
 		$heading_class = 'fal fa-farm';
 
-
-		// $masterkelompok = MasterKelompok::findOrFail($id);
-		// $pksmitra = PksMitra::where('id', $anggotamitras->pks_mitra_id)->get();
-		// $masteranggotas = MasterAnggota::where('master_kelompok_id', $pksmitra->master_kelompok_id)->get();
-
 		$anggotamitras = AnggotaMitra::findOrFail($id);
-		$commitment = CommitmentBackdate::with('pksmitra.anggotamitras')->findOrFail($anggotamitras->commitmentbackdate_id);
+		$commitment = CommitmentBackdate::with('pksmitra.anggotamitras')
+			->where('user_id', Auth::id())
+			->findOrFail($anggotamitras->commitmentbackdate_id);
 		if (!$commitment->status) {
 			$disabled = false; // input di-enable
 		} else {
