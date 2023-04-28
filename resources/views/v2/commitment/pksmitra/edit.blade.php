@@ -231,7 +231,7 @@
 									<div class="d-flex flex-row align-items-center mt-1 mb-1">
 										<div class="mr-2 d-inline-block">
 											<a class="btn btn-outline-danger btn-icon rounded-circle waves-effect waves-themed"
-												href="{{ url('storage/docs/pks/' . $pksmitra->berkas_pks) }}" data-toggle="button">
+												href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$pksmitra->berkas_pks) }}" data-toggle="button">
 												@if(in_array(pathinfo($pksmitra->berkas_pks, PATHINFO_EXTENSION), [
 													'doc', 'docx', 'xls','xlsx', 'pdf']))
 													<i class="fal fa-file fs-md"></i>
@@ -246,7 +246,7 @@
 											</a>
 										</div>
 										<div class="info-card-text">
-											<a href="{{ url('storage/docs/pks/' . $pksmitra->berkas_pks) }}"
+											<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$pksmitra->berkas_pks) }}"
 												class="fs-lg text-truncate text-truncate-md">
 												{{ $pksmitra->berkas_pks }}
 											</a>

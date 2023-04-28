@@ -94,7 +94,7 @@ class AnggotaMitraController extends Controller
 		} else {
 			$disabled = true; // input di-disable
 		}
-		return view('v2.commitment.anggotamitra.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggotamitras', 'disabled'));
+		return view('v2.commitment.anggotamitra.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggotamitras', 'commitment', 'disabled'));
 	}
 
 	/**
@@ -120,6 +120,7 @@ class AnggotaMitraController extends Controller
 	{
 		//
 		$anggotamitra = AnggotaMitra::find($id);
+		$commitment = CommitmentBackdate::findOrFail($anggotamitra->commitmentbackdate_id);
 		// $anggotamitra->pks_mitra_id = $request->input('pks_mitra_id');
 		// $anggotamitra->commitmentbackdate_id = $request->input('commitmentbackdate_id');
 		// $anggotamitra->no_ijin = $request->input('no_ijin');
@@ -145,14 +146,14 @@ class AnggotaMitraController extends Controller
 				if ($request->hasFile('tanam_doc')) {
 					$attch = $request->file('tanam_doc');
 					$attchname = 'tanam_doc' . $anggotamitra->id . '_' . $anggotamitra->master_kelompok_id . '_' . $anggotamitra->pks_mitra_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
-					Storage::disk('public')->putFileAs('docs/pks/anggota/tanam/docs', $attch, $attchname);
+					Storage::disk('public')->putFileAs('docs/' . $commitment->periodetahun . '/commitment_' . $commitment->id . '/pks/' . $anggotamitra->pks_mitra_id . '/tanam/', $attch, $attchname);
 					$anggotamitra->tanam_doc = $attchname;
 				}
 
 				if ($request->hasFile('tanam_pict')) {
 					$attch = $request->file('tanam_pict');
 					$attchname = 'tanam_pict' . $anggotamitra->id . '_' . $anggotamitra->master_kelompok_id . '_' . $anggotamitra->pks_mitra_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
-					Storage::disk('public')->putFileAs('docs/pks/anggota/tanam/img', $attch, $attchname);
+					Storage::disk('public')->putFileAs('docs/' . $commitment->periodetahun . '/commitment_' . $commitment->id . '/pks/' . $anggotamitra->pks_mitra_id . '/tanam/', $attch, $attchname);
 					$anggotamitra->tanam_pict = $attchname;
 				}
 				break;
@@ -166,14 +167,14 @@ class AnggotaMitraController extends Controller
 				if ($request->hasFile('panen_doc')) {
 					$attch = $request->file('panen_doc');
 					$attchname = 'panen_doc' . $anggotamitra->id . '_' . $anggotamitra->master_kelompok_id . '_' . $anggotamitra->pks_mitra_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
-					Storage::disk('public')->putFileAs('docs/pks/anggota/panen/docs', $attch, $attchname);
+					Storage::disk('public')->putFileAs('docs/' . $commitment->periodetahun . '/commitment_' . $commitment->id . '/pks/' . $anggotamitra->pks_mitra_id . '/panen/', $attch, $attchname);
 					$anggotamitra->panen_doc = $attchname;
 				}
 
 				if ($request->hasFile('panen_pict')) {
 					$attch = $request->file('panen_pict');
 					$attchname = 'panen_pict' . $anggotamitra->id . '_' . $anggotamitra->master_kelompok_id . '_' . $anggotamitra->pks_mitra_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
-					Storage::disk('public')->putFileAs('docs/pks/anggota/panen/img', $attch, $attchname);
+					Storage::disk('public')->putFileAs('docs/' . $commitment->periodetahun . '/commitment_' . $commitment->id . '/pks/' . $anggotamitra->pks_mitra_id . '/panen/', $attch, $attchname);
 					$anggotamitra->panen_pict = $attchname;
 				}
 				break;

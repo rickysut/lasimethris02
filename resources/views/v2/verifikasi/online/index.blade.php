@@ -29,15 +29,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									@foreach ($verifikasis as $verifikasi)
+									@foreach ($pengajuans as $pengajuan)
 										<tr>
-											<td>{{$verifikasi->no_pengajuan}}</td>
-											<td>{{$verifikasi->commitmentbackdate->no_ijin}}</td>
-											<td>Jenis Permohonan</td>
-											<td>{{$verifikasi->created_at}}</td>
+											<td>{{$pengajuan->no_pengajuan}}</td>
+											<td>{{$pengajuan->commitmentbackdate->no_ijin}}</td>
+											<td>{{$pengajuan->jenis}}</td>
+											<td>{{$pengajuan->created_at}}</td>
 											<td class="text-center">
-												
-												<a href="{{route('admin.task.verifikasiv2.online.check', $verifikasi->id)}}" class="btn btn-icon btn-sm btn-primary"
+												<a href="{{route('admin.task.verifikasiv2.online.check', $pengajuan->id)}}" class="btn btn-icon btn-sm btn-primary"
 													title="Mulai/Lanjutkan Pemeriksaan">
 													<i class="fal fa-file-search"></i>
 												</a>

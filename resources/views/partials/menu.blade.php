@@ -233,18 +233,18 @@
 						<span class="nav-link-text">Backdate Verifikasi</span>
 					</a>
 					<ul>
-						<li class="c-sidebar-nav-item {{ request()->is('*verifikasiv2/onfarm*') ? 'active' : '' }}">
-							<a href="{{ route('admin.task.verifikasiv2') }}" title="listskl"
-								data-filter-tags="verifikasi daftar skl">
-								<i class="fa-fw fal fa-map-marker-alt c-sidebar-nav-icon"></i>
-								<span class="nav-link-text">Onfarm</span>
-							</a>
-						</li>
 						<li class="c-sidebar-nav-item {{ request()->is('*verifikasiv2/online') ? 'active' : '' }}">
 							<a href="{{ route('admin.task.verifikasiv2.online') }}" title="listskl"
 								data-filter-tags="verifikasi daftar skl">
 								<i class="fa-fw fal fa-file-search c-sidebar-nav-icon"></i>
 								<span class="nav-link-text">Online</span>
+							</a>
+						</li>
+						<li class="c-sidebar-nav-item {{ request()->is('*verifikasiv2/onfarm*') ? 'active' : '' }}">
+							<a href="{{ route('admin.task.verifikasiv2.onfarm') }}" title="listskl"
+								data-filter-tags="verifikasi daftar skl">
+								<i class="fa-fw fal fa-map-marker-alt c-sidebar-nav-icon"></i>
+								<span class="nav-link-text">Onfarm</span>
 							</a>
 						</li>
 						<li class="c-sidebar-nav-item {{ request()->is('verifikasiv2/skl*') ? 'active' : '' }}">

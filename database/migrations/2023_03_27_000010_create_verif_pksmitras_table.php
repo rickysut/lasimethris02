@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('verif_pksmitra', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('pengajuan_id');
-            $table->unsignedBigInteger('commitmentbackdate_id');
+            $table->unsignedBigInteger('verifcommit_id');
             $table->unsignedBigInteger('pksmitra_id');
+            $table->enum('docstatus', ['Sesuai', 'Tidak Sesuai'])->nullable();
             $table->string('status')->nullable();
             $table->text('note')->nullable();
             $table->date('verif_at')->nullable();
@@ -27,7 +28,7 @@ return new class extends Migration
 
             $table->foreign('pengajuan_id')->references('id')->on('pengajuan_v2s')->onDelete('cascade');
 
-            $table->foreign('commitmentbackdate_id')->references('id')->on('commitment_backdates')->onDelete('cascade');
+            $table->foreign('verifcommit_id')->references('id')->on('verif_commitment')->onDelete('cascade');
 
             $table->foreign('pksmitra_id')->references('id')->on('pks_mitras')->onDelete('cascade');
         });

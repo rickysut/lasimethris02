@@ -27,6 +27,7 @@
 							<th>Vol. Import</th>
 							<th>Kewajiban</th>
 							<th>Tindakan</th>
+							<th>Status</th>
 						</thead>
 						<tbody>
 							@foreach ($commitments as $commitment)
@@ -49,16 +50,16 @@
 								<td>{{ number_format($commitment->volume_riph, 2, ',','.') }} ton</td>
 								<td>
 									<div class="row">
-										<div class="col-2">
-											ha
+										<div class="col-3">
+											Luas
 										</div>
 										<div class="col-9">
 											{{ number_format($commitment->volume_riph * 0.05/6, 2, ',','.') }} ha
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-2">
-											ton
+										<div class="col-3">
+											Volume
 										</div>
 										<div class="col-9">
 											{{ number_format($commitment->volume_riph * 0.05, 2, ',','.') }} ton
@@ -106,8 +107,11 @@
 										</span>
 									@endif
 								</td>
+								<td class="justify-content-center">
+									<span class="badge btn-primary btn-icon btn-xs" title="verifikasi">{{$commitment->status}}</span>
+									<span class="badge btn-primary btn-icon btn-xs" title="skl">{{$commitment->skl}}</span>
+								</td>
 							</tr>
-								
 							@endforeach
 						</tbody>
 					</table>

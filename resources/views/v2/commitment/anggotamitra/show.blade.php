@@ -259,7 +259,7 @@
 							<div>
 								<label class="form-label" for="tgl_prod">Dokumentasi Tanam</label>
 								<div class="d-flex align-items-center flex-row">
-									<a href="{{ url('storage/docs/pks/anggota/tanam/docs/' . $anggotamitras->tanam_doc) }}"
+									<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/tanam/'.$anggotamitras->tanam_doc) }}"
 										data-sub-html="{{$anggotamitras->tanam_doc}}" title="{{$anggotamitras->tanam_doc}}"
 										target="_blank">
 										<div class="d-flex align-items-center">
@@ -267,10 +267,10 @@
 										</div>
 									 </a>
 									<div id="js-galleryTanam">
-										<a href="{{ url('storage/docs/pks/anggota/tanam/img/' . $anggotamitras->tanam_pict) }}"
+										<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/tanam/'.$anggotamitras->tanam_pict) }}"
 											data-sub-html="{{$anggotamitras->tanam_pict}}" title="{{$anggotamitras->tanam_pict}}">
 											<img class="img-responsive"
-											src="{{ url('storage/docs/pks/anggota/tanam/img/' . $anggotamitras->tanam_pict) }}"
+											src="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/tanam/'.$anggotamitras->tanam_pict) }}"
 											alt="{{$anggotamitras->tanam_pict}}">
 										</a>
 									</div>
@@ -334,7 +334,7 @@
 													<span class="input-group-text"><i class="fal fa-ruler-combined"></i></span>
 												</div>
 												<input type="number" value="{{ old('volume', $anggotamitras->volume) }}"
-													name="volume" id="volume"
+													name="volume" id="volume" step="0.01"
 													class="font-weight-bold form-control form-control-sm bg-white" />
 											</div>
 											<span class="help-block">Luas area lahan diukur mandiri.</span>
@@ -345,7 +345,7 @@
 							<div>
 								<label class="form-label" for="tgl_prod">Dokumentasi Produksi</label>
 								<div class="d-flex align-items-center flex-row">
-									<a href="{{ url('storage/docs/pks/anggota/panen/docs/' . $anggotamitras->panen_doc) }}"
+									<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/panen/'.$anggotamitras->panen_doc) }}"
 										data-sub-html="{{$anggotamitras->panen_doc}}" title="{{$anggotamitras->panen_doc}}"
 										target="_blank">
 										<div class="d-flex align-items-center">
@@ -353,11 +353,10 @@
 										</div>
 									</a>
 									<div id="js-galleryProduksi">
-										<a href="{{ url('storage/docs/pks/anggota/panen/img/' . $anggotamitras->panen_pict) }}"
+										<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/panen/'.$anggotamitras->panen_pict) }}"
 											data-sub-html="{{$anggotamitras->panen_pict}}" title="{{$anggotamitras->panen_pict}}">
 											<img class="img-responsive"
-											src="{{ url('storage/docs/pks/anggota/panen/img/' . $anggotamitras->panen_pict) }}"
-											alt="{{$anggotamitras->panen_pict}}">
+											src="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/panen/'.$anggotamitras->panen_pict) }}">
 										</a>
 									</div>
 								</div>

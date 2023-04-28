@@ -249,10 +249,39 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::get('pengajuanv2', 'PengajuanV2Controller@index')->name('pengajuanv2.index');
 
 		//verifikasi v2
-		Route::get('verifikasi/backdate', 'VerifikasiV2Controller@index')->name('verifikasiv2');
-		Route::get('verifikasi/backdate/online', 'VerifikasiV2Controller@onlinelist')->name('verifikasiv2.online');
-		Route::get('verifikasi/backdate/online/{verifikasi}/check', 'VerifikasiV2Controller@onlinecheck')->name('verifikasiv2.online.check');
-		Route::get('verifikasi/backdate/online/verifcommitment/{verifcommitment}', 'VerifikasiV2Controller@verifcommitment')->name('verifikasiv2.online.verifcommitment');
+		Route::get('pengajuanv2', 'VerifikasiV2Controller@index')->name('verifikasiv2');
+		Route::get('pengajuanv2/list', 'VerifikasiV2Controller@onlinelist')->name('verifikasiv2.online');
+		Route::get('verifikasiv2/{id}', 'VerifikasiV2Controller@onlinecheck')->name('verifikasiv2.online.check');
+		Route::get('verifikasiv2/{id}/commitment', 'VerifikasiV2Controller@verifcommitment')->name('verifikasiv2.online.verifcommitment');
+
+		//panggil id pks yang akan di periksa
+		Route::get('verifikasiv2/{verifikasi}/commitment/{commitment}/pksmitra/{id}/check', 'VerifikasiV2Controller@pkscheck')->name('verifikasiv2.online.pks.check');
+
+		//panggil id pks yang akan di ubah hasil periksa
+		Route::get('verifikasiv2/verifpks/{id}/edit', 'VerifikasiV2Controller@pksedit')->name('verifikasiv2.online.pks.edit');
+
+		//post new verifikasi pks
+		Route::post('verifikasiv2/verifpks/store', 'VerifikasiV2Controller@pksstore')->name('verifikasiv2.online.pks.store');
+
+		//update verifikasi pks
+		Route::put('verifikasiv2/verifpks/{verifpks}/update', 'VerifikasiV2Controller@pksupdate')->name('verifikasiv2.online.pks.update');
+
+		//verifikasi lokasi (online)
+		Route::get('verifikasiv2/anggotamitra/{id}/check', 'VerifikasiV2Controller@locationcheck')->name('verifikasiv2.online.location.check');
+
+		Route::post('verifikasiv2/location/store', 'VerifikasiV2Controller@locationstore')->name('verifikasiv2.online.location.store');
+		Route::get('verifikasiv2/veriflokasi/{id}/edit', 'VerifikasiV2Controller@locationedit')->name('verifikasiv2.online.location.edit');
+		Route::put('verifikasiv2/veriflokasi/{id}/update', 'VerifikasiV2Controller@locationupdate')->name('verifikasiv2.online.location.update');
+
+		// verifikasi lokasi (onfarm)
+		Route::get('verifikasi/backdate/onfarm', 'VerifikasiV2Controller@onfarm')->name('verifikasiv2.onfarm');
+		Route::get('verifikasi/backdate/onfarm/{id}/list', 'VerifikasiV2Controller@onfarmlist')->name('verifikasiv2.onfarm.list');
+		Route::get('verifikasi/backdate/onfarm/location/{id}/check', 'VerifikasiV2Controller@onfarmcheck')->name('verifikasiv2.onfarm.check');
+
+		Route::get('verifikasi/backdate/onfarm/{verifikasi}/commitment/{verifcommitment}/pks/{verifpks}/location/{id}/edit', 'VerifikasiV2Controller@onfarmupdate')->name('verifikasiv2.online.onfarm.edit');
+
+		Route::put('verifikasi/backdate/onfarm/{id}/update', 'VerifikasiV2Controller@onfarmupdate')->name('verifikasiv2.online.onfarm.update');
+
 		Route::put('verifikasi/backdate/online/verifcommitmentupdate/{verifcommitment}', 'VerifikasiV2Controller@verifcommitmentupdate')->name('verifikasiv2.online.verifcommitmentupdate');
 
 		Route::put('verifikasi/backdate/online/{verifikasi}/update', 'VerifikasiV2Controller@update')->name('verifikasiv2.online.update');

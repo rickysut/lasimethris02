@@ -33,4 +33,14 @@ class verif_commitment extends Model
 		'note',
 		'verificator_id',
 	];
+
+	public function pengajuanv2()
+	{
+		return $this->belongsTo(PengajuanV2::class, 'pengajuan_id', 'id');
+	}
+
+	public function verifpks()
+	{
+		return $this->hasMany(verif_pksmitra::class);
+	}
 }

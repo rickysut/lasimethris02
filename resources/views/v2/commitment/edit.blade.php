@@ -105,13 +105,13 @@
 							<div class="panel-content">
 								<div class="col mt-3 mb-5">
 									<div class="form-group">
-									<label for="kebutuhan_benih">Kebutuhan Benih (kg)</label>
-									<input readonly type="number" name="kebutuhan_benih" id="kebutuhan_benih"
-										class="form-control form-control-sm"
-										placeholder="Kebutuhan Benih" aria-describedby="helpId">
-									<small id="helpId" class="text-muted">
-										Jumlah benih dibutuhkan untuk seluruah lokasi lahan.
-									</small>
+										<label for="kebutuhan_benih">Kebutuhan Benih (kg)</label>
+										<input readonly type="number" name="kebutuhan_benih" id="kebutuhan_benih"
+											class="form-control form-control-sm"
+											placeholder="Kebutuhan Benih" aria-describedby="helpId">
+										<small id="helpId" class="text-muted">
+											Jumlah benih dibutuhkan untuk seluruah lokasi lahan.
+										</small>
 									</div>
 									<div class="form-group">
 										<label for="kebutuhan_benih">Stok Mandiri (kg)</label>

@@ -79,7 +79,7 @@ class PksMitraController extends Controller
 		if ($request->hasFile('berkas_pks')) {
 			$attch = $request->file('berkas_pks');
 			$attchname = 'PKS_' . $pksmitra->id . '_' . 'riph' . $pksmitra->commitmentbackdate_id . '_' . 'poktan' . $pksmitra->master_kelompok_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
-			Storage::disk('public')->putFileAs('docs/pks/' . $commitment->periodetahun . '/',  $attch, $attchname);
+			Storage::disk('public')->putFileAs('docs/' . $commitment->periodetahun . '/commitment_' . $commitment->id . '/pks/', $attch, $attchname);
 			$pksmitra->berkas_pks = $attchname;
 		}
 
@@ -189,7 +189,7 @@ class PksMitraController extends Controller
 			// process uploaded file
 			$attch = $request->file('berkas_pks');
 			$attchname = 'PKS_' . $pksmitra->id . '_' . 'riph' . $pksmitra->commitmentbackdate_id . '_' . 'poktan' . $pksmitra->master_kelompok_id . '_' . time() . '.' . $attch->getClientOriginalExtension();
-			Storage::disk('public')->putFileAs('docs/pks/' . $commitment->periodetahun . '/', $attch, $attchname);
+			Storage::disk('public')->putFileAs('docs/' . $commitment->periodetahun . '/commitment_' . $commitment->id . '/pks/', $attch, $attchname);
 			$pksmitra->berkas_pks = $attchname;
 		} else {
 			// use the previously uploaded file

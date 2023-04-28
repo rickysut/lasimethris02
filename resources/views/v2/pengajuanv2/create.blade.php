@@ -372,9 +372,9 @@
 								<td>{{$pksmitra->tgl_perjanjian_start}}</td>
 								<td>{{$pksmitra->tgl_perjanjian_end}}</td>
 								<td>
-									@if(file_exists(storage_path('app/public/docs/pks/' . $commitments->periodetahun . '/' . $pksmitra->berkas_pks)))
+									@if($pksmitra->berkas_pks)
 										<a href="#" data-toggle="modal" data-target="#viewDocs"
-											data-doc="{{ asset('storage/docs/pks/' . $commitments->periodetahun . '/' . $pksmitra->berkas_pks) }}">
+											data-doc="{{ url('storage/docs/' . $commitments->periodetahun . '/commitment_'.$commitments->id.'/pks/'.$pksmitra->berkas_pks) }}">
 											<i class="fas fa-check text-success mr-1"></i>
 											Lihat Dokumen
 										</a>
@@ -466,8 +466,8 @@
 </div>
 
 {{-- modal view doc --}}
-<div class="modal fade modal-fullscreen" id="viewDocs" tabindex="-1" role="dialog" aria-labelledby="document" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="viewDocs" tabindex="-1" role="dialog" aria-labelledby="document" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-right" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel">
@@ -477,8 +477,8 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body">
-				<iframe src="" width="100%" height="100%"></iframe>
+			<div class="modal-body embed-responsive embed-responsive-16by9">
+				<iframe class="embed-responsive-item" src="" width="100%"  frameborder="0"></iframe>
 			</div>
 		</div>
 	</div>
@@ -668,19 +668,19 @@
 </script>
 
 <script>
-    function validateInput() {
-        // get the input value and the current username from the page
-        var inputVal = document.getElementById('validasi').value;
-        var currentUsername = '{{ Auth::user()->username }}';
-        
-        // check if the input is not empty and matches the current username
-        if (inputVal !== '' && inputVal === currentUsername) {
-            return true; // allow form submission
-        } else {
-            alert('Input validasi harus diisi dan bernilai sama dengan username Anda.');
-            return false; // prevent form submission
-        }
-    }
+	function validateInput() {
+		// get the input value and the current username from the page
+		var inputVal = document.getElementById('validasi').value;
+		var currentUsername = '{{ Auth::user()->username }}';
+		
+		// check if the input is not empty and matches the current username
+		if (inputVal !== '' && inputVal === currentUsername) {
+			return true; // allow form submission
+		} else {
+			alert('Input validasi harus diisi dan bernilai sama dengan username Anda.');
+			return false; // prevent form submission
+		}
+	}
 </script>
 
 @endsection

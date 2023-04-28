@@ -15,12 +15,16 @@ return new class extends Migration
     {
         Schema::create('pengajuan_v2s', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('commitmentbackdate_id');
             $table->string('no_pengajuan');
-            $table->string('status');
-            $table->text('note');
+            $table->enum('jenis', ['Verifikasi', 'SKL'])->nullable(); //Verifikasi, SKL
+            $table->string('status')->nullable(); //1 Diajukan, 2 Diperiksa, 3 Selesai-, 4 Selesai+
+            $table->text('note')->nullable();
+            $table->date('verif_at')->nullable();
             $table->timestamps();
-            $table->date('verif_at');
             $table->softDeletes();
+
+            $table->foreign('commitmentbackdate_id')->references('id')->on('commitment_backdates')->onDelete('cascade');
         });
     }
 

@@ -445,15 +445,16 @@ class CommitmentBackdateController extends Controller
 		// generate the new no_pengajuan value with timestamp and masked n
 		$no_pengajuan = "{$nMasked}/PV." . time() . "/simethris/{$month}/{$year}";
 		$pengajuan->no_pengajuan = $no_pengajuan;
-		$pengajuan->status = '1';
 		$pengajuan->commitmentbackdate_id = $commitments->id;
+		$pengajuan->status = '1'; //1 = diajukan
+		$pengajuan->jenis = 'Verifikasi'; //jenis pengajuan 'Verifikasi'
 		// $pengajuan->jenis = 'verifikasi';
 		$pengajuan->created_at = Carbon::now();
 
 		$pengajuan->save();
 		//set status pengajuan pada tabel commitment
-		$commitments->status = '1'; //or 'verifikasi submitted'
-		$commitments->pengajuan_id = $pengajuan->id;
+		$commitments->status = '1'; //1 = verifikasi diajukan
+		// $commitments->pengajuan_id = $pengajuan->id;
 		$commitments->save();
 
 		$verifCommitment = new verif_commitment();

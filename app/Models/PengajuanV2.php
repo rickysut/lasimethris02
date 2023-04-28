@@ -23,4 +23,9 @@ class PengajuanV2 extends Model
 	{
 		return $this->belongsTo(CommitmentBackdate::class, 'commitmentbackdate_id', 'id');
 	}
+
+	public function verifcommitment()
+	{
+		return $this->hasOne(verif_commitment::class);
+	}
 }

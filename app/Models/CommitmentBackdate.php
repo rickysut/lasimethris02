@@ -71,6 +71,6 @@ class Commitmentbackdate extends Model
 
 	public function pengajuanV2()
 	{
-		return $this->hasOne(PengajuanV2::class);
+		return $this->hasMany(PengajuanV2::class);
 	}
 }

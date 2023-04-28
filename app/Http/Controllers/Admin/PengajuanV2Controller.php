@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Models\AnggotaMitra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\PengajuanV2;
 use App\Models\CommitmentBackdate;
+use App\Models\PksMitra;
 use App\Models\verif_commitment;
 
 class PengajuanV2Controller extends Controller
@@ -93,6 +95,7 @@ class PengajuanV2Controller extends Controller
 
 		$pengajuan->save();
 		$verifCommitment->save();
+		$commitments->save();
 		return redirect()->route('admin.task.commitments.show', $pengajuan->commitmentbackdate_id)
 			->with('success', 'Permintaan Anda telah kami terima saved successfully');
 	}
