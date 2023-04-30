@@ -303,7 +303,7 @@
 											<label for="">Pemeriksaan Dokumen</label>
 											<select name="datastatus" id="datastatus" class="form-control-sm form-control" required>
 												<option value="" hidden>--pilih status</option>
-												<option value="Selesai">Sesuai</option>
+												<option value="Sesuai">Sesuai</option>
 												<option value="Tidak Sesuai">Tidak Sesuai</option>
 											</select>
 											<small id="helpId" class="text-muted">Pilih status periksa.</small>

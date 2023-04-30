@@ -533,7 +533,7 @@
 										<td class="text-right">{{$veriflokasi->anggotamitra->volume}} ton</td>
 										<td data-toggle="tooltip" title
 												data-original-title="{{$veriflokasi->onlinenote}}"
-												@if (!$veriflokasi->status && $veriflokasi->datastatus === 'Sesuai')
+												@if (!$veriflokasi->onlinestatus && $veriflokasi->datastatus === 'Sesuai')
 													<span class="text-warning">
 														<i class="fas fa-clock mr-1"></i>
 														<span class="fw-500">Dalam Pemeriksaan</span>
@@ -570,36 +570,66 @@
 			</div>
 			<div class="col-12">
 				<div class="panel" id="panel-6">
+					
 					<div class="panel-hdr">
-						<h2>Berita Acara Pemeriksaan Data</h2>
+						<h2>BA. Verifikasi Administratif</h2>
 						<div class="panel-toolbar">
+							<span class="help-block">Rekam Berita Acara ini <span class="text-danger fw-500">HANYA JIKA</span> pemeriksaan seluruh data secara administratif telah selesai.</span>
 						</div>
 					</div>
 					<div class="panel-container show">
-						<div class="panel-content">
-							<div class="form-group">
-								<label for="">Catatan Pemeriksaan</label>
-								<textarea name="" id="" rows="5" class="form-control form-control-sm"></textarea>
-							</div>
-							<div class="form-group">
-								<label class="form-label">Berkas Berita Acara</label>
-								<div class="custom-file input-group">
-									<input type="file" class="custom-file-input" id="customControlValidation7"
-										name="tanam_doc" id="tanam_doc">
-									<label class="custom-file-label" for="customControlValidation7">Choose file...</label>
+						<form action="{{route('admin.task.verifikasiv2.online.baonline', $verifikasi->id)}}" method="POST" enctype="multipart/form-data">
+							@csrf
+							@method('PUT')
+							<div class="panel-content">
+								<div class="form-group">
+									<label for="">Catatan Pemeriksaan</label>
+									<textarea name="onlinenote" id="onlinenote" rows="5" class="form-control form-control-sm" required>{{ old('onlinenote', $verifikasi ? $verifikasi->onlinenote : '') }}</textarea>
 								</div>
-								<span class="help-block">Unggah Dokumen Pendukung. Ekstensi pdf ukuran maks 4mb.</span>
+								<div class="form-group">
+									<label class="form-label">
+										Berkas Berita Acara.
+										@if (!empty($verifikasi->onlineattch))
+										<a class="ml-1" href="{{ url('storage/docs/' . $verifikasi->commitmentbackdate->periodetahun . '/commitment_'.$verifikasi->commitmentbackdate->id.'/onlineba/'.$verifikasi->onlineattch) }}" target="blank">(Lihat Berkas Berita Acara)</a>
+										@endif
+									</label>
+									<div class="custom-file input-group">
+										<input type="file" class="custom-file-input" id="customControlValidation7"
+											name="onlineattch" id="onlineattch" value="{{ old('onlineattch', $verifikasi ? $verifikasi->onlineattch : '') }}">
+										<label class="custom-file-label" for="customControlValidation7">
+											@if (!empty($verifikasi->onlineattch))
+											{{ old('onlineattch', $verifikasi ? $verifikasi->onlineattch : '') }}
+											@else
+											Pilih berkas...
+											@endif
+										</label>
+									</div>
+									<span class="help-block">Unggah Dokumen Pendukung. Ekstensi pdf ukuran maks 4mb.</span>
+								</div>
+								<div class="row">
+									<div class="form-group col-md-6">
+										<label for="">Status Pemeriksaan</label>
+										<select class="custom-select" name="onlinestatus" id="onlinestatus">
+											<option value="" hidden>-- pilih</option>
+											<option value="1" {{ old('onlinestatus', $verifikasi ? $verifikasi->onlinestatus : '') == '1' ? 'selected' : '' }}>Selesai</option>
+											<option value="2" {{ old('onlinestatus', $verifikasi ? $verifikasi->onlinestatus : '') == '2' ? 'selected' : '' }}>Perbaikan Data</option>
+										</select>
+									</div>
+									<div class="form-group col-md-6">
+										<label class="">Konfirmasi</label>
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="ketik username Anda di sini" id="validasi" name="validasi"required>
+											<div class="input-group-append">
+												<button class="btn btn-danger" type="submit" onclick="return validateInput()">
+													<i class="fas fa-save text-align-center mr-1"></i>Simpan
+												</button>
+											</div>
+										</div>
+										<span class="help-block">Dengan ini kami menyatakan verifikasi pada bagian ini telah SELESAI.</span>
+									</div>
+								</div>
 							</div>
-							<div class="form-group">
-								<label for="">Status Pemeriksaan</label>
-								<select class="form-control form-control-sm" name="" id="">
-									<option selected>Select one</option>
-									<option value="2"></option>
-									<option value="3"></option>
-									<option value="4"></option>
-								</select>
-							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -776,5 +806,22 @@
 			});
 
 		});
+	</script>
+
+	
+	<script>
+		function validateInput() {
+			// get the input value and the current username from the page
+			var inputVal = document.getElementById('validasi').value;
+			var currentUsername = '{{ Auth::user()->username }}';
+			
+			// check if the input is not empty and matches the current username
+			if (inputVal !== '' && inputVal === currentUsername) {
+				return true; // allow form submission
+			} else {
+				alert('Isi kolom Konfirmasi dengan username Anda!.');
+				return false; // prevent form submission
+			}
+		}
 	</script>
 @endsection

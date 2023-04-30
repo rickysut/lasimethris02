@@ -18,47 +18,49 @@
 								<div class="row">
 									<div class="col-12 text-center mb-1">
 										<span class="icon-stack icon-stack-sm">
-											<i class="base-7 icon-stack-3x color-warning-700"></i>
+											<i class="base-7 icon-stack-3x color-success-50"></i>
 											<i class="fal fa-hourglass icon-stack-1x text-white"></i>
 										</span>
 									</div>
 									<div class="col-12 text-center">
-										<span class="fw-700">Verifikasi diproses.</span>
+										<span class="fw-700">Sudah Diajukan.</span>
 									</div>
 								</div><hr>
-								<p class="small help-block">Pengajuan Verifikasi Anda telah diterima dan dalam proses.<br> Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
+								<p class="small help-block">Pengajuan Verifikasi Anda telah diterima dan segera diproses.<br> Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
 								</p>
 								@break
 							@case(2)
 								<div class="row">
 									<div class="col-12 text-center mb-1">
 										<span class="icon-stack icon-stack-sm">
-											<i class="base-7 icon-stack-3x color-success-700"></i>
-											<i class="fal fa-badge-check icon-stack-1x text-white"></i>
+											<i class="base-7 icon-stack-3x color-info-700"></i>
+											<i class="fal fa-file-search icon-stack-1x text-white"></i>
 										</span>
 									</div>
 									<div class="col-12 text-center">
-										<span class="fw-700">Verifikasi selesai dan sesuai</span>
+										<span class="fw-700">Proses Verifikasi</span>
 									</div>
 								</div><hr>
-								<a href="#" class="btn btn-xs btn-success d-block" data-toggle="tooltip"
-									data-original-title="Ajukan Penerbitan Surat Keterangan Lunas">
+								<p class="small help-block">Laporan Realisasi Anda sedang dalam proses pemeriksaan.<br> Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
+								</p>
+								{{-- <span class="btn btn-xs btn-warning d-block" data-toggle="tooltip"
+									data-original-title="Dalam Proses Verifikasi">
 									Ajukan SKL
-								</a>
+								</span> --}}
 								@break
 							@case(3)
 								<div class="row">
 									<div class="col-12 text-center mb-1">
 										<span class="icon-stack icon-stack-sm">
-											<i class="base-7 icon-stack-3x color-primary-500"></i>
-											<i class="fal fa-hourglass icon-stack-1x text-white"></i>
+											<i class="base-7 icon-stack-3x color-danger-500"></i>
+											<i class="fa fa-exclamation icon-stack-1x text-white"></i>
 										</span>
 									</div>
 									<div class="col-12 text-center">
-										<span class="fw-700">Pemeriksaan SKL.</span>
+										<span class="fw-700">Perbaikan.</span>
 									</div>
 								</div><hr>
-								<p class="small help-block">Pengajuan penerbitan SKL Anda dalam proses pemeriksaan.<br>Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
+								<p class="small help-block">Laporan Anda perlu diperbaiki dan atau dilengkapi.
 								</p>
 								@break
 							@case(4)

@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Storage;
 
 class VerifikasiV2Controller extends Controller
 {
@@ -75,23 +76,25 @@ class VerifikasiV2Controller extends Controller
 		return view('v2.verifikasi.online.check', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'verifikasi', 'verifcommit', 'verifpksmitras', 'veriflokasis', 'commitment', 'pksmitras', 'anggotamitras', 'total_luastanam', 'total_volume'));
 	}
 
-	public function update(Request $request, $id)
+	public function baonline(Request $request, $id)
 	{
 		$user = Auth::user();
 		$verifikasi = PengajuanV2::findOrFail($id);
-		$commitment = CommitmentBackdate::where('id', $verifikasi->commitmentbackdate_id)->first();
-		$verifCommitment = verif_commitment::where('pengajuan_id', $verifikasi->id)
-			->where('commitmentbackdate_id', $verifikasi->commitmentbackdate_id)
-			->first();
-		switch ($request->input('form_action')) {
-			case 'form1':
-				//simpan update form pengajuanv2 status 2-3-4- dst
-				break;
-			default:
-				//...
-				break;
+		$verifikasi->onlinestatus = $request->input('onlinestatus');
+		$verifikasi->onlinenote = $request->input('onlinenote');
+		$verifikasi->onlinedate = Carbon::now();
+
+		$commitment = CommitmentBackdate::find($verifikasi->commitmentbackdate_id);
+
+		if ($request->hasFile('onlineattch')) {
+			$attch = $request->file('onlineattch');
+			$attchname = 'onlineba_' . $verifikasi->id . '_commitment_' . $commitment->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/' . $commitment->periodetahun . '/commitment_' . $commitment->id . '/onlineba/', $attch, $attchname);
+			$verifikasi->onlineattch = $attchname;
 		}
-		$verifCommitment->save();
+
+		$verifikasi->onlineverificator = $user->id;
+		$verifikasi->save();
 		return redirect()->route('admin.task.verifikasiv2.online.check', $verifikasi->id)
 			->with('success', 'Verifikasi dimulai');
 	}
@@ -128,7 +131,16 @@ class VerifikasiV2Controller extends Controller
 		$verifcommit->status = '3'; //selesai
 		$verifcommit->verif_at = Carbon::now();
 		$verifcommit->verificator_id = $user->id;
+
+		$pengajuanv2 = PengajuanV2::find($verifcommit->pengajuan_id);
+		$pengajuanv2->status = '2'; //perubahan status menjadi diperiksa dimulai di sini. Akhir status 'Selesai' verifikasi dilakukan di onfarm form
+
+		$commitment = Commitmentbackdate::find($pengajuanv2->commitmentbackdate_id);
+		$commitment->status = '2';
+
 		$verifcommit->save();
+		$pengajuanv2->save();
+		$commitment->save();
 		return redirect()->route('admin.task.verifikasiv2.online.check', $verifcommit->pengajuan_id)
 			->with('success', 'Hasil pemeriksaan/verifikasi data Komitmen berhasil disimpan. Lanjutkan pemeriksaan/verifikasi data PKS/Perjanjian Kerjasama.');
 	}
@@ -195,15 +207,15 @@ class VerifikasiV2Controller extends Controller
 
 		$verifpks = verif_pksmitra::findOrFail($id);
 		// //get single pks to retrieve the data based on verifpks
-		$pksmitra = PksMitra::find($verifpks->pksmitra_id);
+		// $pksmitra = PksMitra::find($verifpks->pksmitra_id);
 		// //get single commitment to retrieve commitment data based on pksmitra
-		$commitment = CommitmentBackdate::find($pksmitra->commitmentbackdate_id);
+		// $commitment = CommitmentBackdate::find($pksmitra->commitmentbackdate_id);
 		// //get single verif_commitment data to retrive commitment id based on commitment
-		$verifcommitment = verif_commitment::find($verifpks->commitmentbackdate_id);
+		// $verifcommitment = verif_commitment::find($verifpks->commitmentbackdate_id);
 		// //get single $verifikasi id by previouse line for verifpks basedon verifcommitment
-		$verifikasi = PengajuanV2::find($verifcommitment->pengajuan_id);
+		// $verifikasi = PengajuanV2::find($verifcommitment->pengajuan_id);
 
-		dd($verifikasi);
+		// dd($verifikasi);
 
 		return view('v2.verifikasi.online.pksedit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'verifpks'));
 	}
@@ -250,12 +262,11 @@ class VerifikasiV2Controller extends Controller
 			->where('commitmentbackdate_id', $verifikasi->commitmentbackdate_id)
 			->latest()
 			->first();
-
 		$verifpks = verif_pksmitra::where('pengajuan_id', $verifikasi->id)
 			->where('verifcommit_id', $verifcommit->id)
 			->where('pksmitra_id', $pksmitra->id)
 			->first();
-
+		// dd($verifikasi->id, $verifcommit->id, $pksmitra->id);
 		return view('v2.verifikasi.online.locationcheck', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pksmitra', 'commitment', 'verifikasi', 'verifcommit', 'verifpks', 'anggotamitra'));
 	}
 
@@ -324,33 +335,28 @@ class VerifikasiV2Controller extends Controller
 	//onfarm section
 	public function onfarm()
 	{
-		abort_if(Gate::denies('online_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+		// abort_if(Gate::denies('online_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 		$module_name = 'Permohonan';
-		$page_title = 'Pengajuan Verifikasi';
-		$page_heading = 'Daftar Verifikasi';
+		$page_title = 'Daftar Pengajuan';
+		$page_heading = 'Pengajuan Verifikasi Lapangan';
 		$heading_class = 'fal fa-file-search';
 
-		$verifikasis = PengajuanV2::all();
-
+		$verifikasis = PengajuanV2::where('jenis', 'verifikasi')->get();
 		return view('v2.verifikasi.onfarm.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'verifikasis'));
 	}
 
 	public function onfarmlist($id)
 	{
 		abort_if(Gate::denies('online_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-		$module_name = 'Permohonan';
-		$page_title = 'Pengajuan Verifikasi';
-		$page_heading = 'Daftar Verifikasi Lapangan';
-		$heading_class = 'fal fa-map-marker';
+		$module_name = 'Verifikasi';
+		$page_title = 'Verifikasi Onfarm';
+		$page_heading = 'Lokasi Sampling';
+		$heading_class = 'fal fa-map-marked';
 
 		$verifikasi = PengajuanV2::findOrFail($id);
 		$onfarms = verif_lokasi::where('pengajuan_id', $id)->get();
-
-
 		return view('v2.verifikasi.onfarm.list', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'verifikasi', 'onfarms'));
 	}
-
-
 
 	public function onfarmcheck($id)
 	{
@@ -361,8 +367,12 @@ class VerifikasiV2Controller extends Controller
 		$heading_class = 'fal fa-ballot-check';
 
 		$veriflokasi = verif_lokasi::findOrFail($id);
+		$anggotamitra = AnggotaMitra::find($veriflokasi->anggotamitra_id);
+		$pksmitra = PksMitra::find($anggotamitra->pks_mitra_id);
+		$commitment = CommitmentBackdate::find($pksmitra->commitmentbackdate_id);
+		$verifikasi = PengajuanV2::find($veriflokasi->pengajuan_id);
 
-		return view('v2.verifikasi.online.locationedit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'veriflokasi'));
+		return view('v2.verifikasi.onfarm.onfarmcheck', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'veriflokasi', 'anggotamitra', 'pksmitra', 'commitment', 'verifikasi'));
 	}
 
 	public function onfarmupdate(Request $request, $id)
@@ -377,13 +387,37 @@ class VerifikasiV2Controller extends Controller
 		$veriflokasi->tgl_ukur = $request->input('tgl_ukur');
 		$veriflokasi->volume_verif = $request->input('volume_verif');
 		$veriflokasi->tgl_timbang = $request->input('tgl_timbang');
+		$veriflokasi->onfarmverif = $request->input('onfarmverif');
 		$veriflokasi->onfarmstatus = $request->input('onfarmstatus');
 		$veriflokasi->onfarmnote = $request->input('onlinenote');
 		$veriflokasi->onfarmverif_at = Carbon::now();
 		$veriflokasi->onfarmverificator_id = $user->id;
 
 		$veriflokasi->save();
-		return redirect()->route('admin.task.verifikasiv2.online.check', $veriflokasi->pengajuan_id)
+		return redirect()->route('admin.task.verifikasiv2.onfarm.check', $veriflokasi->pengajuan_id)
 			->with('success', 'Pemeriksaan Lapangan lokasi tanam dan Produksi berhasil disimpan/diubah/perbarui.');
+	}
+
+	public function baonfarm(Request $request, $id)
+	{
+		$user = Auth::user();
+		$verifikasi = PengajuanV2::findOrFail($id);
+		$verifikasi->onfarmstatus = $request->input('onfarmstatus');
+		$verifikasi->onfarmnote = $request->input('onfarmnote');
+		$verifikasi->onfarmdate = Carbon::now();
+
+		$commitment = CommitmentBackdate::find($verifikasi->commitmentbackdate_id);
+
+		if ($request->hasFile('onfarmattch')) {
+			$attch = $request->file('onfarmattch');
+			$attchname = 'onfarmba_' . $verifikasi->id . '_commitment_' . $commitment->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/' . $commitment->periodetahun . '/commitment_' . $commitment->id . '/onfarmba/', $attch, $attchname);
+			$verifikasi->onfarmattch = $attchname;
+		}
+
+		$verifikasi->onfarmverificator = $user->id;
+		$verifikasi->save();
+		return redirect()->route('admin.task.verifikasiv2.online.check', $verifikasi->id)
+			->with('success', 'Verifikasi dimulai');
 	}
 }

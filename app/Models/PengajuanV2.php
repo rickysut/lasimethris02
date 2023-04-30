@@ -15,8 +15,21 @@ class PengajuanV2 extends Model
 
 	protected $fillable = [
 		'commitmentbackdate_id',
-		'no_doc',
-		'status'
+		'no_pengajuan',
+		'jenis',
+		'status',
+		'onlinestatus',
+		'onlinenote',
+		'onlinedate',
+		'onlineattch',
+		'onlineverificator',
+		'onfarmstatus',
+		'onfarmnote',
+		'onfarmdate',
+		'onfarmattch',
+		'onfarmverificator',
+		'note',
+		'verif_at',
 	];
 
 	public function commitmentbackdate()

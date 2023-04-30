@@ -226,29 +226,35 @@
 					</li>
 				@endcan
 				{{-- backdate verifikasi --}}
-				<li class="{{ request()->is('admin/task/verifikasiv2*') ? 'active open' : '' }} ">
+				<li class="
+					{{ request()->is('admin/task/pengajuanv2*')
+					|| request()->is('admin/task/onfarmv2*') 
+					|| request()->is('admin/task/verifikasiv2*') ? 'active open' : '' }}">
 					<a title="Verifikasi Backdate"
 						data-filter-tags="verifikasi skl terbit">
 						<i class="fal fa-calendar-day"></i>
 						<span class="nav-link-text">Backdate Verifikasi</span>
 					</a>
 					<ul>
-						<li class="c-sidebar-nav-item {{ request()->is('*verifikasiv2/online') ? 'active' : '' }}">
-							<a href="{{ route('admin.task.verifikasiv2.online') }}" title="listskl"
+						<li class="c-sidebar-nav-item
+							{{ request()->is('*pengajuanv2*')
+							|| request()->is('admin/task/verifikasiv2*')
+							 ? 'active' : '' }}">
+							<a href="{{ route('admin.task.verifikasiv2') }}" title="Daftar Pengajuan Verifikasi"
 								data-filter-tags="verifikasi daftar skl">
 								<i class="fa-fw fal fa-file-search c-sidebar-nav-icon"></i>
 								<span class="nav-link-text">Online</span>
 							</a>
 						</li>
-						<li class="c-sidebar-nav-item {{ request()->is('*verifikasiv2/onfarm*') ? 'active' : '' }}">
-							<a href="{{ route('admin.task.verifikasiv2.onfarm') }}" title="listskl"
+						<li class="c-sidebar-nav-item {{ request()->is('*onfarmv2*') ? 'active' : '' }}">
+							<a href="{{ route('admin.task.onfarmv2') }}" title="Daftar Verifikasi Onfarm"
 								data-filter-tags="verifikasi daftar skl">
 								<i class="fa-fw fal fa-map-marker-alt c-sidebar-nav-icon"></i>
 								<span class="nav-link-text">Onfarm</span>
 							</a>
 						</li>
 						<li class="c-sidebar-nav-item {{ request()->is('verifikasiv2/skl*') ? 'active' : '' }}">
-							<a href="{{ route('admin.task.verifikasiv2') }}" title="listskl"
+							<a href="" title="listskl"
 								data-filter-tags="verifikasi daftar skl">
 								<i class="fa-fw fal fa-file-certificate c-sidebar-nav-icon"></i>
 								<span class="nav-link-text">Penerbitan SKL</span>
@@ -382,7 +388,7 @@
 						<ul>
 							@can('pengajuan_access')
 								<li class="c-sidebar-nav-item {{ request()->is('admin/task/pengajuan') 
-									|| request()->is('admin/task/pengajuan/*') ? 'active' : '' }}">
+									|| request()->is('admin/task/pengajuanv2*') ? 'active' : '' }}">
 									@if (Auth::user()->roles[0]->title == 'user_v2')
 										<a href="{{ route('admin.task.pengajuanv2.index') }}"
 											data-filter-tags="daftar pengajuan verifikasi data online onfarm">

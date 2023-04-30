@@ -37,13 +37,13 @@ return new class extends Migration
 
 			//data tanam
 			$table->string('luas_verif')->nullable();
-			$table->string('tgl_ukur')->nullable();
+			$table->date('tgl_ukur')->nullable();
 
 			//data produksi
 			$table->string('volume_verif')->nullable();
-			$table->string('tgl_timbang')->nullable();
+			$table->date('tgl_timbang')->nullable();
 
-
+			$table->enum('onfarmverif', ['Sesuai', 'Tidak Sesuai'])->nullable();
 			$table->string('onfarmstatus')->nullable(); //selesai atau 3
 			$table->text('onfarmnote')->nullable();
 			$table->date('onfarmverif_at')->nullable();
