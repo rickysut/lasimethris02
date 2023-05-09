@@ -13,68 +13,27 @@
 							<table id="dataPengajuan" class="table table-sm table-bordered table-striped w-100">
 								<thead>
 									<tr>
+										<th>No. SKL</th>
 										<th>No. Pengajuan</th>
 										<th>No. RIPH</th>
 										<th hidden>Periode</th>
-										<th>Pengajuan</th>
-										<th>Tanggal Pengajuan</th>
-										<th>Tanggal Verifikasi</th>
-										<th>Status</th>
+										<th>Tanggal Terbit</th>
 										<th>Tindakan</th>
 									</tr>
 								</thead>
 								<tbody>
 									@foreach ($pengajuans as $pengajuan)
-										@php
-											$commitmentCount = $pengajuans->where('commitmentbackdate_id', $pengajuan->commitmentbackdate_id)->count();
-											$urutan = $pengajuans->where('commitmentbackdate_id', $pengajuan->commitmentbackdate_id)->sortBy('created_at')->search($pengajuan) + 1;
-										@endphp
 										<tr>
+											<td>{{$pengajuan->sklv2->no_skl}}</td>
 											<td>{{$pengajuan->no_pengajuan}}</td>
 											<td>{{$pengajuan->commitmentbackdate->no_ijin}}</td>
 											<td hidden>{{$pengajuan->commitmentbackdate->periodetahun}}</td>
-											<td>
-												@if ($commitmentCount == 1)
-													<span class="badge badge-xs badge-primary ml-1">Baru</span>
-												@else
-													<span class="badge badge-xs badge-warning ml-1">ke: {{$urutan}}</span>
-												@endif
-											</td>
-											<td>{{$pengajuan->created_at}}</td>
-											<td>{{$pengajuan->onlinedate}}</td>
+											<td class="text-center">{{$pengajuan->sklv2->published_date}}</td>
 											<td class="text-center">
-												@if ($pengajuan->onlinestatus === '1')
-													<span class="badge btn-xs btn-icon btn-success" data-toggle="tooltip"
-														data-original-title="Selesai">
-														<i class="fa fa-check-circle"></i>
-													</span>
-													<span hidden>1</span>
-												@elseif ($pengajuan->onlinestatus === '2')
-													<span class="badge btn-xs btn-icon btn-danger" data-toggle="tooltip"
-													data-original-title="Perbaikan Data">
-														<i class="fa fa-exclamation-circle"></i>
-													</span>
-													<span hidden>2</span>
-												@else
-													<span class="badge btn-xs btn-icon btn-warning" data-toggle="tooltip"
-													data-original-title="Belum (selesai) periksa">
-														<i class="fal fa-hourglass"></i>
-													</span>
-													<span hidden>3</span>
-												@endif
-											</td>
-											<td class="text-center">
-												@if($pengajuan->onlinestatus)
-													<a href="{{route('admin.task.onlinev2.show', $pengajuan->id)}}"
-														title="Lihat hasil" class="mr-1 btn btn-xs btn-icon btn-info">
-														<i class="fal fa-file-search"></i>
-													</a>
-												@else
-													<a href="{{route('admin.task.onlinev2.check', $pengajuan->id)}}" class="btn btn-icon btn-xs btn-primary"
-														title="Mulai/Lanjutkan Pemeriksaan">
-														<i class="fal fa-file-search"></i>
-													</a>
-												@endif
+												<a href="{{route('admin.task.sklv2.show', $pengajuan->sklv2->id)}}" class="btn btn-icon btn-xs btn-success"
+													title="Lihat SKL">
+													<i class="fal fa-file-certificate"></i>
+												</a>
 											</td>
 										</tr>
 									@endforeach
@@ -152,22 +111,8 @@
 					$('<option>').val(year.substring(0, 4)).text(year.substring(0, 4)).appendTo(selectYear);
 				});
 
-				// Create the "Status" select element and add the options
-				var selectStatus = $('<select>')
-					.attr('id', 'selectdataPengajuanStatus')
-					.addClass('custom-select custom-select-sm col-3 mr-2')
-					.on('change', function() {
-					var status = $(this).val();
-					table.column(6).search(status).draw();
-					});
-
-				$('<option>').val('').text('Semua Status').appendTo(selectStatus);
-				$('<option>').val('1').text('Selesai').appendTo(selectStatus);
-				$('<option>').val('2').text('Perbaikan').appendTo(selectStatus);
-				$('<option>').val('3').text('Belum Periksa').appendTo(selectStatus);
-
 				// Add the select elements before the first datatable button in the second table
-				$('#dataPengajuan_wrapper .dt-buttons').before(selectYear, selectStatus);
+				$('#dataPengajuan_wrapper .dt-buttons').before(selectYear);
 			});
 	</script>
 @endsection

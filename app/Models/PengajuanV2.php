@@ -18,6 +18,9 @@ class PengajuanV2 extends Model
 		'no_pengajuan',
 		'jenis',
 		'status',
+		'note',
+		'luas_verif',
+		'volume_verif',
 		'onlinestatus',
 		'onlinenote',
 		'onlinedate',
@@ -28,7 +31,6 @@ class PengajuanV2 extends Model
 		'onfarmdate',
 		'onfarmattch',
 		'onfarmverificator',
-		'note',
 		'verif_at',
 	];
 
@@ -40,5 +42,10 @@ class PengajuanV2 extends Model
 	public function verifcommitment()
 	{
 		return $this->hasOne(verif_commitment::class);
+	}
+
+	public function sklv2()
+	{
+		return $this->belongsTo(Sklv2::class, 'id', 'pengajuan_id');
 	}
 }

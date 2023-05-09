@@ -1,0 +1,391 @@
+@extends('layouts.admin')
+@section('content')
+	@include('partials.breadcrumb')
+	@include('partials.subheader')
+
+	@can('commitment_access')
+		@include('partials.sysalert')
+		<div class="row">
+			<div class="col-12">
+				<ul class=" nav nav-pills" role="tablist">
+					<li class="nav-item">
+						<a class="btn-sm nav-link active" data-toggle="pill" href="#queue">
+							<i class="fas fa-clock mr-1"></i>
+							Applicant Queue
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="btn-sm nav-link" data-toggle="pill" href="#published">
+							<i class="fas fa-check mr-1"></i>
+							Published
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="btn-sm nav-link" data-toggle="pill" href="#failed">
+							<i class="fas fa-times mr-1"></i>
+							Cancelled
+						</a>
+					</li>
+				</ul>
+				<div class="tab-content py-3">
+					<div class="tab-pane active" id="queue" role="tabpanel">
+						<div class="panel" id="panel-1">
+							<div class="panel-container show">
+								<div class="panel-content">
+									<table id="dataPengajuan" class="table table-sm table-bordered table-striped w-100">
+										<thead>
+											<tr>
+												<th>No. Pengajuan</th>
+												<th>Pemohon</th>
+												<th>No. RIPH</th>
+												<th>Jenis Pengajuan</th>
+												<th>Tanggal Pengajuan</th>
+												<th>Tindakan</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach ($pengajuans as $pengajuan)
+											@php
+												$commitmentCount = $pengajuans->where('commitmentbackdate_id', $pengajuan->commitmentbackdate_id)->count();
+											@endphp
+												@if ($pengajuan->onlinestatus === null)
+													<tr>
+														<td>{{$pengajuan->no_pengajuan}}</td>
+														<td>{{pengajuan->commitmentbackdate->user->data_user->company_name}}</td>
+														<td>{{$pengajuan->commitmentbackdate->no_ijin}}</td>
+														<td>
+															@if ($commitmentCount <= 1)
+																{{$pengajuan->jenis}}
+																<span class="badge badge-xs badge-primary ml-1">Baru</span>
+															@else
+																{{$pengajuan->jenis}}
+																<span class="badge badge-xs badge-warning ml-1">Ulang ke: {{$commitmentCount-1}}</span>
+															@endif
+														</td>
+														<td>{{$pengajuan->created_at}}</td>
+														<td class="text-center">
+															<a href="{{route('admin.task.verifikasiv2.online.check', $pengajuan->id)}}" class="btn btn-icon btn-sm btn-primary"
+																title="Mulai/Lanjutkan Pemeriksaan">
+																<i class="fal fa-file-search"></i>
+															</a>
+														</td>
+													</tr>
+												@endif
+											@endforeach
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="published" role="tabpanel">
+						<div class="panel" id="panel-2">
+							<div class="panel-container show">
+								<div class="panel-content">
+									<table id="tblVerified" class="table table-sm table-bordered table-striped w-100">
+										<thead>
+											<th>No. Pengajuan</th>
+											<th>No. RIPH</th>
+											<th>Tanggal Pengajuan</th>
+											<th>Tanggal Verifikasi</th>
+											<td>Status</td>
+											<th>Tindakan</th>
+										</thead>
+										<tbody>
+											@foreach ($pengajuans as $pengajuan)
+												@if ($pengajuan->status !== null && $pengajuan->onlinestatus === '1')
+													<tr>
+														<td>{{$pengajuan->no_pengajuan}}</td>
+														<td>{{$pengajuan->commitmentbackdate->no_ijin}}</td>
+														<td>{{$pengajuan->created_at}}</td>
+														<td>{{$pengajuan->onlinedate}}</td>
+														<td class="text-center">
+															@if($pengajuan->onlinestatus === '1')
+																<span class="badge btn-xs btn-success">
+																	<i class="fa fa-check mr-1"></i>Selesai
+																</span>
+															@elseif ($pengajuan->onlinestatus === '2')
+																<span class="badge btn-xs btn-danger">
+																	<i class="fa fa-exclamation-circle mr-1"></i>Perbaikan
+																</span>
+															@endif
+														</td>
+														<td class="text-center">
+															<a href="{{route('admin.task.verifikasiv2.online.check', $pengajuan->id)}}" class="btn btn-icon btn-sm btn-primary"
+																title="Mulai/Lanjutkan Pemeriksaan">
+																<i class="fal fa-file-search"></i>
+															</a>
+														</td>
+													</tr>
+												@endif
+											@endforeach
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" id="failed" role="tabpanel">
+						<div class="panel" id="panel-2">
+							<div class="panel-container show">
+								<div class="panel-content">
+									<table id="tblFailed" class="table table-sm table-bordered table-striped w-100">
+										<thead>
+											<th>No. Pengajuan</th>
+											<th>No. RIPH</th>
+											<th>Tanggal Pengajuan</th>
+											<th>Tanggal Verifikasi</th>
+											<td>Status</td>
+											<th>Tindakan</th>
+										</thead>
+										<tbody>
+											@foreach ($pengajuans as $pengajuan)
+												@if ($pengajuan->onlinestatus === '2')
+													<tr>
+														<td>{{$pengajuan->no_pengajuan}}</td>
+														<td>{{$pengajuan->commitmentbackdate->no_ijin}}</td>
+														<td>{{$pengajuan->created_at}}</td>
+														<td>{{$pengajuan->onlinedate}}</td>
+														<td class="text-center">
+															@if($pengajuan->onlinestatus === '1')
+																<span class="badge btn-xs btn-success">
+																	<i class="fa fa-check mr-1"></i>Selesai
+																</span>
+															@elseif ($pengajuan->onlinestatus === '2')
+																<span class="badge btn-xs btn-danger">
+																	<i class="fa fa-exclamation-circle mr-1"></i>Perbaikan
+																</span>
+															@endif
+														</td>
+														<td class="text-center">
+															<a href="{{route('admin.task.verifikasiv2.online.check', $pengajuan->id)}}" class="btn btn-icon btn-sm btn-primary"
+																title="Mulai/Lanjutkan Pemeriksaan">
+																<i class="fal fa-file-search"></i>
+															</a>
+														</td>
+													</tr>
+												@endif
+											@endforeach
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	@endcan
+@endsection
+
+@section('scripts')
+	@parent
+	<script>
+		$(document).ready(function() {
+		// initialize datatable dataPengajuan
+			$('#dataPengajuan').dataTable({
+				responsive: true,
+			lengthChange: false,
+			dom:
+				"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'<'select'>>>" + // Move the select element to the left of the datatable buttons
+				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+				buttons: [
+					/*{
+						extend:    'colvis',
+						text:      'Column Visibility',
+						titleAttr: 'Col visibility',
+						className: 'mr-sm-3'
+					},*/
+					{
+						extend: 'pdfHtml5',
+						text: '<i class="fa fa-file-pdf"></i>',
+						titleAttr: 'Generate PDF',
+						className: 'btn-outline-danger btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'excelHtml5',
+						text: '<i class="fa fa-file-excel"></i>',
+						titleAttr: 'Generate Excel',
+						className: 'btn-outline-success btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'csvHtml5',
+						text: '<i class="fal fa-file-csv"></i>',
+						titleAttr: 'Generate CSV',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'copyHtml5',
+						text: '<i class="fa fa-copy"></i>',
+						titleAttr: 'Copy to clipboard',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'print',
+						text: '<i class="fa fa-print"></i>',
+						titleAttr: 'Print Table',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					}]
+				});
+	
+			// Get the unique values of the "Year" column
+			var table = $('#dataPengajuan').DataTable(); // add this line to define the 'table' variable
+			var years = table.column(3).data().unique().sort();
+
+			// Create the select element and add the options
+			var select1 = $('<select>')
+				.attr('id', 'selectDataPengajuan') // add unique ID
+				.addClass('custom-select custom-select-sm col-3 mr-2')
+				.on('change', function() {
+					var year = $.fn.dataTable.util.escapeRegex($(this).val());
+					table.column(3).search(year ? '^' + year + '-' : '', true, false).draw();
+				});
+
+			$('<option>').val('').text('Semua Tahun').appendTo(select1);
+			$.each(years, function(i, year) {
+				$('<option>').val(year.substring(0,4)).text(year.substring(0,4)).appendTo(select1);
+			});
+
+			// Add the select element before the first datatable button in the first table
+			$('#dataPengajuan_wrapper .dt-buttons').before(select1);
+
+		//initialize datatable tblVerified
+			$('#tblVerified').dataTable({
+				responsive: true,
+			lengthChange: false,
+			dom:
+				"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'<'select'>>>" + // Move the select element to the left of the datatable buttons
+				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+				buttons: [
+					/*{
+						extend:    'colvis',
+						text:      'Column Visibility',
+						titleAttr: 'Col visibility',
+						className: 'mr-sm-3'
+					},*/
+					{
+						extend: 'pdfHtml5',
+						text: '<i class="fa fa-file-pdf"></i>',
+						titleAttr: 'Generate PDF',
+						className: 'btn-outline-danger btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'excelHtml5',
+						text: '<i class="fa fa-file-excel"></i>',
+						titleAttr: 'Generate Excel',
+						className: 'btn-outline-success btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'csvHtml5',
+						text: '<i class="fal fa-file-csv"></i>',
+						titleAttr: 'Generate CSV',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'copyHtml5',
+						text: '<i class="fa fa-copy"></i>',
+						titleAttr: 'Copy to clipboard',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'print',
+						text: '<i class="fa fa-print"></i>',
+						titleAttr: 'Print Table',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					}]
+				});
+	
+			// Get the unique values of the "Year" column
+			var table = $('#tblVerified').DataTable(); // add this line to define the 'table' variable
+			var years = table.column(3).data().unique().sort();
+
+			// Create the select element and add the options
+			var select2 = $('<select>')
+				.attr('id', 'selectTblVerified') // add unique ID
+				.addClass('custom-select custom-select-sm col-3 mr-2')
+				.on('change', function() {
+					var year = $.fn.dataTable.util.escapeRegex($(this).val());
+					table.column(3).search(year ? '^' + year + '-' : '', true, false).draw();
+				});
+
+			$('<option>').val('').text('Semua Tahun').appendTo(select2);
+			$.each(years, function(i, year) {
+				$('<option>').val(year.substring(0,4)).text(year.substring(0,4)).appendTo(select2);
+			});
+			// Add the select element before the first datatable button in the second table
+			$('#tblVerified_wrapper .dt-buttons').before(select2);
+
+		//initialize datatable tblVerified
+		$('#tblFailed').dataTable({
+				responsive: true,
+			lengthChange: false,
+			dom:
+				"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'<'select'>>>" + // Move the select element to the left of the datatable buttons
+				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+				buttons: [
+					/*{
+						extend:    'colvis',
+						text:      'Column Visibility',
+						titleAttr: 'Col visibility',
+						className: 'mr-sm-3'
+					},*/
+					{
+						extend: 'pdfHtml5',
+						text: '<i class="fa fa-file-pdf"></i>',
+						titleAttr: 'Generate PDF',
+						className: 'btn-outline-danger btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'excelHtml5',
+						text: '<i class="fa fa-file-excel"></i>',
+						titleAttr: 'Generate Excel',
+						className: 'btn-outline-success btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'csvHtml5',
+						text: '<i class="fal fa-file-csv"></i>',
+						titleAttr: 'Generate CSV',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'copyHtml5',
+						text: '<i class="fa fa-copy"></i>',
+						titleAttr: 'Copy to clipboard',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					},
+					{
+						extend: 'print',
+						text: '<i class="fa fa-print"></i>',
+						titleAttr: 'Print Table',
+						className: 'btn-outline-primary btn-sm btn-icon mr-1'
+					}]
+				});
+	
+			// Get the unique values of the "Year" column
+			var table = $('#tblFailed').DataTable(); // add this line to define the 'table' variable
+			var years = table.column(3).data().unique().sort();
+
+			// Create the select element and add the options
+			var select2 = $('<select>')
+				.attr('id', 'selectTblFailed') // add unique ID
+				.addClass('custom-select custom-select-sm col-3 mr-2')
+				.on('change', function() {
+					var year = $.fn.dataTable.util.escapeRegex($(this).val());
+					table.column(3).search(year ? '^' + year + '-' : '', true, false).draw();
+				});
+
+			$('<option>').val('').text('Semua Tahun').appendTo(select2);
+			$.each(years, function(i, year) {
+				$('<option>').val(year.substring(0,4)).text(year.substring(0,4)).appendTo(select2);
+			});
+			// Add the select element before the first datatable button in the second table
+			$('#tblFailed_wrapper .dt-buttons').before(select2);
+		});
+	</script>
+@endsection

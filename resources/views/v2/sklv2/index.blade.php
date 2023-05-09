@@ -15,43 +15,43 @@
 									<tr>
 										<th>No. Pengajuan</th>
 										<th>No. RIPH</th>
-										<th>Periode</th>
+										<th hidden>Periode</th>
 										<th>Pengajuan</th>
 										<th>Tanggal Pengajuan</th>
-										<th>Tanggal Verifikasi Data</th>
+										<th>Tanggal Verifikasi</th>
 										<th>Status</th>
 										<th>Tindakan</th>
 									</tr>
 								</thead>
 								<tbody>
-									@foreach ($verifikasis as $verifikasi)
+									@foreach ($pengajuans as $pengajuan)
 										@php
-											$commitmentCount = $verifikasis->where('commitmentbackdate_id', $verifikasi->commitmentbackdate_id)->count();
-											$urutan = $verifikasis->where('commitmentbackdate_id', $verifikasi->commitmentbackdate_id)->sortBy('created_at')->search($verifikasi) + 1;
+											$commitmentCount = $pengajuans->where('commitmentbackdate_id', $pengajuan->commitmentbackdate_id)->count();
+											$urutan = $pengajuans->where('commitmentbackdate_id', $pengajuan->commitmentbackdate_id)->sortBy('created_at')->search($pengajuan) + 1;
 										@endphp
 										<tr>
-											<td>{{$verifikasi->no_pengajuan}}</td>
-											<td>{{$verifikasi->commitmentbackdate->no_ijin}}</td>
-											<td>{{$verifikasi->commitmentbackdate->periodetahun}}</td>
+											<td>{{$pengajuan->no_pengajuan}}</td>
+											<td>{{$pengajuan->commitmentbackdate->no_ijin}}</td>
+											<td hidden>{{$pengajuan->commitmentbackdate->periodetahun}}</td>
 											<td>
 												@if ($commitmentCount == 1)
-													<span class="badge badge-xs badge-primary ml-1">Pertama</span>
+													<span class="badge badge-xs badge-primary ml-1">Baru</span>
 												@else
 													<span class="badge badge-xs badge-warning ml-1">ke: {{$urutan}}</span>
 												@endif
 											</td>
-											<td>{{$verifikasi->created_at}}</td>
-											<td>{{$verifikasi->onlinedate}}</td>
-											<td>
-												@if ($verifikasi->onfarmstatus === '1')
+											<td>{{$pengajuan->created_at}}</td>
+											<td>{{$pengajuan->onlinedate}}</td>
+											<td class="text-center">
+												@if ($pengajuan->status === '6')
 													<span class="badge btn-xs btn-icon btn-success" data-toggle="tooltip"
-														data-original-title="Selesai">
-														<i class="fa fa-check-circle"></i>
+														data-original-title="Telah Terbit">
+														<i class="fa fa-award"></i>
 													</span>
 													<span hidden>1</span>
-												@elseif ($verifikasi->onfarmstatus === '2')
+												@elseif ($pengajuan->status !== 6)
 													<span class="badge btn-xs btn-icon btn-danger" data-toggle="tooltip"
-													data-original-title="Perbaikan Data">
+													data-original-title="Belum diterbitkan">
 														<i class="fa fa-exclamation-circle"></i>
 													</span>
 													<span hidden>2</span>
@@ -64,13 +64,17 @@
 												@endif
 											</td>
 											<td class="text-center">
-												@if($verifikasi->onfarmstatus)
-													<a href="{{route('admin.task.onfarmv2.show', $verifikasi->id)}}"
-														title="Lihat hasil" class="mr-1 btn btn-xs btn-icon btn-info">
-														<i class="fal fa-file-search"></i>
+												@if ($pengajuan->status === '6')
+													<a href="{{route('admin.task.sklv2.show', $pengajuan->sklv2->id)}}" class="btn btn-icon btn-xs btn-success"
+														title="Lihat SKL">
+														<i class="fal fa-file-certificate"></i>
+													</a>
+													<a href="{{route('admin.task.sklv2.show', $pengajuan->sklv2->id)}}" class="btn btn-icon btn-xs btn-info"
+														title="Lihat Verifikasi">
+														<i class="fal fa-ballot-check"></i>
 													</a>
 												@else
-													<a href="{{route('admin.task.onfarmv2.list', $verifikasi->id)}}" class="btn btn-icon btn-xs btn-primary"
+													<a href="{{route('admin.task.sklv2.verifikasi', $pengajuan->id)}}" class="btn btn-icon btn-xs btn-primary"
 														title="Mulai/Lanjutkan Pemeriksaan">
 														<i class="fal fa-file-search"></i>
 													</a>
@@ -162,9 +166,8 @@
 					});
 
 				$('<option>').val('').text('Semua Status').appendTo(selectStatus);
-				$('<option>').val('1').text('Selesai').appendTo(selectStatus);
-				$('<option>').val('2').text('Perbaikan').appendTo(selectStatus);
-				$('<option>').val('3').text('Belum Periksa').appendTo(selectStatus);
+				$('<option>').val('1').text('Sudah Terbit').appendTo(selectStatus);
+				$('<option>').val('2').text('Belum Terbit').appendTo(selectStatus);
 
 				// Add the select elements before the first datatable button in the second table
 				$('#dataPengajuan_wrapper .dt-buttons').before(selectYear, selectStatus);

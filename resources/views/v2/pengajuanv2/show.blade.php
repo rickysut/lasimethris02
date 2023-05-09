@@ -14,24 +14,85 @@
 <div class="row">
 	<div class="col-12">
 		<div class="text-center">
-			<i class="fal fa-badge-check fa-3x subheader-icon"></i>
-			<h2>Pemeriksaan Data</h2>
-			<div class="row justify-content-center">
-				<!--
-				Yang ingin dicapi pada fitur ini adalah:
-				menampilkan animasi sistem sedang memeriksa data (check & load query).
-			-->
-				<p class="lead">Berikut adalah data-data yang telah Anda laporkan dan lampirkan.</p>
-				<div class="col-md-8 order-md-2">
-					<h3>HASIL PEMERIKSAAN AWAL</h3>
+			@if($pengajuan->status === '1')
+				<i class="fal fa-upload fa-3x subheader-icon text-info"></i>
+				<h2 class="text-muted">Sudah Diajukan</h2>
+				<div class="row justify-content-center">
+					<p class="lead">Anda telah mengajukan permohonan verifikasi.</p>
 				</div>
-			</div>
+			@elseif($pengajuan->status === '2')
+				<i class="fal fa-seacrh fa-3x subheader-icon text-warning"></i>
+				<h2 class="text-muted">Verifikasi Data</h2>
+				<div class="row justify-content-center">
+					<p class="lead">Data Anda telah diperiksa oleh Petugas/Verifikator.</p>
+				</div>
+			@elseif($pengajuan->status === '3')
+				<i class="fal fa-times-circle fa-3x subheader-icon text-danger"></i>
+				<h2 class="text-danger">PERBAIKI DATA</h2>
+				<div class="row justify-content-center">
+					<p class="lead">Pemeriksaan tidak dapat dilanjutkan. Perbaiki Data Anda dan lakukan pengajuan Ulang untuk dilakukan pemeriksaan ulang.</p>
+				</div>
+			@elseif($pengajuan->status === '4')
+				<i class="fal fa-map-marked-alt fa-3x subheader-icon text-warning"></i>
+				<h2 class="text-muted">Verifikasi Lapangan</h2>
+				<div class="row justify-content-center">
+					<p class="lead">Verifikasi Lapangan telah selesai dilakukan oleh Petugas/Verifikator. Surat Keterangan Lunas (SKL) segera diterbitkan</p>
+				</div>
+			@elseif($pengajuan->status === '5')
+				<i class="fal fa-map-marker-times fa-3x subheader-icon text-danger"></i>
+				<h2 class="text-danger">PERBAIKI DATA</h2>
+				<div class="row justify-content-center">
+					<p class="lead">Pemeriksaan Lapangan Telah selesai. Perbaiki data Anda dan lakukan pengajuan kembali untuk dilakukan pemeriksaan ulang</p>
+				</div>
+			@elseif($pengajuan->status === '6')
+				<i class="fal fa-award fa-3x subheader-icon text-success"></i>
+				<h2 class="text-success">SKL TERBIT</h2>
+				<div class="row justify-content-center">
+					<span>
+						SELAMAT! SKL telah diterbitkan
+					</span>
+				</div>
+				<div class="row justify-content-center">
+					<div class="col-md-6 mb-3">
+							<table class="table table-bordered table-sm w-100">
+								<thead>
+									<th>No. Penerbitan</th>
+									<th>Tanggal Terbit</th>
+								</thead>
+								<tbody>
+									@if ($skl)
+									<td>
+											{{$skl->no_skl}}
+									</td>
+									<td>
+											{{$skl->published_date}}
+									</td>
+									@endif
+								</tbody>
+							</table>
+					</div>
+				</div>
+			@elseif($pengajuan->status === '7')
+				<span class="badge btn-xs btn-success" title="SKL telah diterbitkan">SKL Terbit</span>
+			@endif
 		</div>
 		<div class="panel" id="panel-1">
 			<div class="panel-container card-header show">
 				<div class="row d-flex justify-content-between">
 					<div class="form-group col-md-4">
-						<label class="form-label" for="no_ijin">Nomor RIPH</label>
+						<label class="form-label" for="no_ijin">Nomor Pengajuan</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">
+									<i class="fal fa-file-invoice"></i>
+								</span>
+							</div>
+							<input type="text" class="form-control form-control-sm bg-white" id="no_pengajuan" value="{{$pengajuan->no_pengajuan}}" disabled="">
+						</div>
+						<span class="help-block">Nomor Pengajuan.</span>
+					</div>
+					<div class="form-group col-md-4">
+						<label class="form-label" for="no_hs">Nomor RIPH</label>
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text">
@@ -40,49 +101,25 @@
 							</div>
 							<input type="text" class="form-control form-control-sm bg-white" id="no_ijin" value="{{$commitment->no_ijin}}" disabled="">
 						</div>
-						<span class="help-block">Nomor Ijin RIPH.</span>
+						<span class="help-block">Nomor Ijin Rekomendasi Import Produk Hortikultura.</span>
 					</div>
 					<div class="form-group col-md-4">
-						<label class="form-label" for="no_hs">Komoditas</label>
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">
-									<i class="fal fa-file-invoice"></i>
-								</span>
-							</div>
-							<input type="text" class="form-control form-control-sm bg-white" id="no_ijin" value="{{$commitment->no_hs}}" disabled="">
-						</div>
-						<span class="help-block">Kode dan nama Komoditas Produk import.</span>
-					</div>
-					<div class="form-group col-md-2 col-sm-6">
-						<label class="form-label" for="tgl_ijin">Tanggal Ijin</label>
+						<label class="form-label" for="tgl_ijin">Tanggal Diajukan</label>
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<span class="input-group-text">
 									<i class="fal fa-calendar-day"></i>
 								</span>
 							</div>
-							<input type="text" class="form-control form-control-sm bg-white" id="tgl_ijin" value="{{$commitment->tgl_ijin}}" disabled="">
+							<input type="text" class="form-control form-control-sm bg-white" id="tgl_ijin" value="{{$pengajuan->created_at}}" disabled="">
 						</div>
-						<span class="help-block">Tanggal mulai berlaku.</span>
-					</div>
-					<div class="form-group col-md-2 col-sm-6">
-						<label class="form-label" for="tgl_end">Tanggal Berakhir</label>
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">
-									<i class="fal fa-calendar-day"></i>
-								</span>
-							</div>
-							<input type="text" class="form-control form-control-sm bg-white" id="tgl_end" value="{{$commitment->tgl_end}}" disabled="">
-						</div>
-						<span class="help-block">Tanggal berakhir RIPH.</span>
+						<span class="help-block">Tanggal pengajuan verifikasi.</span>
 					</div>
 				</div>
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table class="table table-striped table-bordered w-100" id="mainCheck">
+					<table class="table table-striped table-bordered table-sm w-100" id="mainCheck">
 						<thead>
 							<th class="text-muted text-uppercase">Data</th>
 							<th class="text-muted text-uppercase">Kewajiban</th>
@@ -141,11 +178,12 @@
 			<div class="panel-hdr">
 				<h2>Berkas-berkas lampiran</h2>
 				<div class="panel-toolbar">
+					<span class="help-block">Daftar Lampiran Berkas Utama</span>
 				</div>
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table class="table table-striped table-bordered w-100" id="attchCheck">
+					<table class="table table-striped table-bordered table-sm w-100" id="attchCheck">
 						<thead class="card-header">
 							<tr>
 								<th class="text-uppercase text-muted">Form</th>
@@ -271,14 +309,6 @@
 					</table>
 				</div>
 			</div>
-			<div class="card-footer">
-				<div class="help-block">
-					Keterangan<br>
-					<span><i class="fas fa-check text-success mr-1"></i> Status berkas dilampirkan.</span><br>
-					<span><i class="fas fa-times text-danger mr-1"></i> Status berkas tidak dilampirkan</span><br>
-					<span>klik tanda <i class="fas fa-times text-danger mr-1"></i>untuk melengkapi berkas yang diperlukan.</span><br>
-				</div>
-			</div>
 		</div>
 		<div id="panel-3" class="panel">
 			<div class="panel-hdr">
@@ -289,7 +319,7 @@
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table id="pksCheck" class="table table-bordered table-striped w-100">
+					<table id="pksCheck" class="table table-bordered table-striped table-sm w-100">
 						<thead class="card-header">
 							<tr>
 								<th class="text-uppercase text-muted">Perjanjian</th>
@@ -339,9 +369,10 @@
 								<th hidden>Kelompoktani</th>
 								<th>Nama Lokasi</th>
 								<th>Nama Anggota</th>
+								<th>Nomor Induk Kependudukan</th>
 								<th>Luas Tanam</th>
 								<th>Produksi</th>
-								<th>Data geolokasi</th>
+								<th>Geodata</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -351,9 +382,10 @@
 									<td hidden>{{$anggotamitra->pksmitra->masterkelompok->nama_kelompok}}</td>
 									<td>{{$anggotamitra->nama_lokasi}}</td>
 									<td>{{$anggotamitra->masteranggota->nama_petani}}</td>
+									<td>{{$anggotamitra->masteranggota->nik_petani}}</td>
 									<td class="text-right">{{$anggotamitra->luas_tanam}} ha</td>
 									<td class="text-right">{{$anggotamitra->volume}} ton</td>
-									<td text-center>
+									<td class="text-center">
 										@if ($anggotamitra->latitude || $anggotamitra->longitude || $anggotamitra->polygon)
 											<span class="badge badge-xs badge-success">Ada</span>
 										@else
@@ -365,39 +397,6 @@
 							@endforeach
 						</tbody>
 					</table>
-				</div>
-			</div>
-		</div>
-		<div id="panel-5" class="panel">
-			<div class="panel-container show">
-				<div class="panel-content">
-					<div class="row d-flex align-items-center">
-						<div class="col-md-6">
-							<div class="alert alert-danger" role="alert">
-							  <p>Dengan ini menyatakan bahwa kami telah menyelesaikan komitmen wajib tanam-produksi dan siap untuk dilakukan verifikasi data dan lapangan.</p>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label class="form-label h6">Konfirmasi</label>
-								<div class="input-group">
-									<input type="text" class="form-control form-control-sm" placeholder="ketik username Anda di sini" id="validasi" name="validasi" @if ($disabled) disabled @endif required>
-									<div class="input-group-append">
-										<a class="btn btn-sm btn-danger" href="" role="button"><i class="fal fa-times text-align-center mr-1"></i> Batalkan</a>
-									</div>
-									<form action="{{ route('admin.task.submission.store', $commitment->id) }}" method="POST" enctype="multipart/form-data">
-										@csrf
-										<div class="input-group-append">
-											<button class="btn btn-sm btn-primary" type="submit" onclick="return validateInput()"
-												@if ($disabled) disabled @endif>
-												<i class="fas fa-upload text-align-center mr-1"></i> Ajukan
-											</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -605,21 +604,4 @@
 		});
 	});
 </script>
-
-<script>
-	function validateInput() {
-		// get the input value and the current username from the page
-		var inputVal = document.getElementById('validasi').value;
-		var currentUsername = '{{ Auth::user()->username }}';
-		
-		// check if the input is not empty and matches the current username
-		if (inputVal !== '' && inputVal === currentUsername) {
-			return true; // allow form submission
-		} else {
-			alert('Input validasi harus diisi dan bernilai sama dengan username Anda.');
-			return false; // prevent form submission
-		}
-	}
-</script>
-
 @endsection

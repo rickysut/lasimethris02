@@ -99,36 +99,43 @@
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Nomor Perjanjian</span>
 											<span class="fw-500">
-												<i class="fas fa-file-invoice mr-1"></i>
 												{{$pksmitra->no_perjanjian}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Kelompoktani</span>
 											<span class="fw-500">
-												<i class="fas fa-users mr-1"></i>
 												{{$pksmitra->masterkelompok->nama_kelompok}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Berlaku sejak</span>
 											<span class="fw-500">
-												<i class="fa fa-calendar-plus mr-1"></i>
 												{{$pksmitra->tgl_perjanjian_start}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Berakhir pada</span>
 											<span class="fw-500">
-												<i class="fas fa-calendar-check mr-1"></i>
 												{{$pksmitra->tgl_perjanjian_end}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Luas Rencana</span>
 											<span class="fw-500">
-												<i class="fas fa-ruler-combined mr-1"></i>
 												{{$pksmitra->luas_rencana}} ha
+											</span>
+										</li>
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<span class="text-muted">Varietas</span>
+											<span class="fw-500">
+												{{$pksmitra->varietas_tanam}}
+											</span>
+										</li>
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<span class="text-muted">Periode Tanam</span>
+											<span class="fw-500">
+												{{$pksmitra->periode_tanam}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
@@ -154,7 +161,7 @@
 									@include('partials.globaltoolbar')
 								</div>
 							</div>
-							<form action="{{route('admin.task.verifikasiv2.online.pks.store')}}" method="POST" enctype="multipart/form-data">
+							<form action="{{route('admin.task.onlinev2.pks.store')}}" method="POST" enctype="multipart/form-data">
 								@csrf
 								<div class="panel-container show">
 									<div class="panel-content">
@@ -162,35 +169,19 @@
 										<input type="text" name="verifcommit_id"
 											value="{{$verifcommit->id}}" hidden>
 										<input type="text" name="pengajuan_id" value="{{$verifikasi->id}}" hidden>
-										<div class="row d-flex align-items-center justify-content-between mb-3">
-											<div class="form-group col-md-6">
-												<label for="">Hasil Pemeriksaan Berkas</label>
-												<select type="text" id="docstatus" name="docstatus" class="form-control form-control-sm" required>
-													<option hidden value="">- pilih status dokumen</option>
-													<option value="Sesuai">
-														Sesuai
-													</option>
-													<option value="Tidak Sesuai">
-														Tidak Sesuai
-													</option>
-												</select>
-												<small id="helpId" class="text-muted">Berikan status hasil pemeriksaan.</small>
-											</div>
-											<div class="form-group col-md-6">
-												<label for="">Status Pemeriksaan</label>
-												<select type="text" id="status" name="status" class="form-control form-control-sm" required>
-													<option hidden value="">- pilih status periksa</option>
-													<option value="Selesai">
-														Selesai
-													</option>
-												</select>
-												<small id="helpId" class="text-muted">Berikan status hasil pemeriksaan.</small>
-											</div>
-											<div class="form-group col-sm-12">
-												<label for="">Catatan Pemeriksaan</label>
-												<textarea class="form-control form-control-sm" name="note" id="note" rows="5" required></textarea>
-												<small id="helpId" class="text-muted">Berikan catatan hasil pemeriksaan.</small>
-											</div>
+										<div class="form-group">
+											<label for="">Catatan Pemeriksaan</label>
+											<textarea class="form-control form-control-sm" name="note" id="note" rows="3" required></textarea>
+											<small id="helpId" class="text-muted">Berikan catatan atau keterangan hasil pemeriksaan.</small>
+										</div>
+										<div class="form-group">
+											<label for="">Status Pemeriksaan</label>
+											<select type="text" id="status" name="status" class="form-control form-control-sm" required>
+												<option hidden value="">- pilih status periksa</option>
+												<option value="1">Selesai</option>
+												<option value="2">Perbaikan</option>
+											</select>
+											<small id="helpId" class="text-muted">Berikan status hasil pemeriksaan.</small>
 										</div>
 									</div>
 								</div>

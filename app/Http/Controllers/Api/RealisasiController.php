@@ -154,6 +154,24 @@ class RealisasiController extends Controller
 		return response()->json($results);
 	}
 
+	public function getVerifiedbyYear($periodeTahun)
+	{
+		$currentUser = Auth::user();
+		$users = User::where('id', $currentUser->id)->with(['commitmentbackdate' => function ($query) use ($periodeTahun) {
+			$query->where('periodetahun', $periodeTahun);
+		}, 'commitmentbackdate.pksmitra.anggotamitras'])->get();
+
+		$results = [];
+	}
+
+	public function getVerifiedAll()
+	{
+		$user = Auth::user();
+		$users = User::where('id', $user->id)
+			->with(['commitmentbackdate.pksmitra.anggotamitras'])
+			->get();
+		$results = [];
+	}
 
 
 	/**

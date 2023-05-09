@@ -120,7 +120,7 @@
 					<div class="panel-hdr">
 						<h2>Kelengkapan Berkas</h2>
 						<div class="panel-toolbar">
-							<a href="{{route('admin.task.verifikasiv2.online.verifcommitment', $verifcommit->id)}}" class="btn btn-xs btn-primary"><i class="fal fa-search mr-1"></i>Periksa Dokumen</a>
+							<a href="{{route('admin.task.onlinev2.commitment', $verifcommit->id)}}" class="btn btn-xs btn-primary"><i class="fal fa-search mr-1"></i>Periksa Dokumen</a>
 						</div>
 					</div>
 					<div class="panel-container show">
@@ -449,7 +449,7 @@
 										<th class="text-uppercase text-muted">Kelompok Tani</th>
 										<th class="text-uppercase text-muted">Masa Berlaku</th>
 										<th class="text-uppercase text-muted">Tanggal Pemeriksaan</th>
-										<th class="text-uppercase text-muted">Hasil Periksa</th>
+										<th class="text-uppercase text-muted">Status</th>
 										<th class="text-uppercase text-muted">Tindakan</th>
 									</tr>
 								</thead>
@@ -463,35 +463,30 @@
 												{{$verifpksmitra->pksmitra->tgl_perjanjian_end}}
 											</td>
 											<td>{{$verifpksmitra->verif_at}}</td>
-											<td data-toggle="tooltip" title
-												data-original-title="{{$verifpksmitra->note}}"
-												@if (!$verifpksmitra->status && $verifpksmitra->docstatus === 'Sesuai')
-													<span class="text-warning">
-														<i class="fas fa-clock mr-1"></i>
-														<span class="fw-500">Dalam Pemeriksaan</span>
+											<td class="text-center">
+												@if ($verifpksmitra->status === '1')
+													<span class="badge btn-xs btn-icon btn-success"
+														data-toggle="tooltip" title
+														data-original-title="Pemeriksaan Selesai. Catatan: {{$verifpksmitra->note}}">
+														<i class="fa fa-check-circle"></i>
 													</span>
-												@elseif ($verifpksmitra->status === 'Selesai' && $verifpksmitra->docstatus === 'Sesuai')
-													<span class="text-success">
-														<i class="fas fa-check-circle mr-1"></i>
-														<span class="fw-500">Selesai Diperiksa dan Dokumen Sesuai</span>
+												@elseif ($verifpksmitra->status === '2')
+													<span class="badge btn-xs btn-icon btn-danger" data-toggle="tooltip" title
+													data-original-title="Pemeriksaan Selesai, Pelaku usaha harus memperbaiki kekurangan. Catatan: {{$verifpksmitra->note}}">
+														<i class="fa fa-exclamation-circle"></i>
 													</span>
-												@elseif ($verifpksmitra->status === 'Selesai' && $verifpksmitra->docstatus === 'Tidak Sesuai')
-													<span class="text-danger">
-														<i class="fas fa-check-circle mr-1"></i>
-														<span class="fw-500">Selesai Diperiksa dengan Catatan</span>
-													</span>
-												@elseif (!$verifpksmitra->status && $verifpksmitra->docstatus === 'Tidak Sesuai')
-													<span class="text-warning">
-														<i class="fas fa-exclamation-circle mr-1"></i>
-														<span class="fw-500">Belum Selesai Diperiksa</span>
+												@else
+													<span class="badge btn-xs btn-icon btn-warning" data-toggle="tooltip" title
+													data-original-title="Pemeriksaan belum dilakukan">
+														<i class="fa fa-hourglass"></i>
 													</span>
 												@endif
 											</td>
 											<td>
 												@if($verifpksmitra->id)
-													<a href="{{route('admin.task.verifikasiv2.online.pks.edit', $verifpksmitra->id)}}" data-toggle="tooltip"
+													<a href="{{route('admin.task.onlinev2.pks.edit', $verifpksmitra->id)}}" data-toggle="tooltip"
 														data-original-title="Ubah Pemeriksaan"
-														class="btn btn-xs btn-icon btn-primary">
+														class="btn btn-xs btn-icon btn-primary mr-1">
 														<i class="fal fa-edit"></i>
 													</a>
 												@else
@@ -520,7 +515,7 @@
 									<th class="text-uppercase text-muted">Pengelola</th>
 									<th class="text-uppercase text-muted">Luas</th>
 									<th class="text-uppercase text-muted">Volume</th>
-									<th class="text-uppercase text-muted">Pemeriksaan</th>
+									<th class="text-uppercase text-muted">Status</th>
 									<th class="text-uppercase text-muted">Tindakan</th>
 								</thead>
 								<tbody>
@@ -531,32 +526,19 @@
 										<td>{{$veriflokasi->anggotamitra->masteranggota->nama_petani}}</td>
 										<td class="text-right">{{$veriflokasi->anggotamitra->luas_tanam}} ha</td>
 										<td class="text-right">{{$veriflokasi->anggotamitra->volume}} ton</td>
-										<td data-toggle="tooltip" title
-												data-original-title="{{$veriflokasi->onlinenote}}"
-												@if (!$veriflokasi->onlinestatus && $veriflokasi->datastatus === 'Sesuai')
-													<span class="text-warning">
-														<i class="fas fa-clock mr-1"></i>
-														<span class="fw-500">Dalam Pemeriksaan</span>
-													</span>
-												@elseif ($veriflokasi->onlinestatus === 'Selesai' && $veriflokasi->datastatus === 'Sesuai')
-													<span class="text-success">
-														<i class="fas fa-check-circle mr-1"></i>
-														<span class="fw-500">Selesai Diperiksa dan Dokumen Sesuai</span>
-													</span>
-												@elseif ($veriflokasi->onlinestatus === 'Selesai' && $veriflokasi->datastatus === 'Tidak Sesuai')
-													<span class="text-danger">
-														<i class="fas fa-check-circle mr-1"></i>
-														<span class="fw-500">Selesai Diperiksa dengan Catatan</span>
-													</span>
-												@elseif (!$veriflokasi->onlinestatus && $veriflokasi->datastatus === 'Tidak Sesuai')
-													<span class="text-warning">
-														<i class="fas fa-exclamation-circle mr-1"></i>
-														<span class="fw-500">Belum Selesai Diperiksa</span>
-													</span>
-												@endif
-											</td>
 										<td class="text-center">
-											<a href="{{route('admin.task.verifikasiv2.online.location.edit', $veriflokasi->id)}}" class="btn btn-icon btn-xs btn-primary">
+											@if ($veriflokasi->onlinestatus === 'Selesai')
+												<span class="badge btn-xs btn-success btn-icon" data-toggle="tooltip" data-original-title="Selesai. {{$veriflokasi->onlinenote}}">
+													<i class="fa fa-check-circle"></i>
+												</span>
+											@elseif ($veriflokasi->onlinestatus === 'Perbaikan')
+												<span class="badge btn-xs btn-danger btn-icon" data-toggle="tooltip" data-original-title="Perbaikan. {{$veriflokasi->onlinenote}}">
+													<i class="fa fa-exclamation-circle"></i>
+												</span>
+											@endif
+										</td>
+										<td class="text-center">
+											<a href="{{route('admin.task.onlinev2.location.edit', $veriflokasi->id)}}" class="btn btn-icon btn-xs btn-primary" data-toggle="tooltip" data-original-title="Ubah Pemeriksaan">
 												<i class="fal fa-edit"></i>
 											</a>
 										</td>
@@ -578,7 +560,7 @@
 						</div>
 					</div>
 					<div class="panel-container show">
-						<form action="{{route('admin.task.verifikasiv2.online.baonline', $verifikasi->id)}}" method="POST" enctype="multipart/form-data">
+						<form action="{{route('admin.task.onlinev2.baonline', $verifikasi->id)}}" method="POST" enctype="multipart/form-data">
 							@csrf
 							@method('PUT')
 							<div class="panel-content">
@@ -672,7 +654,7 @@
 							<div class="input-group">
 								<select class="select2-des form-control" id="pksMitra" name="pksMitra" required>
 									<option value="" hidden></option>
-									@foreach ($pksmitras as $pksmitra)
+									@foreach ($verifikasi->commitmentbackdate->pksmitra as $pksmitra)
 										@if (!$verifpksmitras->contains('pksmitra_id', $pksmitra->id))
 											<option value="{{$pksmitra->id}}" data-verifikasi="{{$verifikasi->id}}" data-commitment="{{ $pksmitra->commitmentbackdate_id }}">
 												{{$pksmitra->no_perjanjian}} - {{$pksmitra->masterkelompok->nama_kelompok}}
@@ -779,7 +761,7 @@
 				var commitmentId = $('option:selected', this).data('commitment');
 
 				// Construct the new href value with the selected value and data attributes
-				var newHref = "{{ route('admin.task.verifikasiv2.online.pks.check', [':verifikasi', ':commitment', ':id']) }}";
+				var newHref = "{{ route('admin.task.onlinev2.pks.check', [':verifikasi', ':commitment', ':id']) }}";
 				newHref = newHref.replace(':verifikasi', verifikasiId);
 				newHref = newHref.replace(':commitment', commitmentId);
 				newHref = newHref.replace(':id', selectedValue);
@@ -798,7 +780,7 @@
 				// var pksmitra = $('#lokasiLahan option:selected').data('pksmitra');
 
 				// Construct the new href value with the selected value and data attributes
-				var newHref = "{{ route('admin.task.verifikasiv2.online.location.check',':id') }}";
+				var newHref = "{{ route('admin.task.onlinev2.location.check',':id') }}";
 				newHref = newHref.replace(':id', selectedValue);
 
 				// Update the href attribute of the link with the new href value
@@ -808,7 +790,6 @@
 		});
 	</script>
 
-	
 	<script>
 		function validateInput() {
 			// get the input value and the current username from the page

@@ -33,15 +33,6 @@
 							@foreach ($commitments as $commitment)
 							<tr>
 								<td>
-									@if(!empty($commitment->status))
-										<span title="Dalam proses verifikasi">
-											<i class="fas fa-lock text-info fs-nano"></i>
-										</span>
-									@else
-										<span title="Anda belum mengajukan verifikasi">
-											<i class="fa fa-exclamation-circle text-warning fs-nano"></i>
-										</span>
-									@endif
 									{{$commitment->no_ijin}}
 								</td>
 								<td>{{$commitment->periodetahun}}</td>
@@ -77,7 +68,7 @@
 										title="Data Penangkar Mitra">
 										<i class="fal fa-seedling"></i>
 									</a>
-									@if (is_null($commitment->status))
+									@if (empty($commitment->status) || $commitment->status === '3' || $commitment->status === '5')
 										<a href="{{ route('admin.task.commitments.edit', $commitment->id) }}"
 											class="btn btn-icon btn-xs btn-warning"
 											title="Ubah Data Komitmen">
@@ -100,16 +91,10 @@
 												<i class="fal fa-trash-alt"></i>
 											</button>
 										</form>
-									@else
-										<span class="ml-3 btn btn-icon btn-xs btn-default disabled"
-											title="Tidak dapat dihapus">
-											<i class="fas fa-trash-alt"></i>
-										</span>
 									@endif
 								</td>
 								<td class="justify-content-center">
 									<span class="badge btn-primary btn-icon btn-xs" title="verifikasi">{{$commitment->status}}</span>
-									<span class="badge btn-primary btn-icon btn-xs" title="skl">{{$commitment->skl}}</span>
 								</td>
 							</tr>
 							@endforeach

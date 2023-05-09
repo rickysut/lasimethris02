@@ -17,6 +17,7 @@ use App\Models\MasterKelompok;
 use App\Models\PenangkarMitra;
 use App\Models\PengajuanV2;
 use App\Models\verif_commitment;
+use App\Models\User;
 
 class CommitmentBackdateController extends Controller
 {
@@ -39,7 +40,7 @@ class CommitmentBackdateController extends Controller
 
 		$masterpenangkars = MasterPenangkar::all();
 		$user = Auth::user();
-		$commitments = $user->commitmentbackdate()->get();
+		$commitments = CommitmentBackdate::where('user_id', $user->id)->get();
 
 		return view('v2.commitment.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'user', 'commitments', 'masterpenangkars'));
 	}
@@ -155,7 +156,7 @@ class CommitmentBackdateController extends Controller
 		$pksmitras = $commitment->pksmitra;
 		$penangkarmitras = $commitment->penangkarmitra;
 
-		if (!$commitment->status) {
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
 			$disabled = false; // input di-enable
 		} else {
 			$disabled = true; // input di-disable
@@ -307,7 +308,7 @@ class CommitmentBackdateController extends Controller
 			->findOrFail($id);
 		$penangkarmitras = $commitmentbackdate->penangkarmitra;
 
-		if (!$commitment->status) {
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
 			$disabled = false; // input di-enable
 		} else {
 			$disabled = true; // input di-disable
@@ -327,7 +328,7 @@ class CommitmentBackdateController extends Controller
 			->where('user_id', Auth::id())
 			->findOrFail($id);
 
-		if (!$commitment->status) {
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
 			$disabled = false; // input di-enable
 		} else {
 			$disabled = true; // input di-disable
@@ -338,193 +339,6 @@ class CommitmentBackdateController extends Controller
 		$pksmitras = $commitment->pksmitra;
 
 		return view('v2.commitment.pksmitra.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitras', 'disabled'));
-	}
-
-	//buat pengajuan verifikasi
-	public function createpengajuan($id)
-	{
-		//load all commitments for current user
-		$commitments = CommitmentBackdate::with(['user', 'pksmitra.anggotamitras'])
-			->where('user_id', Auth::id())
-			->findOrFail($id);
-
-		if (!empty($commitments->status) && $commitments->status != 6) {
-			return redirect()->route('admin.task.commitments.viewpengajuan', $commitments->id);
-			$disabled = true;
-		} else {
-			$disabled = false; // input di-disable
-		}
-
-
-		$total_luastanam = $commitments->pksmitra->flatMap(function ($pm) {
-			return $pm->anggotamitras;
-		})->sum('luas_tanam');
-
-		$total_volume = $commitments->pksmitra->flatMap(function ($pm) {
-			return $pm->anggotamitras;
-		})->sum('volume');
-
-		$module_name = 'Komitmen';
-		$page_title = 'Pengajuan Verifikasi';
-		$page_heading = 'Pengajuan Verifikasi Realisasi';
-		$heading_class = 'fal fa-file-invoice';
-
-		return view('v2.pengajuanv2.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'total_luastanam', 'total_volume', 'disabled'));
-	}
-
-	public function viewpengajuan($id)
-	{
-		//load all commitments for current user
-		$commitments = CommitmentBackdate::with(['user', 'pksmitra.anggotamitras'])
-			->where('user_id', Auth::id())
-			->findOrFail($id);
-
-		if (!empty($commitments->status) && $commitments->status != 6) {
-			$disabled = true; // input di-enable
-		} else {
-			$disabled = false; // input di-disable
-		}
-
-		$total_luastanam = $commitments->pksmitra->flatMap(function ($pm) {
-			return $pm->anggotamitras;
-		})->sum('luas_tanam');
-
-		$total_volume = $commitments->pksmitra->flatMap(function ($pm) {
-			return $pm->anggotamitras;
-		})->sum('volume');
-
-		$module_name = 'Komitmen';
-		$page_title = 'Pengajuan Verifikasi';
-		$page_heading = 'Pengajuan Verifikasi Realisasi';
-		$heading_class = 'fal fa-file-invoice';
-
-		return view('v2.pengajuanv2.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'total_luastanam', 'total_volume', 'disabled'));
-	}
-
-	//simpan pengajuan verifikasi
-	public function storepengajuan($id, Request $request)
-	{
-		//validasi sebelum pengajuan di-submit
-		$request->validate(
-			[]
-		);
-		// Find commitment_backdate id
-		$commitments = CommitmentBackdate::find($id);
-
-		/**check status commitments->status:
-		 * A. Cancel, yaitu
-		 * 1. jika dalam tahap pengajuan verifikasi
-		 * 2. jika dalam proses verifikasi
-		 * 3. jika dalam proses pengajuan SKL
-		 * 4. jika dalam proses verifikasi SKL
-		 * 
-		 * B. Lanjut, yaitu
-		 * 1. jika pengajuan ulang baik verifikasi maupun SKL
-		 */
-
-		//create new pengajuan
-		$pengajuan = new PengajuanV2();
-		// get current month and year as 2-digit and 4-digit strings
-		$month = date('m');
-		$year = date('Y');
-		// retrieve the latest record for the current month and year
-		$latestRecord = PengajuanV2::where('no_pengajuan', 'like', "%/{$month}/{$year}")
-			->orderBy('created_at', 'desc')
-			->first();
-
-		// get the current increment value for n
-		$n = 1;
-		if ($latestRecord) {
-			$parts = explode('/', $latestRecord->no_pengajuan);
-			$n = intval($parts[0]) + 1;
-		}
-
-		// mask the n part to always have 3 digits
-		$nMasked = str_pad($n, 3, '0', STR_PAD_LEFT);
-
-		// generate the new no_pengajuan value with timestamp and masked n
-		$no_pengajuan = "{$nMasked}/PV." . time() . "/simethris/{$month}/{$year}";
-		$pengajuan->no_pengajuan = $no_pengajuan;
-		$pengajuan->commitmentbackdate_id = $commitments->id;
-		$pengajuan->status = '1'; //1 = diajukan
-		$pengajuan->jenis = 'Verifikasi'; //jenis pengajuan 'Verifikasi'
-		// $pengajuan->jenis = 'verifikasi';
-		$pengajuan->created_at = Carbon::now();
-
-		$pengajuan->save();
-		//set status pengajuan pada tabel commitment
-		$commitments->status = '1'; //1 = verifikasi diajukan
-		// $commitments->pengajuan_id = $pengajuan->id;
-		$commitments->save();
-
-		$verifCommitment = new verif_commitment();
-		$verifCommitment->pengajuan_id = $pengajuan->id;
-		$verifCommitment->commitmentbackdate_id = $commitments->id;
-		$verifCommitment->status = '1';
-		$verifCommitment->verif_at = Carbon::now();
-		$verifCommitment->save();
-
-		return redirect()->route('admin.task.commitments.pengajuansuccess', $pengajuan->id)->with('success', 'Data Pengajuan submitted successfully');
-	}
-
-	//redirect sukses
-	public function success($id)
-	{
-		$module_name = 'Komitmen';
-		$page_title = 'Pengajuan Verifikasi';
-		$page_heading = 'Pengajuan Verifikasi Realisasi';
-		$heading_class = 'fal fa-file-invoice';
-
-		$pengajuan = PengajuanV2::findOrFail($id);
-		return view('v2.pengajuanv2.successaju', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pengajuan'));
-	}
-
-	//saat pengajuan ulang
-	public function pengajuanulang($id, Request $request)
-	{
-		// Find commitment_backdate id
-
-		$commitment = CommitmentBackdate::with('user')
-			->where('user_id', Auth::id())
-			->findOrFail($id);
-
-		if ($commitment->status != 6) {
-			return redirect()->back()->with('error', 'Halaman ini tidak dapat di akses!');
-		}
-
-		// Update pengajuanv2 status
-		$pengajuan = PengajuanV2::where('no_pengajuan', $request->input('no_pengajuan'))
-			->where('commitmentbackdate_id', $id)
-			->firstOrFail();
-		$pengajuan->status = '6';
-		$pengajuan->save();
-
-		// Update commitment_backdate
-		$commitment->status = '6';
-		$fileInputs = [
-			'formRiph',
-			'formSptjm',
-			'logbook',
-			'formRt',
-			'formRta',
-			'formRpo',
-			'formLa'
-		];
-		$commitment_id = $commitment->id;
-		$folder_name = "commitmentsv2/$commitment_id";
-
-		foreach ($fileInputs as $fileInput) {
-			if ($request->hasFile($fileInput)) {
-				$file = $request->file($fileInput);
-				$file_name = $fileInput . '_' . $commitment_id . '_' . date('Ymd') . '_' . time() . '.' . $file->getClientOriginalExtension();
-				Storage::disk('public')->putFileAs("docs/$folder_name", $file, $file_name);
-				$commitment->$fileInput = $file_name;
-			}
-		}
-
-		$commitment->save();
-
-		return redirect()->route('admin.task.commitments.show', $commitment->id)->with('success', 'Data Pengajuan submitted successfully');
 	}
 
 	public function destroy($id)

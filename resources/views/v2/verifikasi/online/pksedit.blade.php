@@ -99,36 +99,43 @@
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Nomor Perjanjian</span>
 											<span class="fw-500">
-												<i class="fas fa-file-invoice mr-1"></i>
 												{{$verifpks->pksmitra->no_perjanjian}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Kelompoktani</span>
 											<span class="fw-500">
-												<i class="fas fa-users mr-1"></i>
 												{{$verifpks->pksmitra->masterkelompok->nama_kelompok}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Berlaku sejak</span>
 											<span class="fw-500">
-												<i class="fa fa-calendar-plus mr-1"></i>
 												{{$verifpks->pksmitra->tgl_perjanjian_start}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Berakhir pada</span>
 											<span class="fw-500">
-												<i class="fas fa-calendar-check mr-1"></i>
 												{{$verifpks->pksmitra->tgl_perjanjian_end}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
 											<span class="text-muted">Luas Rencana</span>
 											<span class="fw-500">
-												<i class="fas fa-ruler-combined mr-1"></i>
 												{{$verifpks->pksmitra->luas_rencana}} ha
+											</span>
+										</li>
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<span class="text-muted">Varietas</span>
+											<span class="fw-500">
+												{{$verifpks->pksmitra->varietas_tanam}}
+											</span>
+										</li>
+										<li class="list-group-item d-flex justify-content-between align-items-center">
+											<span class="text-muted">Periode Tanam</span>
+											<span class="fw-500">
+												{{$verifpks->pksmitra->periode_tanam}}
 											</span>
 										</li>
 										<li class="list-group-item d-flex justify-content-between align-items-center">
@@ -159,38 +166,25 @@
 								@method('PUT')
 								<div class="panel-container show">
 									<div class="panel-content">
-										<div class="row d-flex align-items-center justify-content-between mb-3">
-											<div class="form-group col-md-6">
-												<label for="">Hasil Pemeriksaan Berkas</label>
-												<select type="text" id="docstatus" name="docstatus" class="form-control form-control-sm" required>
-													<option hidden value="">- pilih status dokumen</option>
-													<option value="Sesuai"
-														{{ $verifpks && $verifpks->docstatus == 'Sesuai' ? 'selected' : '' }}>
-														Sesuai
-													</option>
-													<option value="Tidak Sesuai"
-														{{ $verifpks && $verifpks->docstatus == 'Tidak Sesuai' ? 'selected' : '' }}>
-														Tidak Sesuai
-													</option>
-												</select>
-												<small id="helpId" class="text-muted">Berikan status hasil pemeriksaan.</small>
-											</div>
-											<div class="form-group col-md-6">
-												<label for="">Status Pemeriksaan</label>
-												<select type="text" id="status" name="status" class="form-control form-control-sm" required>
-													<option hidden value="">- pilih status periksa</option>
-													<option value="Selesai"
-														{{ $verifpks && $verifpks->status == 'Selesai' ? 'selected' : '' }}>
-														Selesai
-													</option>
-												</select>
-												<small id="helpId" class="text-muted">Berikan status hasil pemeriksaan.</small>
-											</div>
-											<div class="form-group col-sm-12">
-												<label for="">Catatan Pemeriksaan</label>
-												<textarea class="form-control form-control-sm" name="note" id="note" rows="5" required>{{ old('note', $verifpks ? $verifpks->note : '') }}</textarea>
-												<small id="helpId" class="text-muted">Berikan catatan hasil pemeriksaan.</small>
-											</div>
+										<div class="form-group">
+											<label for="">Catatan Pemeriksaan</label>
+											<textarea class="form-control form-control-sm" name="note" id="note" rows="3" required>{{ old('note', $verifpks ? $verifpks->note : '') }}</textarea>
+											<small id="helpId" class="text-muted">Berikan catatan hasil pemeriksaan.</small>
+										</div>
+										<div class="form-group">
+											<label for="">Status Pemeriksaan</label>
+											<select type="text" id="status" name="status" class="form-control form-control-sm" required>
+												<option hidden value="">- pilih status periksa</option>
+												<option value="1"
+													{{ $verifpks && $verifpks->status == '1' ? 'selected' : '' }}>
+													Selesai
+												</option>
+												<option value="2"
+													{{ $verifpks && $verifpks->status == '2' ? 'selected' : '' }}>
+													Perbaikan
+												</option>
+											</select>
+											<small id="helpId" class="text-muted">Berikan status hasil pemeriksaan.</small>
 										</div>
 									</div>
 								</div>

@@ -154,7 +154,7 @@
 									</div>
 								</div>
 							</div>
-							<form action="{{route('admin.task.verifikasiv2.online.verifcommitmentupdate', $verifcommit->id)}}" method="POST" id="form1">
+							<form action="{{route('admin.task.onlinev2.commitmentsave', $verifcommit->id)}}" method="POST" id="form1">
 								@csrf
 								@method('PUT')
 								<div class="panel-content">

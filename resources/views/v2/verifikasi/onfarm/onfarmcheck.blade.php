@@ -62,8 +62,8 @@
 				</div>
 			</div>
 			<div class="col-12">
-				<div class="d-flex justify-content-between align-items-center">
-					<ul class=" nav nav-pills mb-3" role="tablist">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<ul class=" nav nav-pills" role="tablist">
 						<li class="nav-item">
 							<a class="btn-sm nav-link active" data-toggle="pill" href="#tab1">
 								<i class="fas fa-clock mr-1"></i>
@@ -77,53 +77,43 @@
 							</a>
 						</li>
 					</ul>
-					<a class="btn btn-sm btn-outline-info" href="{{route('admin.task.onfarmv2.list', $verifikasi->id)}}">
-						<i class="fas fa-undo mr-1"></i>
-						ke Daftar Lokasi Sampling
-					</a>
+					<ul class="nav nav-pills hidden-sm-down">
+						<li class="nav-item">
+							<a class="btn btn-sm btn-outline-info" href="{{route('admin.task.onfarmv2.list', $verifikasi->id)}}">
+								<i class="fas fa-undo mr-1"></i>
+								ke Daftar Lokasi Sampling
+							</a>
+						</li>
+					</ul>
 				</div>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab1" role="tabpanel">
 						<div id="panel-2" class="panel">
-							<div class="panel-hdr">
-								<h2>Pemetaan</h2>
-								<div class="panel-toolbar">
-									@include('partials.globaltoolbar')
-								</div>
-							</div>
 							<div class="panel-container show">
 								<div id="myMap" style="height: 500px; width: 100%;"></div>
 								<div class="panel-content card-header">
-									<div class="row">
-										<div class="form-group col-md-12">
-											<label class="form-label" for="gmap">
-												Pilih lokasi dan Buat Peta Polygon bidang lahan dari lokasi yang dipilih
-												<sup class="text-danger"> *</sup>
-											</label>
-										</div>
-									</div>
-								</div>
-								<div class="panel-content">
-									<form id="location-search-form">
-										<div class="form-group mb-5" title="Cari lokasi yang diinginkan">
-											<div class="input-group bg-white shadow-inset-2">
-												<div class="input-group-prepend">
-													<span class="input-group-text bg-transparent border-right-0 py-1 px-3 text-success">
-														<i class="fal fa-search"></i>
-													</span>
+									<div class="row d-flex justify-content-between align-items-top">
+										<div class="col-md-4">
+											<form id="location-search-form">
+												<div class="form-group mb-5" title="Cari lokasi yang diinginkan">
+													<div class="input-group bg-white shadow-inset-2">
+														<div class="input-group-prepend">
+															<span class="input-group-text bg-transparent border-right-0 py-1 px-3 text-success">
+																<i class="fal fa-search"></i>
+															</span>
+														</div>
+														<input id="searchBox" placeholder="cari lokasi..."
+															class="form-control border-left-0 bg-transparent pl-0" >
+														<div class="input-group-append">
+															<button class="btn btn-default waves-effect waves-themed"
+																type="submit">Search</button>
+														</div>
+													</div>
+													<span class="help-block">Cari lokasi di peta</span>
 												</div>
-												<input id="searchBox" placeholder="cari lokasi..."
-													class="form-control border-left-0 bg-transparent pl-0" >
-												<div class="input-group-append">
-													<button class="btn btn-default waves-effect waves-themed"
-														type="submit">Search</button>
-												</div>
-											</div>
-											<span class="help-block">Cari lokasi di peta</span>
+											</form>
 										</div>
-									</form>
-									<div class="row d-flex flex-row justify-content-between">
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group">
 												<div class="input-group bg-white shadow-inset-2">
 													<div class="input-group-prepend">
@@ -140,22 +130,22 @@
 												<span class="help-block">Unggah berkas KML</span>
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<div class="form-group">
-												<div class="input-group bg-grey shadow-inset-2">
+												<div class="input-group shadow-inset-2">
 													<div class="input-group-prepend">
 														<span class="input-group-text border-right-0 py-1 px-3 text-success">
 															<i class="fal fa-globe"></i>
 														</span>
 													</div>
-													<input id="mapId" name="mapId" placeholder="contoh: 1cwFsptUJ7EdW1IoHxFB_VRHsD10TEJ0" class="form-control">
+													<input id="mapId" name="mapId" placeholder="Id peta publik" class="form-control">
 													<div class="input-group-append">
 														
 														<button class="btn btn-default waves-effect waves-themed"
 															onclick="link_parser()">Open</button>
 													</div>
 												</div>
-												<span class="help-block">Pastikan tautan yang Anda berikan telah diatur agar dapat dilihat oleh publik pada aplikasi google map.</span>
+												<span class="help-block">contoh: 1cwFsptUJ7EdW1IoHxFB_VRHsD10TEJ0.</span>
 											</div>
 										</div>
 									</div>
@@ -165,12 +155,6 @@
 					</div>
 					<div class="tab-pane" id="tab2" role="tabpanel">
 						<div id="panel-2" class="panel">
-							<div class="panel-hdr">
-								<h2>Pemetaan</h2>
-								<div class="panel-toolbar">
-									@include('partials.globaltoolbar')
-								</div>
-							</div>
 							<div class="panel-container show">
 								<div class="panel-content" hidden>
 									<input type="text" name="userlat" id="userlat" value="{{$anggotamitra->latitude}}">
@@ -193,190 +177,7 @@
 				</div>
 			</div>
 			<div class="col-12">
-				<div class="panel-content">
-					<div class="row">
-						<div class="form-group col-md-3">
-							<label>Nama Lokasi <sup class="text-danger"> **</sup></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fal fa-map-signs"></i></span>
-								</div>
-								<input type="text" value="{{ old('nama_lokasi', $anggotamitra->nama_lokasi) }}"
-									name="nama_lokasi" id="nama_lokasi" readonly
-									class="font-weight-bold form-control form-control-sm bg-white" />
-							</div>
-							<span class="help-block">berikan Nama/ID untuk lokasi ini.</span>
-						</div>
-						<div class="form-group col-md-3">
-							<label>Latitude <sup class="text-info"> *</sup></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fal fa-map-marker"></i></span>
-								</div>
-								<input type="text" value="{{ old('latitude', $veriflokasi->latitude) }}"
-									name="latitude" id="latitude" readonly
-									class="font-weight-bold form-control form-control-sm bg-white" />
-							</div>
-							<span class="help-block">Koordinat Lintang lokasi</span>
-						</div>
-						<div class="form-group col-md-3">
-							<label>Longitude <sup class="text-info"> *</sup></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fal fa-map-marker-alt"></i></span>
-								</div>
-								<input type="text" value="{{ old('longitude', $veriflokasi->longitude) }}"
-									name="longitude" id="longitude"
-									class="font-weight-bold form-control form-control-sm bg-white" />
-							</div>
-							<span class="help-block">Koordinat Bujur lokasi</span>
-						</div>
-						<div class="form-group col-3">
-							<label>Altitude (mdpl) <sup class="text-danger"> **</sup></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fal fa-ruler-vertical"></i></span>
-								</div>
-								<input type="text" value="{{ old('altitude', $veriflokasi->altitude) }}"
-									name="altitude" id="altitude"
-									class="font-weight-bold form-control form-control-sm bg-white" />
-							</div>
-							<span class="help-block">Ketinggian lokasi lahan (rerata ketinggain dpl)</span>
-						</div>
-						<div class="form-group col-md-7">
-							<label>Polygon<sup class="text-info"> *</sup></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fal fa-draw-polygon"></i></span>
-								</div>
-								<input type="text" value="{{ old('polygon', $veriflokasi->polygon) }}"
-								name="polygon" id="polygon" readonly
-								class="font-weight-bold form-control form-control-sm bg-white" />
-							</div>
-							<span class="help-block">Kurva bidang lahan yang ditanami.</span>
-						</div>
-						<div class="form-group col-md-5">
-							<label>Luas Perkiraan (ha)<sup class="text-info"> *</sup></label>
-							<div class="input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fal fa-ruler-combined"></i></span>
-								</div>
-								<input type="text" value="{{ old('luas_kira', $anggotamitra->luas_kira) }}"
-									name="luas_kira" id="luas_kira" readonly
-									class="font-weight-bold form-control form-control-sm bg-white" />
-							</div>
-							<span class="help-block">Luas bidang diukur oleh sistem.</span>
-						</div>
-					</div>
-					<div class="mt-5">
-						<span class="small mr-3"><span class="text-info mr-1"> *</span>: Autogenerate by System</span>
-						<span class="small"><span class="text-danger mr-1"> **</span>: Wajib diisi</span>
-					</div>
-				</div>
 				<div class="card-deck">
-					<div id="panel-3" class="panel card">
-						<div class="panel-hdr">
-							<h2>
-								Data<span class="fw-300"><i>Geolokasi</i></span>
-							</h2>
-							<div class="panel-toolbar">
-								@include('partials.globaltoolbar')
-							</div>
-						</div>
-						<div class="panel-container show">
-							<div class="panel-content">
-								{{-- <ul class="list-group">
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Latitude</span>
-										<div class="form-group">
-											<input readonly type="text" name="latitude" id="latitude" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->latitude}}">
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">longitude</span>
-										<div class="form-group">
-											<input readonly type="text" name="longitude" id="longitude" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->longitude}}">
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Polygon</span>
-										<div class="form-group">
-											<input readonly type="text" name="polygon" id="polygon" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->polygon}}">
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Luas pada Peta</span>
-										<div class="form-group">
-											<input readonly type="text" name="luas_kira" id="luas_kira" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->luas_kira}} ha">
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Altitude</span>
-										<div class="form-group">
-											<input readonly type="text" name="altitude" id="altitude" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->altitude}} mdpl">
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Nama Lokasi/Lahan</span>
-										<div class="form-group">
-											<input readonly type="text" name="nama_lokasi" id="nama_lokasi" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->nama_lokasi}}">
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Varietas ditanam</span>
-										<div class="form-group">
-											<input readonly type="text" name="varietas" id="varietas" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->varietas}}">
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Tanggal Tanam</span>
-										<div class="form-group">
-											<input readonly type="text" name="tgl_tanam" id="tgl_tanam" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->tgl_tanam}}">
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Luas Tanam dilaporkan</span>
-										<div class="form-group">
-											@if ($anggotamitra->luas_tanam)
-												<input readonly type="text" name="luas_tanam" id="luas_tanam" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->luas_tanam}} ha">
-											@else
-												<input readonly type="text" name="luas_tanam" id="luas_tanam" class="text-right form-control form-control-sm" placeholder="tidak ada data">
-											@endif
-										</div>
-									</li>
-									<li class="list-group-item d-flex justify-content-between align-items-center">
-										<span class="text-muted">Volume Produksi</span>
-										<div class="form-group">
-											@if ($anggotamitra->volume)
-												<input readonly type="text" name="luas_tanam" id="luas_tanam" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{$anggotamitra->volume}} ton">
-											@else
-												<input readonly type="text" name="volume" id="volume" class="text-right form-control form-control-sm" placeholder="tidak ada data">
-											@endif
-										</div>
-									</li>
-								</ul> --}}
-								<div class="mt-3">
-									<label class="form-label" for="tgl_prod">Dokumentasi</label>
-									<div class="d-flex align-items-center flex-row">
-										<div id="js-galleryTanam">
-											<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitra->pks_mitra_id.'/tanam/'.$anggotamitra->tanam_pict) }}"
-												data-sub-html="{{$anggotamitra->tanam_pict}}" title="{{$anggotamitra->tanam_pict}}">
-												<img class="img-responsive img-thumbnail" style="max-height: 120px"
-												src="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitra->pks_mitra_id.'/tanam/'.$anggotamitra->tanam_pict) }}"
-												alt="{{$anggotamitra->tanam_pict}}">
-											</a>
-											<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitra->pks_mitra_id.'/panen/'.$anggotamitra->panen_pict) }}"
-												data-sub-html="{{$anggotamitra->panen_pict}}" title="{{$anggotamitra->panen_pict}}">
-												<img class="img-responsive img-thumbnail" style="max-height: 120px"
-												src="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitra->pks_mitra_id.'/panen/'.$anggotamitra->panen_pict) }}"
-												alt="{{$anggotamitra->panen_pict}}">
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 					<div id="panel-4" class="panel card">
 						<div class="panel-hdr">
 							<h2>
@@ -402,65 +203,175 @@
 								</div>
 							</div>
 						@endif
-					</div>
-				</div>
-				<div id="panel-5" class="panel">
-					<div class="panel-hdr">
-						<h2>Hasil Pemeriksaan</h2>
-					</div>
-					<div class="panel-container show">
-						<form action="{{route('admin.task.verifikasiv2.online.location.store')}}" method="post" enctype="multipart/form-data">
-							@csrf
+						<hr>
+						<div class="panel-container show">
 							<div class="panel-content">
-								<div class="row">
-									<div class="col-md-6">
-										<input type="text" name="pengajuan_id" value="{{$verifikasi->id}}" hidden>
-										<input type="text" name="commitmentbackdate_id" value="{{$commitment->id}}" hidden>
-										<input type="text" name="pksmitra_id" value="{{$pksmitra->id}}" hidden>
+								<div class="mt-3">
+									<label class="form-label" for="tgl_prod">Dokumentasi</label>
+									<div class="d-flex align-items-center flex-row">
+										<div id="js-galleryTanam">
+											<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitra->pks_mitra_id.'/tanam/'.$anggotamitra->tanam_pict) }}"
+												data-sub-html="{{$anggotamitra->tanam_pict}}" title="{{$anggotamitra->tanam_pict}}">
+												<img class="img-thumbnail" style="max-height: 120px"
+												src="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitra->pks_mitra_id.'/tanam/'.$anggotamitra->tanam_pict) }}"
+												alt="{{$anggotamitra->tanam_pict}}">
+											</a>
+											<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitra->pks_mitra_id.'/panen/'.$anggotamitra->panen_pict) }}"
+												data-sub-html="{{$anggotamitra->panen_pict}}" title="{{$anggotamitra->panen_pict}}">
+												<img class="img-thumbnail" style="max-height: 120px;"
+												src="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitra->pks_mitra_id.'/panen/'.$anggotamitra->panen_pict) }}"
+												alt="{{$anggotamitra->panen_pict}}">
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-7">
+						<div id="panel-3" class="panel">
+							<div class="panel-hdr">
+								<h2>Data Verifikasi</h2>
+							</div>
+							<form action="{{route('admin.task.onfarmv2.update', $veriflokasi->id)}}" method="post" enctype="multipart/form-data">
+								@csrf
+								@method('PUT')
+								<div class="panel-container show">
+									<div class="panel-content">
+										<input type="text" name="pengajuan_id" value="{{$veriflokasi->pengajuan_id}}" hidden>
+										<input type="text" name="verifcommit_id" value="{{$veriflokasi->verifcommit_id}}" hidden>
+										<input type="text" name="verifpks_id" value="{{$veriflokasi->verifpks_id}}" hidden>
 										<input type="text" name="anggotamitra_id" value="{{$anggotamitra->id}}" hidden>
-										<div class="form-group">
-											<label for="">Pemeriksaan Dokumen</label>
-											<select name="datastatus" id="datastatus" class="form-control-sm form-control" required>
-												<option value="" hidden>--pilih status</option>
-												<option value="Selesai">Sesuai</option>
-												<option value="Tidak Sesuai">Tidak Sesuai</option>
-											</select>
-											<small id="helpId" class="text-muted">Pilih status periksa.</small>
-										</div>
-										<div class="form-group">
-											<label for="">Statu Periksa</label>
-											<select name="onlinestatus" id="onlinestatus" class="form-control-sm form-control">
-												<option value="" hidden>--pilih status</option>
-												<option value="Selesai">Selesai</option>
-											</select>
-											<small id="helpId" class="text-muted">Pilih status Pemeriksaan (biarkan kosong jika belum selesai diperiksa).</small>
-										</div>
+										<table class="table table-striped table-bordered w-100" id="dataVerif">
+											<thead>
+												<th class="text-center">Data</th>
+												<th class="text-center" style="width: 30%">Data Realisasi</th>
+												<th class="text-center" style="width: 33%">Data Verifikasi</th>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Nama Lokasi</td>
+													<td class="text-right">{{$anggotamitra->nama_lokasi}}</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>Nama Pengelola</td>
+													<td class="text-right">{{$anggotamitra->masteranggota->nama_petani}}</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>Varietas</td>
+													<td class="text-right">{{$anggotamitra->varietas}}</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>Latitude</td>
+													<td class="text-right">{{$anggotamitra->latitude}}</td>
+													<td class="text-right">
+														<div class="form-group">
+															<input type="text" name="latitude" id="latitude" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{ old('latitude', $veriflokasi->latitude) }}">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Longitude</td>
+													<td class="text-right">{{$anggotamitra->longitude}}</td>
+													<td class="text-right">
+														<div class="form-group">
+															<input type="text" name="longitude" id="longitude" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{ old('longitude', $veriflokasi->longitude) }}">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Altitude</td>
+													<td class="text-right">{{$anggotamitra->altitude}}</td>
+													<td class="text-right">
+														<div class="form-group">
+															<input type="text" name="altitude" id="altitude" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{ old('altitude', $veriflokasi->altitude) }}">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Polygon</td>
+													<td>
+														<span class="d-block text-truncate text-truncate-md">
+															{{$anggotamitra->polygon}}
+														</span>
+													</td>
+													<td class="text-right">
+														<div class="form-group">
+															<input type="text" name="polygon" id="polygon" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{ old('polygon', $veriflokasi->polygon) }}">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Luas Lahan/Tanam (ha)</td>
+													<td class="text-right">{{$anggotamitra->luas_tanam}}</td>
+													<td class="text-right">
+														<div class="form-group">
+															<input type="text" name="luas_verif" id="luas_kira" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{ old('luas_verif', $veriflokasi->luas_verif) }}">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Volume Produksi (ton)</td>
+													<td class="text-right">{{$anggotamitra->volume}}</td>
+													<td class="text-right">
+														<div class="form-group">
+															<input type="text" name="volume_verif" id="volume_verif" class="text-right form-control form-control-sm" placeholder="tidak ada data" value="{{ old('volume_verif', $veriflokasi->volume_verif) }}">
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														Status Periksa
+													</td>
+													<td></td>
+													<td>
+														<div class="form-group">
+															<select name="onfarmstatus" id="onfarmstatus" class="form-control-sm form-control">
+																<option value="" hidden>--pilih status</option>
+																<option value="Selesai" {{ old('onfarmstatus', $veriflokasi ? $veriflokasi->onfarmstatus : '') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+																<option value="Perbaikan" {{ old('onfarmstatus', $veriflokasi ? $veriflokasi->onfarmstatus : '') == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>
+															</select>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
-									<div class="form-group col-md-6">
-										<label for="">Catatan Pemeriksaan</label>
-										<textarea class="form-control form-control-sm" name="onlinenote" id="onlinenote" rows="7" required></textarea>
-										<small id="helpId" class="text-muted">Berikan catatan hasil pemeriksaan secara administratif atas data dan dokumen yang diunggah.</small>
+									<div class="panel-content">
+										<div class="row">
+											<div class="col-md-6">
+												
+											</div>
+											<div class="form-group col-12">
+												<label for="">Catatan Pemeriksaan</label>
+												<textarea class="form-control form-control-sm" name="onfarmnote" id="onfarmnote" rows="7" required>{{ old('onfarmnote', $veriflokasi->onfarmnote) }}</textarea>
+												<small id="helpId" class="text-muted">Berikan catatan hasil pemeriksaan lapangan.</small>
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="card-footer">
-								<div class="form-group">
-									<label class="form-label h6">Konfirmasi & Simpan</label>
-									<div class="input-group">
-										<input type="text" class="form-control form-control-sm" placeholder="ketik username Anda di sini" id="validasi" name="validasi"required>
-										<div class="input-group-append">
-											<a class="btn btn-sm btn-warning" href="" role="button"><i class="fal fa-times text-align-center mr-1"></i> Batalkan</a>
+								<div class="card-footer">
+									<div class="form-group">
+										<label class="form-label h6">Konfirmasi & Simpan</label>
+										<div class="input-group">
+											<input type="text" class="form-control form-control-sm" placeholder="ketik username Anda di sini" id="validasi" name="validasi"required>
+											<div class="input-group-append">
+												<a class="btn btn-sm btn-warning" href="" role="button"><i class="fal fa-times text-align-center mr-1"></i>Batalkan</a>
+											</div>
+											<div class="input-group-append">
+												<button class="btn btn-sm btn-primary" type="submit" onclick="return validateInput()">
+													<i class="fas fa-upload text-align-center mr-1"></i>Simpan
+												</button>
+											</div>
 										</div>
-										<div class="input-group-append">
-											<button class="btn btn-sm btn-primary" type="submit" onclick="return validateInput()">
-												<i class="fas fa-upload text-align-center mr-1"></i>Simpan
-											</button>
-										</div>
+										<span class="help-block">Dengan ini kami menyatakan verifikasi pada bagian ini telah SELESAI.</span>
 									</div>
-									<span class="help-block">Dengan ini kami menyatakan verifikasi pada bagian ini telah SELESAI.</span>
 								</div>
-							</div>
-						</form>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -573,6 +484,16 @@
 	</script>
 	<!-- gallery Tanam -->
 
+	<script>
+		$(document).ready(function() {
+			// Initialize datatable dataPengajuan
+			var table = $('#dataVerif').DataTable({
+				responsive: true,
+				ordering: false,
+				dom:'',
+			});
+		});
+	</script>
 	<script>
 		function validateInput() {
 			// get the input value and the current username from the page

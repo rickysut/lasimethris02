@@ -212,7 +212,7 @@
 						<h2>Hasil Pemeriksaan</h2>
 					</div>
 					<div class="panel-container show">
-						<form action="{{route('admin.task.verifikasiv2.online.location.update',$veriflokasi->id)}}" method="post" enctype="multipart/form-data">
+						<form action="{{route('admin.task.onlinev2.location.update',$veriflokasi->id)}}" method="post" enctype="multipart/form-data">
 							@csrf
 							@method('PUT')
 							<div class="panel-content">
@@ -226,26 +226,15 @@
 											<input type="text" name="anggotamitra_id" value="{{$veriflokasi->anggotamitra_id}}">
 										</div>
 										<div class="form-group">
-											<label for="">Pemeriksaan Dokumen</label>
-											<select name="datastatus" id="datastatus" class="form-control-sm form-control" required>
-												<option value="" hidden>--pilih status</option>
-												<option value="Sesuai"
-														{{ $veriflokasi && $veriflokasi->datastatus == 'Sesuai' ? 'selected' : '' }}>
-														Sesuai
-													</option>
-													<option value="Tidak Sesuai"
-														{{ $veriflokasi && $veriflokasi->datastatus == 'Tidak Sesuai' ? 'selected' : '' }}>
-														Tidak Sesuai
-													</option>
-											</select>
-											<small id="helpId" class="text-muted">Pilih status periksa.</small>
-										</div>
-										<div class="form-group">
 											<label for="">Status</label>
 											<select name="onlinestatus" id="onlinestatus" class="form-control-sm form-control" required>
 												<option value="" hidden>--pilih status</option>
 												<option value="Selesai"
 													{{ $veriflokasi && $veriflokasi->onlinestatus == 'Selesai' ? 'selected' : '' }}>
+													Selesai
+												</option>
+												<option value="Perbaikan"
+													{{ $veriflokasi && $veriflokasi->onlinestatus == 'Perbaikan' ? 'selected' : '' }}>
 													Selesai
 												</option>
 											</select>
@@ -254,7 +243,7 @@
 									</div>
 									<div class="form-group col-md-6">
 										<label for="">Catatan Pemeriksaan</label>
-										<textarea class="form-control form-control-sm" name="onlinenote" id="onlinenote" rows="12" required>{{ old('onlinenote', $veriflokasi ? $veriflokasi->onlinenote : '') }}</textarea>
+										<textarea class="form-control form-control-sm" name="onlinenote" id="onlinenote" rows="7" required>{{ old('onlinenote', $veriflokasi ? $veriflokasi->onlinenote : '') }}</textarea>
 										<small id="helpId" class="text-muted">Berikan catatan hasil pemeriksaan secara administratif atas data dan dokumen yang diunggah.</small>
 									</div>
 								</div>

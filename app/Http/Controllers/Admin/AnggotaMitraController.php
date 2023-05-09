@@ -89,7 +89,7 @@ class AnggotaMitraController extends Controller
 		$commitment = CommitmentBackdate::with('pksmitra.anggotamitras')
 			->where('user_id', Auth::id())
 			->findOrFail($anggotamitras->commitmentbackdate_id);
-		if (!$commitment->status) {
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
 			$disabled = false; // input di-enable
 		} else {
 			$disabled = true; // input di-disable

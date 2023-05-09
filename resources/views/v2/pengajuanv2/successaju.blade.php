@@ -37,7 +37,7 @@
 						</tbody>
 					</table>
 				</div>
-				<p>Anda dapat melihat dan melacak status pengajuan permohonan Anda pada menu <a href="{{route('admin.task.pengajuanv2.index')}}">Permohonan</a>.</p>
+				<p>Anda dapat melihat dan melacak status pengajuan permohonan Anda pada menu <a href="{{route('admin.task.submission')}}">Permohonan</a>.</p>
 			</div>
 		</div>
 

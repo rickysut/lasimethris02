@@ -27,6 +27,8 @@ function inituserMap() {
 		userMap.setZoom(18);
 		google.maps.event.addListener(marker, "click", function () {
 			userMap.setCenter(marker.getPosition());
+			document.getElementById("latitude").value = marker.getPosition().lat();
+			document.getElementById("longitude").value = marker.getPosition().lng();
 		});
 	}
 
@@ -36,13 +38,23 @@ function inituserMap() {
 		userpolys = JSON.parse(userpolys);
 		var userpoly = new google.maps.Polygon({
 			paths: userpolys,
-			strokeColor: "#FF0000",
-			strokeOpacity: 0.8,
+			strokeColor: "#ffd900",
+			strokeOpacity: 1,
 			strokeWeight: 2,
-			fillColor: "#FF0000",
+			fillColor: "#ffd900",
 			fillOpacity: 0.35,
 			editable: false,
 			map: userMap,
+		});
+		// add listener for polygon click event
+		google.maps.event.addListener(userpoly, "click", function () {
+			// change the value of polygon input field
+			document.getElementById("polygon").value = JSON.stringify(
+				userpoly.getPaths().getArray()
+			);
+			// calculate and display the area of the polygon
+			var luas = google.maps.geometry.spherical.computeArea(userpoly.getPath());
+			document.getElementById("luas_kira").value = (luas / 10000).toFixed(2);
 		});
 	}
 }

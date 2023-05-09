@@ -290,7 +290,7 @@
 						<h2>Hasil Pemeriksaan</h2>
 					</div>
 					<div class="panel-container show">
-						<form action="{{route('admin.task.verifikasiv2.online.location.store')}}" method="post" enctype="multipart/form-data">
+						<form action="{{route('admin.task.onlinev2.location.store')}}" method="post" enctype="multipart/form-data">
 							@csrf
 							<div class="panel-content">
 								<div class="row">
@@ -301,7 +301,7 @@
 										<input type="text" name="anggotamitra_id" value="{{$anggotamitra->id}}" hidden>
 										<div class="form-group">
 											<label for="">Pemeriksaan Dokumen</label>
-											<select name="datastatus" id="datastatus" class="form-control-sm form-control" required>
+											<select name="datastatus" id="datastatus" class="form-control-sm form-control">
 												<option value="" hidden>--pilih status</option>
 												<option value="Sesuai">Sesuai</option>
 												<option value="Tidak Sesuai">Tidak Sesuai</option>
@@ -313,6 +313,7 @@
 											<select name="onlinestatus" id="onlinestatus" class="form-control-sm form-control">
 												<option value="" hidden>--pilih status</option>
 												<option value="Selesai">Selesai</option>
+												<option value="Perbaikan">Perbaikan</option>
 											</select>
 											<small id="helpId" class="text-muted">Pilih status Pemeriksaan (biarkan kosong jika belum selesai diperiksa).</small>
 										</div>

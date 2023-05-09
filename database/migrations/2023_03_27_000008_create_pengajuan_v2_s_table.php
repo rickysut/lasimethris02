@@ -18,8 +18,10 @@ return new class extends Migration
 			$table->unsignedBigInteger('commitmentbackdate_id');
 			$table->string('no_pengajuan');
 			$table->enum('jenis', ['Verifikasi', 'SKL'])->nullable(); //Verifikasi, SKL
-			$table->string('status')->nullable(); //1 Diajukan, 2 Diperiksa, 3 Selesai-, 4 Selesai+
+			$table->string('status')->nullable(); //
 			$table->text('note')->nullable();
+			$table->double('luas_verif', 8, 2)->nullable();
+			$table->double('volume_verif', 8, 2)->nullable();
 			$table->string('onlinestatus')->nullable();
 			$table->text('onlinenote')->nullable();
 			$table->date('onlinedate')->nullable();

@@ -113,7 +113,7 @@ class PksMitraController extends Controller
 		$masteranggotas = MasterAnggota::where('master_kelompok_id', $pksmitra->master_kelompok_id)->get();
 		$anggotamitras = AnggotaMitra::where('pks_mitra_id', $id)->get();
 
-		if (!$commitment->status) {
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
 			$disabled = false; // input di-enable
 		} else {
 			$disabled = true; // input di-disable
@@ -148,7 +148,7 @@ class PksMitraController extends Controller
 		$masterkelompoks = MasterKelompok::all();
 		// dd($masterkelompoks);
 
-		if (!$commitment->status) {
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
 			$disabled = false; // input di-enable
 		} else {
 			$disabled = true; // input di-disable
