@@ -41,6 +41,7 @@ class CommitmentBackdateController extends Controller
 		$masterpenangkars = MasterPenangkar::all();
 		$user = Auth::user();
 		$commitments = CommitmentBackdate::where('user_id', $user->id)->get();
+		// dd($user);
 
 		return view('v2.commitment.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'user', 'commitments', 'masterpenangkars'));
 	}

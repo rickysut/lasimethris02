@@ -194,7 +194,7 @@ class OnlineV2Controller extends Controller
 		// dd($verifpks);
 		$verifpks->save();
 
-		return redirect()->route('admin.task.verifikasiv2.online.check', [$verifpks->pengajuan_id, $verifpks->commitmentbackdate_id])
+		return redirect()->route('admin.task.onlinev2.check', [$verifpks->pengajuan_id, $verifpks->commitmentbackdate_id])
 			->with('success', 'Hasil Pemeriksaan PKS Kemitraan berhasil diubah.');
 	}
 

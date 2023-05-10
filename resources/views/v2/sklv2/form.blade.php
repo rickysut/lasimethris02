@@ -116,6 +116,8 @@
  ha;</dt>
 							<dd class="col-sm-3">Realisasi</dd>
 							<dt class="col-sm-9">: {{number_format($total_luastanam,2,'.',',')}} ha.</dt>
+							<dd class="col-sm-3">Verifikasi</dd>
+							<dt class="col-sm-9">: {{number_format($pengajuan->luas_verif,2,'.',',')}} ha.</dt>
 						</dl>
 					</dt>
 					<dd class="col-sm-3">Wajib Produksi</dd>
@@ -125,6 +127,8 @@
 							<dt class="col-sm-9">: {{ number_format($commitment->volume_riph * 0.05, 2, '.', ',') }} ton;</dt>
 							<dd class="col-sm-3">Realisasi</dd>
 							<dt class="col-sm-9">: {{number_format($total_produksi,2,'.',',')}} ton.</dt>
+							<dd class="col-sm-3">Verifikasi</dd>
+							<dt class="col-sm-9">: {{number_format($pengajuan->volume_verif,2,'.',',')}} ton.</dt>
 						</dl>
 					</dt>
 				</dl>

@@ -104,7 +104,7 @@
 									<div class="col-12 text-center mb-1">
 										<span class="icon-stack icon-stack-sm">
 											<i class="base-7 icon-stack-3x color-success-700"></i>
-											<i class="fal fa-awad icon-stack-1x text-white"></i>
+											<i class="fal fa-award icon-stack-1x text-white"></i>
 										</span>
 									</div>
 									<div class="col-12 text-center">

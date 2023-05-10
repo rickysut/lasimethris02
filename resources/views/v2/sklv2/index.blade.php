@@ -54,6 +54,7 @@
 													data-original-title="Belum diterbitkan">
 														<i class="fa fa-exclamation-circle"></i>
 													</span>
+													{{$pengajuan->status}}
 													<span hidden>2</span>
 												@else
 													<span class="badge btn-xs btn-icon btn-warning" data-toggle="tooltip"

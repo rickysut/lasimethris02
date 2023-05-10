@@ -46,6 +46,6 @@ class PengajuanV2 extends Model
 
 	public function sklv2()
 	{
-		return $this->belongsTo(Sklv2::class, 'id', 'pengajuan_id');
+		return $this->hasOne(Sklv2::class, 'pengajuan_id', 'id');
 	}
 }

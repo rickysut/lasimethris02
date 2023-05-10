@@ -333,8 +333,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::get('sklv2/{id}/edit', 'SklV2Controller@edit')->name('sklv2.edit');
 		Route::put('sklv2/{id}/update', 'SklV2Controller@update')->name('sklv2.update');
 		Route::get('sklv2/{id}/show', 'SklV2Controller@show')->name('sklv2.show');
-
-		// Route::put('verifikasi/backdate/online/{verifikasi}/update', 'VerifikasiV2Controller@update')->name('verifikasiv2.online.update');
 	});
 
 

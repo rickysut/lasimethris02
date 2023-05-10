@@ -161,7 +161,7 @@
 									@include('partials.globaltoolbar')
 								</div>
 							</div>
-							<form action="{{route('admin.task.verifikasiv2.online.pks.update', $verifpks->id)}}" method="POST" enctype="multipart/form-data">
+							<form action="{{route('admin.task.onlinev2.pks.update', $verifpks->id)}}" method="POST" enctype="multipart/form-data">
 								@csrf
 								@method('PUT')
 								<div class="panel-container show">

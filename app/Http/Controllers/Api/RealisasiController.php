@@ -7,8 +7,10 @@ use App\Models\AnggotaMitra;
 use App\Models\Commitment;
 use App\Models\Commitmentbackdate;
 use App\Models\PenangkarMitra;
+use App\Models\PengajuanV2;
 use App\Models\PksMitra;
 use App\Models\User;
+use App\Models\DataUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -89,6 +91,12 @@ class RealisasiController extends Controller
 
 				$count_pksmitra = $user->commitmentbackdate->flatMap->pksmitra->count();
 
+				$sumVerifTanam = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))->sum('luas_verif');
+				$sumVerifProduksi = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))->sum('volume_verif');
+
+				$onlinestatus = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'));
+				$onfarmstatus = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'));
+
 				$results[] = [
 					'id' => $user->id,
 					// 'periode_tahun' => $periodeTahun,
@@ -98,6 +106,11 @@ class RealisasiController extends Controller
 					'total_poktan' => $total_poktan,
 					'count_pksmitra' => $count_pksmitra,
 					'total_anggotamitras' => $total_anggotamitras,
+					'sumVerifTanam' => $sumVerifTanam,
+					'sumVerifProduksi' => $sumVerifProduksi,
+					'onlinestatus' => $onlinestatus,
+					'onfarmstatus' => $onfarmstatus,
+
 				];
 			}
 		}
@@ -138,6 +151,9 @@ class RealisasiController extends Controller
 
 				$count_pksmitra = $u->commitmentbackdate->flatMap->pksmitra->count();
 
+				$sumVerifTanam = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))->sum('luas_verif');
+				$sumVerifProduksi = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))->sum('volume_verif');
+
 
 				$results[] = [
 					'id' => $u->id,
@@ -147,6 +163,9 @@ class RealisasiController extends Controller
 					'total_poktan' => $total_poktan,
 					'count_pksmitra' => $count_pksmitra,
 					'total_anggotamitras' => $total_anggotamitras,
+					'sumVerifTanam' => $sumVerifTanam,
+					'sumVerifProduksi' => $sumVerifProduksi,
+
 				];
 			}
 		}
@@ -154,24 +173,64 @@ class RealisasiController extends Controller
 		return response()->json($results);
 	}
 
-	public function getVerifiedbyYear($periodeTahun)
-	{
-		$currentUser = Auth::user();
-		$users = User::where('id', $currentUser->id)->with(['commitmentbackdate' => function ($query) use ($periodeTahun) {
-			$query->where('periodetahun', $periodeTahun);
-		}, 'commitmentbackdate.pksmitra.anggotamitras'])->get();
-
-		$results = [];
-	}
-
-	public function getVerifiedAll()
+	public function getApiVerifiedbyYear($periodeTahun)
 	{
 		$user = Auth::user();
-		$users = User::where('id', $user->id)
-			->with(['commitmentbackdate.pksmitra.anggotamitras'])
+		$commitments = CommitmentBackdate::where('user_id', $user->id)
+			->with(['pengajuanV2', 'sklV2'])
+			->whereHas('pengajuanV2', function ($query) use ($periodeTahun) {
+				$query->where('periodetahun', $periodeTahun);
+			})
 			->get();
-		$results = [];
+
+		// Retrieve additional related models
+		$pengajuanV2s = [];
+		$sklV2s = [];
+
+		foreach ($commitments as $commitment) {
+			$pengajuanV2s = array_merge($pengajuanV2s, $commitment->pengajuanV2->toArray());
+			$sklV2s[] = $commitment->sklV2 ? $commitment->sklV2->toArray() : null;
+		}
+
+		$combinedData = [
+			'user' => $user,
+			'commitments' => $commitments,
+			'pengajuanV2s' => $pengajuanV2s,
+			'sklV2s' => $sklV2s,
+		];
+
+		// Return the combined data as JSON response
+		return response()->json($combinedData);
 	}
+
+
+	public function getAPIVerifiedAll()
+	{
+		$user = Auth::user();
+		$commitments = CommitmentBackdate::where('user_id', $user->id)
+			->with(['pengajuanV2', 'sklV2'])
+			->get();
+
+		// Retrieve additional related models
+		$pengajuanV2s = [];
+		$sklV2s = [];
+
+		foreach ($commitments as $commitment) {
+			$pengajuanV2s = array_merge($pengajuanV2s, $commitment->pengajuanV2->toArray());
+			$sklV2s[] = $commitment->sklV2 ? $commitment->sklV2->toArray() : null;
+		}
+
+		$combinedData = [
+			'user' => $user,
+			'commitments' => $commitments,
+			'pengajuanV2s' => $pengajuanV2s,
+			'sklV2s' => $sklV2s,
+		];
+
+		// Return the combined data as JSON response
+		return response()->json($combinedData);
+	}
+
 
 
 	/**

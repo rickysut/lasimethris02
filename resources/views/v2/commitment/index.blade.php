@@ -94,7 +94,42 @@
 									@endif
 								</td>
 								<td class="justify-content-center">
-									<span class="badge btn-primary btn-icon btn-xs" title="verifikasi">{{$commitment->status}}</span>
+									@if (empty($commitment->status))
+										<span class="badge btn-warning btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Belum Mengajukan Verifikasi">
+											<i class="fal fa-exclamation-circle"></i>
+										</span>
+									@elseif ($commitment->status === '1')
+										<span class="badge btn-primary btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Verifikasi sudah diajukan">
+											<i class="fal fa-hourglass"></i>
+										</span>
+									@elseif ($commitment->status === '2')
+										<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Verifikasi Data Selesai">
+											<i class="fal fa-check-circle"></i>
+										</span>
+									@elseif ($commitment->status === '3')
+										<span class="badge btn-danger btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Maaf. Verifikasi Data tidak dapat dilanjutkan. Perbaiki Data Anda terlebih dahulu">
+											<i class="fa fa-exclamation-circle"></i>
+										</span>
+									@elseif ($commitment->status === '4')
+										<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Verifikasi Lapangan Selesai">
+											<i class="fal fa-map-marker-check"></i>
+										</span>
+									@elseif ($commitment->status === '5')
+										<span class="badge btn-danger btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Maaf. Verifikasi Lapangan tidak dapat dilanjutkan. Perbaiki Data Anda terlebih dahulu">
+											<i class="fal fa-exclamation-circle"></i>
+										</span>
+									@elseif ($commitment->status === '6')
+										<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Hore!. SKL Telah Terbit">
+											<i class="fal fa-award"></i>
+										</span>
+									@endif
 								</td>
 							</tr>
 							@endforeach

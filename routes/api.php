@@ -38,4 +38,8 @@ Route::group(['namespace' => 'Api'], function () {
 
     //data pksmitra
     Route::get('getApiPksMitraAll', 'getPksMitra@getApiPksMitraAll');
+
+    //data Verifikasi v2
+    Route::get('getApiVerifikasiByYear/{periodetahun}', 'RealisasiController@getApiVerifiedbyYear');
+    Route::get('getAPIVerifiedAll', 'RealisasiController@getAPIVerifiedAll');
 });

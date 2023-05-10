@@ -181,7 +181,7 @@
 								<div class="ml-2">
 									<span class="small">Diverifikasi</span>
 									<h5 class="d-block l-h-n m-0 fw-500">
-										123.456.789 ha
+										<span id="sumVerifTanam"></span> ha
 									</h5>
 								</div>
 								<i class="fal fa-leaf position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:3rem"></i>
@@ -244,7 +244,7 @@
 								<div class="ml-2">
 									<span class="small">Diverifikasi</span>
 									<h5 class="d-block l-h-n m-0 fw-500">
-										123.456.789 ha
+										<span id="sumVerifProduksi"></span> ton
 									</h5>
 								</div>
 								<i class="fal fa-dolly-flatbed position-absolute pos-right pos-bottom opacity-30 mb-n1 mr-n1" style="font-size:3rem"></i>
@@ -269,42 +269,18 @@
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<div class="table-responsive">
-						<table id="sum_verif"  class="table table-bordered ajaxTable table-hover datatable table-sm w-100">
-                            <thead  class="bg-primary-100 text-white text-center align-items-center">
-								<tr>
-									<th rowspan="2">Nomor RIPH</th>
-									<th colspan="2">
-										<div class="col-12">Tahap 1</div>
-										<div class="col-12 small">Verifikasi Lapangan</div>
-									</th>
-									<th rowspan="2">
-										<div class="col-12">Tahap 2</div>
-										<div class="col-12 small">Verifikasi Data</div>
-									</th>
-									<th rowspan="2">
-										<div class="col-12">Tahap 3</div>
-										<div class="col-12 small">Penerbitan SKL</div>
-									</th>
-									<th rowspan="2">Status</th>
-								</tr>
-								<tr>
-									<th>Tanam</th>
-									<th>Produksi</th>
-								</tr>
-							</thead>
-							<tbody class="text-center">
-								<tr>
-									<td><a href="/pengajuan/submitted">xxxx/PP.240/D/MM/YYY</a></td>
-									<td><span class="badge btn-sm btn-success">Verified</span></td>
-									<td><span class="badge btn-sm btn-danger">Verified</span></td>
-									<td><span class="badge btn-sm btn-warning">On progress</span></td>
-									<td><span class="badge btn-sm btn-info">Submitted</span></td>
-									<td>Verifying</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+					<table class="table table-hover table-striped table-bordered w-100" id="verifprogress">
+						<thead>
+							<th>Nomor Pengajuan</th>
+							<th>Nomor RIPH</th>
+							<th>Verifikasi Data</th>
+							<th>Verifikasi Lapangan</th>
+							<th>Penerbitan SKL</th>
+							<th>Progress</th>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -321,44 +297,122 @@
 	  $('#periodetahun').change(function() {
 		var periodetahun = $(this).val();
 		var url = '/api/getAPIRealisasiByYear/' + periodetahun;
+		var verificationUrl = '/api/getAPIVerifiedByYear/' + periodetahun;
 	
 		if (periodetahun == '') return;
 		if (periodetahun == 'all') {
 		  url = '/api/getAPIRealisasiAll';
+		  verificationUrl = '/api/getAPIVerifiedAll'
 		}
 	
 		$.get(url, function(data) {
-		  $('#userId').text(data[0].id);
-		  $('#volume_riph').text(data[0].total_import.toLocaleString('en-US'));
-		  $('#total_poktan').text(data[0].total_poktan);
-		  $('#total_volume').text(data[0].total_volume.toLocaleString('en-US'));
-		  $('#total_luastanam').text(data[0].total_luastanam.toLocaleString('en-US'));
-		  $('#total_anggotamitras').text(data[0].total_anggotamitras);
-	
-		  var wajibProduksi = (data[0].total_import * 0.05);
-		  $('#wajibProduksi').text(wajibProduksi.toLocaleString('en-US', { maximumFractionDigits: 2 }));
-	
-		  var wajibTanam = (data[0].total_import*0.05/6);
-		  $('#wajibTanam').text(wajibTanam.toLocaleString('en-US', { maximumFractionDigits: 2 }));
-	
-		  var realisasiTanam = (data[0].total_luastanam / (data[0].total_import*0.05/6)*100);
-		  $('#realisasiTanam').text(realisasiTanam.toLocaleString('en-US', { maximumFractionDigits: 2 }));
-	
-		  var realisasiProduksi = (data[0].total_volume / (data[0].total_import*0.05)*100).toFixed(2);
-		  $('#realisasiProduksi').text(realisasiProduksi.toLocaleString('en-US', { maximumFractionDigits: 2 }));
-	
-		  $('#naschartTanam').attr('data-percent', realisasiTanam);
-		  $('#naschartTanam').attr('data-original-title', realisasiTanam  + '% dari kewajiban');
-		  var $chartTanam = $('#naschartTanam');
-		  $chartTanam.data('easyPieChart').update(realisasiTanam);
-	
-		  $('#naschartProduksi').attr('data-percent', realisasiProduksi);
-		  $('#naschartProduksi').attr('data-original-title', realisasiProduksi + '% dari kewajiban');
-		  var $chartProduksi = $('#naschartProduksi');
-		  $chartProduksi.data('easyPieChart').update(realisasiProduksi);
+			$('#userId').text(data[0].id);
+			$('#volume_riph').text(data[0].total_import.toLocaleString('en-US'));
+			$('#total_poktan').text(data[0].total_poktan);
+			$('#total_volume').text(data[0].total_volume.toLocaleString('en-US'));
+			$('#total_luastanam').text(data[0].total_luastanam.toLocaleString('en-US'));
+			$('#total_anggotamitras').text(data[0].total_anggotamitras);
+			$('#sumVerifTanam').text(data[0].sumVerifTanam.toLocaleString('en-US'));
+			$('#sumVerifProduksi').text(data[0].sumVerifProduksi.toLocaleString('en-US'));
+
+			var wajibProduksi = (data[0].total_import * 0.05);
+			$('#wajibProduksi').text(wajibProduksi.toLocaleString('en-US', { maximumFractionDigits: 2 }));
+
+			var wajibTanam = (data[0].total_import*0.05/6);
+			$('#wajibTanam').text(wajibTanam.toLocaleString('en-US', { maximumFractionDigits: 2 }));
+
+			var realisasiTanam = (data[0].total_luastanam / (data[0].total_import*0.05/6)*100);
+			$('#realisasiTanam').text(realisasiTanam.toLocaleString('en-US', { maximumFractionDigits: 2 }));
+
+			var realisasiProduksi = (data[0].total_volume / (data[0].total_import*0.05)*100).toFixed(2);
+			$('#realisasiProduksi').text(realisasiProduksi.toLocaleString('en-US', { maximumFractionDigits: 2 }));
+
+			$('#naschartTanam').attr('data-percent', realisasiTanam);
+			$('#naschartTanam').attr('data-original-title', realisasiTanam  + '% dari kewajiban');
+			var $chartTanam = $('#naschartTanam');
+			$chartTanam.data('easyPieChart').update(realisasiTanam);
+
+			$('#naschartProduksi').attr('data-percent', realisasiProduksi);
+			$('#naschartProduksi').attr('data-original-title', realisasiProduksi + '% dari kewajiban');
+			var $chartProduksi = $('#naschartProduksi');
+			$chartProduksi.data('easyPieChart').update(realisasiProduksi);
 		});
-	  });
+
+		$.get(verificationUrl, function(verificationData) {
+			var tableBody = $('#verifprogress tbody');
+			tableBody.empty(); // Clear the table body
+
+			verificationData.commitments.forEach(function(commitment) {
+				// var nomorRIPH = commitment.no_ijin;
+				var pengajuanV2s = verificationData.pengajuanV2s.filter(function(pengajuan) {
+					return pengajuan.commitmentbackdate_id === commitment.id;
+				});
+
+				if (pengajuanV2s.length >0) {
+					pengajuanV2s.forEach(function(pengajuan) {
+						var row = $('<tr></tr>');
+						var noAju = $('<td></td>').text(pengajuan.no_pengajuan)
+						var noIjin = $('<td></td>').text(commitment.no_ijin)
+						var verifikasiData = $('<td class="text-center"></td>').html(function() {
+							if (!pengajuan.status) {
+								return '<span class="badge badge-xs badge-warning"><i class="fal fa-exclamation-circle mr-1"></i>Belum diajukan</span>';
+							} else if (!pengajuan.onlinestatus) {
+								return '<span class="badge badge-xs badge-primary"><i class="fal fa-check-circle mr-1"></i>Diajukan</span>';
+							} else if (pengajuan.onlinestatus === '1') {
+								return '<span class="badge badge-xs badge-success"><i class="fal fa-check-circle mr-1"></i>Selesai</span>';
+							} else if (pengajuan.onlinestatus === '2') {
+								return '<span class="badge badge-xs badge-danger"><i class="fal fa-ban mr-1"></i>Perbaikan</span>';
+							}
+						});
+
+						var verifikasiLapangan = $('<td class="text-center"></td>').html(function() {
+							if (!pengajuan.status && !pengajuan.onlinestatus && !pengajuan.onfarmstatus) {
+								return '<span class="badge badge-xs badge-warning"><i class="fal fa-exclamation-circle mr-1"></i>Belum diajukan</span>';
+							} else if (pengajuan.status && !pengajuan.onlinestatus && !pengajuan.onfarmstatus) {
+								return '<span class="badge badge-xs badge-info"><i class="fal fa-hourglass mr-1"></i>Menunggu</span>';
+							} else if (pengajuan.status && pengajuan.onlinestatus === '1' && !pengajuan.onfarmstatus) {
+								return '<span class="badge badge-xs badge-info"><i class="fal fa-hourglass mr-1"></i>Menunggu</span>';
+							} else if (pengajuan.status && pengajuan.onlinestatus === '2' && !pengajuan.onfarmstatus) {
+								return '<span class="badge badge-xs badge-secondary"><i class="fal fa-times-circle mr-1"></i>Batal Periksa</span>';
+							} else if (pengajuan.status && pengajuan.onlinestatus === '1' && pengajuan.onfarmstatus === '1') {
+								return '<span class="badge badge-xs badge-success"><i class="fal fa-check-circle mr-1"></i>Selesai</span>';
+							} else if (pengajuan.status && pengajuan.onlinestatus === '1' && pengajuan.onfarmstatus === '2') {
+								return '<span class="badge badge-xs badge-danger"><i class="fal fa-ban mr-1"></i>Perbaikan</span>';
+							}
+						});
+						var penerbitanSKL = $('<td></td>').html(function() {
+							if (!pengajuan.status && !pengajuan.onlinestatus && !pengajuan.onfarmstatus) {
+								return '<span class="badge badge-xs badge-warning"><i class="fal fa-exclamation-circle mr-1"></i>Belum diajukan</span>';
+							} else if (pengajuan.status && pengajuan.onlinestatus === '2' && !pengajuan.onfarmstatus) {
+								return '<span class="badge badge-xs badge-secondary"><i class="fal fa-times-circle mr-1"></i>Batal Periksa</span>';
+							} else if (pengajuan.status === '6' && pengajuan.onlinestatus === '1' && pengajuan.onfarmstatus === '1') {
+								return '<span class="badge badge-xs badge-success"><i class="fal fa-file-certificate mr-1"></i>SKL Terbit</span>';
+							} else if (pengajuan.onlinestatus === '1' && pengajuan.onfarmstatus === '2') {
+								return '<span class="badge badge-xs badge-secondary"><i class="fal fa-times-circle mr-1"></i>Batal Periksa</span>';
+							} else {
+								return '<span class="badge badge-xs badge-info"><i class="fal fa-hourglass mr-1"></i>Menunggu</span>';
+							}
+						});
+						var progress = $('<td></td>').html(function() {
+							if (pengajuan.status === '1') {
+								return '<span class="badge badge-xs badge-info"><i class="fal fa-upload mr-1"></i>Pengajuan</span>';
+							} else if (pengajuan.status === '2' || pengajuan.status === '3') {
+								return '<span class="badge badge-xs badge-primary"><i class="fal fa-file-search mr-1"></i>Verifikasi Data</span>';
+							} else if (pengajuan.status === '4' || pengajuan.status === '5') {
+								return '<span class="badge badge-xs badge-warning"><i class="fal fa-map-marker-check mr-1"></i>Verifikasi Lapangan</span>';
+							} else if (pengajuan.status === '6') {
+								return '<span class="badge badge-xs badge-success"><i class="fal fa-award mr-1"></i>Lunas</span>';
+							} else {
+								return '';
+							}
+						});
+						row.append(noAju, noIjin, verifikasiData, verifikasiLapangan, penerbitanSKL, progress); tableBody.append(row);
+					});
+				}
+			});
+		});
 	});
-	</script>
+});
+</script>
 
 @endsection
