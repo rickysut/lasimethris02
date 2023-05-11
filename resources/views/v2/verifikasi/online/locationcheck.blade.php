@@ -300,15 +300,6 @@
 										<input type="text" name="verifpks_id" value="{{$verifpks->id}}" hidden>
 										<input type="text" name="anggotamitra_id" value="{{$anggotamitra->id}}" hidden>
 										<div class="form-group">
-											<label for="">Pemeriksaan Dokumen</label>
-											<select name="datastatus" id="datastatus" class="form-control-sm form-control">
-												<option value="" hidden>--pilih status</option>
-												<option value="Sesuai">Sesuai</option>
-												<option value="Tidak Sesuai">Tidak Sesuai</option>
-											</select>
-											<small id="helpId" class="text-muted">Pilih status periksa.</small>
-										</div>
-										<div class="form-group">
 											<label for="">Statu Periksa</label>
 											<select name="onlinestatus" id="onlinestatus" class="form-control-sm form-control">
 												<option value="" hidden>--pilih status</option>

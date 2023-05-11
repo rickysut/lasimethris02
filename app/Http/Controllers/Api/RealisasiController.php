@@ -91,8 +91,12 @@ class RealisasiController extends Controller
 
 				$count_pksmitra = $user->commitmentbackdate->flatMap->pksmitra->count();
 
-				$sumVerifTanam = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))->sum('luas_verif');
-				$sumVerifProduksi = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))->sum('volume_verif');
+				$VerifTanam = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))
+					->where('status', '6')
+					->sum('luas_verif');
+				$VerifProduksi = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))
+					->where('status', '6')
+					->sum('volume_verif');
 
 				$onlinestatus = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'));
 				$onfarmstatus = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'));
@@ -106,11 +110,8 @@ class RealisasiController extends Controller
 					'total_poktan' => $total_poktan,
 					'count_pksmitra' => $count_pksmitra,
 					'total_anggotamitras' => $total_anggotamitras,
-					'sumVerifTanam' => $sumVerifTanam,
-					'sumVerifProduksi' => $sumVerifProduksi,
-					'onlinestatus' => $onlinestatus,
-					'onfarmstatus' => $onfarmstatus,
-
+					'VerifTanam' => $VerifTanam,
+					'VerifProduksi' => $VerifProduksi,
 				];
 			}
 		}
@@ -151,8 +152,12 @@ class RealisasiController extends Controller
 
 				$count_pksmitra = $u->commitmentbackdate->flatMap->pksmitra->count();
 
-				$sumVerifTanam = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))->sum('luas_verif');
-				$sumVerifProduksi = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))->sum('volume_verif');
+				$VerifTanam = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))
+					->where('status', '6')
+					->sum('luas_verif');
+				$VerifProduksi = PengajuanV2::whereIn('commitmentbackdate_id', $user->commitmentbackdate->pluck('id'))
+					->where('status', '6')
+					->sum('volume_verif');
 
 
 				$results[] = [
@@ -163,9 +168,8 @@ class RealisasiController extends Controller
 					'total_poktan' => $total_poktan,
 					'count_pksmitra' => $count_pksmitra,
 					'total_anggotamitras' => $total_anggotamitras,
-					'sumVerifTanam' => $sumVerifTanam,
-					'sumVerifProduksi' => $sumVerifProduksi,
-
+					'VerifTanam' => $VerifTanam,
+					'VerifProduksi' => $VerifProduksi,
 				];
 			}
 		}
@@ -173,7 +177,7 @@ class RealisasiController extends Controller
 		return response()->json($results);
 	}
 
-	public function getApiVerifiedbyYear($periodeTahun)
+	public function getAPIVerifiedByYear($periodeTahun)
 	{
 		$user = Auth::user();
 		$commitments = CommitmentBackdate::where('user_id', $user->id)
@@ -231,7 +235,165 @@ class RealisasiController extends Controller
 		return response()->json($combinedData);
 	}
 
+	public function MonitoringDataByYear($periodeTahun)
+	{
+		$commitments = CommitmentBackdate::where('periodetahun', $periodeTahun)->get();
+		$ajucommit = $commitments->filter(function ($commitment) {
+			return $commitment->status == '1';
+		})->count();
 
+
+		// dd($ajucommit);
+		$total_commit = $commitments->count();
+
+		$total_import = $commitments->sum('volume_riph');
+
+		$total_luastanam = 0;
+		$total_volume = 0;
+		$luasverif = 0;
+		$volumeverif = 0;
+		$pengajuanV2s = [];
+		$sklV2s = [];
+		foreach ($commitments as $commitment) {
+			foreach ($commitment->anggotamitras as $anggotamitra) {
+				if (!empty($commitment->status)) {
+					$total_luastanam += $anggotamitra->luas_tanam;
+					$total_volume += $anggotamitra->volume;
+				}
+			}
+
+			foreach ($commitment->pengajuanV2->where('status', '6') as $pengajuan) {
+				$luasverif += $pengajuan->luas_verif;
+				$volumeverif += $pengajuan->volume_verif;
+			}
+			$pengajuanV2s = array_merge($pengajuanV2s, $commitment->pengajuanV2->map(function ($pengajuan) {
+				return [
+					'no_pengajuan' => $pengajuan->no_pengajuan,
+					'commitment' => [
+						'user' => [
+							'data_user' => [
+								'company_name' => $pengajuan->commitmentbackdate->user->data_user->company_name,
+							],
+						],
+					],
+					'no_ijin' => $pengajuan->commitmentbackdate->no_ijin,
+
+					'status' => $pengajuan->status,
+					'onlinestatus' => $pengajuan->onlinestatus,
+					'onfarmstatus' => $pengajuan->onfarmstatus,
+				];
+			})->toArray());
+
+			$sklV2s[] = $commitment->sklV2 ? $commitment->sklV2->toArray() : null;
+		}
+		$inverifcount = $commitments->filter(function ($commitment) {
+			return $commitment->pengajuanV2->where('onlinestatus', '1')->where('onfarmstatus', '')->count() > 0;
+		})->count();
+
+		$verifiedcount = $commitments->filter(function ($commitment) {
+			return $commitment->pengajuanV2->where('onfarmstatus', '!=', '')->count() > 0;
+		})->count();
+
+		$lunas = $commitments->where('status', 6)->count();
+
+		// Retrieve additional related models
+
+		$data = [
+			// 'commitments' => $commitments,
+			'total_commit' => $total_commit,
+			'ajucommit' => $ajucommit,
+			'total_import' => $total_import,
+			'total_luastanam' => $total_luastanam,
+			'total_volume' => $total_volume,
+			'luasverif' => $luasverif,
+			'volumeverif' => $volumeverif,
+			'pengajuanV2s' => $pengajuanV2s,
+			// 'sklV2s' => $sklV2s,
+			'inverifcount' => $inverifcount,
+			'verifiedcount' => $verifiedcount,
+			'lunas' => $lunas,
+		];
+
+		return response()->json($data);
+	}
+
+
+	public function MonitoringDataAll()
+	{
+		$commitments = CommitmentBackdate::all();
+		$ajucommit = $commitments->filter(function ($commitment) {
+			return $commitment->status == '1';
+		})->count();
+		// dd($commitments);
+		$total_commit = $commitments->count();
+		$total_import = $commitments->sum('volume_riph');
+
+		$total_luastanam = 0;
+		$total_volume = 0;
+		$luasverif = 0;
+		$volumeverif = 0;
+		$pengajuanV2s = [];
+		$sklV2s = [];
+
+		foreach ($commitments as $commitment) {
+			foreach ($commitment->anggotamitras as $anggotamitra) {
+				$total_luastanam += $anggotamitra->luas_tanam;
+				$total_volume += $anggotamitra->volume;
+
+				// Perform additional operations with $luasTanam and $volume if needed
+			}
+
+			foreach ($commitment->pengajuanV2->where('status', '6') as $pengajuan) {
+				$luasverif += $pengajuan->luas_verif;
+				$volumeverif += $pengajuan->volume_verif;
+			}
+			$pengajuanV2s = array_merge($pengajuanV2s, $commitment->pengajuanV2->map(function ($pengajuan) {
+				return [
+					'no_pengajuan' => $pengajuan->no_pengajuan,
+					'commitment' => [
+						'user' => [
+							'data_user' => [
+								'company_name' => $pengajuan->commitmentbackdate->user->data_user->company_name,
+							],
+						],
+					],
+					'no_ijin' => $pengajuan->commitmentbackdate->no_ijin,
+					'status' => $pengajuan->status,
+					'onlinestatus' => $pengajuan->onlinestatus,
+					'onfarmstatus' => $pengajuan->onfarmstatus,
+				];
+			})->toArray());
+			$sklV2s[] = $commitment->sklV2 ? $commitment->sklV2->toArray() : null;
+		}
+		$inverifcount = $commitments->filter(function ($commitment) {
+			return $commitment->pengajuanV2->where('onlinestatus', '1')->where('onfarmstatus', '')->count() > 0;
+		})->count();
+
+		$verifiedcount = $commitments->filter(function ($commitment) {
+			return $commitment->pengajuanV2->where('onfarmstatus', '!=', '')->count() > 0;
+		})->count();
+
+		$lunas = $commitments->where('status', 6)->count();
+
+
+		$data = [
+			'commitments' => $commitments,
+			'total_commit' => $total_commit,
+			'ajucommit' => $ajucommit,
+			'total_import' => $total_import,
+			'total_luastanam' => $total_luastanam,
+			'total_volume' => $total_volume,
+			'luasverif' => $luasverif,
+			'volumeverif' => $volumeverif,
+			'pengajuanV2s' => $pengajuanV2s,
+			// 'sklV2s' => $sklV2s,
+			'inverifcount' => $inverifcount,
+			'verifiedcount' => $verifiedcount,
+			'lunas' => $lunas,
+		];
+
+		return response()->json($data);
+	}
 
 	/**
 	 * Display the specified resource.

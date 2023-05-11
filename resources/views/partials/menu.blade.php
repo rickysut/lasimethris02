@@ -103,6 +103,12 @@
 										class="fa-fw fal fa-stamp c-sidebar-nav-icon"></i>{{ trans('cruds.dashboardAdmin.title_lang') }}
 								</a>
 							</li>
+							<li class="c-sidebar-nav-item {{ request()->is('admin/dashboard/monitoring') ? 'active' : '' }}">
+								<a href="{{ route('admin.dashboard.monitoring') }}" class="c-sidebar-nav-link"
+									data-filter-tags="{{ strtolower(trans('cruds.dashboardAdmin.title_lang')) }}">
+									<i class="fa-fw fal fa-chart-pie c-sidebar-nav-icon"></i>Moitoring Realisasi
+								</a>
+							</li>
 							<li class="c-sidebar-nav-item {{ request()->is('admin/dashboard/map') ? 'active' : '' }}">
 								<a href="{{ route('admin.dashboard.map') }}" title="Dashboard Pemetaan"
 									data-filter-tags="dashboard pemetaan">

@@ -26,6 +26,9 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('getAPIRealisasiAll', 'RealisasiController@getRealisasiAll');
     Route::get('getAPIRealisasiByYear/{periodetahun}', 'RealisasiController@getRealisasiByYear');
 
+    Route::get('getAPIMonitoringDataByYear/{periodetahun}', 'RealisasiController@MonitoringDataByYear');
+    Route::get('getAPIMonitoringDataAll', 'RealisasiController@MonitoringDataAll');
+
     Route::get('getAPIAnggotaMitraAll', 'AnggotaMitraController@index');
     Route::get('getAPIAnggotaMitraByYear/{periodetahun}', 'AnggotaMitraController@ByYears');
     Route::get('getAPIAnggotaMitra/{id}', 'AnggotaMitraController@show');
@@ -40,6 +43,6 @@ Route::group(['namespace' => 'Api'], function () {
     Route::get('getApiPksMitraAll', 'getPksMitra@getApiPksMitraAll');
 
     //data Verifikasi v2
-    Route::get('getApiVerifikasiByYear/{periodetahun}', 'RealisasiController@getApiVerifiedbyYear');
+    Route::get('getAPIVerifiedByYear/{periodetahun}', 'RealisasiController@getApiVerifiedbyYear');
     Route::get('getAPIVerifiedAll', 'RealisasiController@getAPIVerifiedAll');
 });

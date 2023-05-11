@@ -31,6 +31,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 	Route::get('/', 'HomeController@index')->name('home');
 	// Dashboard
 	Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+	Route::get('/dashboard/monitoring', 'DashboardController@monitoring')->name('dashboard.monitoring');
 	Route::get('/dashboard/map', 'DashboardController@map')->name('dashboard.map');
 	// Permissions
 	Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');

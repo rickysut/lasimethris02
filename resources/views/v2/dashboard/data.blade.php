@@ -181,7 +181,7 @@
 								<div class="ml-2">
 									<span class="small">Diverifikasi</span>
 									<h5 class="d-block l-h-n m-0 fw-500">
-										<span id="sumVerifTanam"></span> ha
+										<span id="VerifTanam"></span> ha
 									</h5>
 								</div>
 								<i class="fal fa-leaf position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1" style="font-size:3rem"></i>
@@ -244,7 +244,7 @@
 								<div class="ml-2">
 									<span class="small">Diverifikasi</span>
 									<h5 class="d-block l-h-n m-0 fw-500">
-										<span id="sumVerifProduksi"></span> ton
+										<span id="VerifProduksi"></span> ton
 									</h5>
 								</div>
 								<i class="fal fa-dolly-flatbed position-absolute pos-right pos-bottom opacity-30 mb-n1 mr-n1" style="font-size:3rem"></i>
@@ -312,8 +312,8 @@
 			$('#total_volume').text(data[0].total_volume.toLocaleString('en-US'));
 			$('#total_luastanam').text(data[0].total_luastanam.toLocaleString('en-US'));
 			$('#total_anggotamitras').text(data[0].total_anggotamitras);
-			$('#sumVerifTanam').text(data[0].sumVerifTanam.toLocaleString('en-US'));
-			$('#sumVerifProduksi').text(data[0].sumVerifProduksi.toLocaleString('en-US'));
+			$('#VerifTanam').text(data[0].VerifTanam.toLocaleString('en-US'));
+			$('#VerifProduksi').text(data[0].VerifProduksi.toLocaleString('en-US'));
 
 			var wajibProduksi = (data[0].total_import * 0.05);
 			$('#wajibProduksi').text(wajibProduksi.toLocaleString('en-US', { maximumFractionDigits: 2 }));
