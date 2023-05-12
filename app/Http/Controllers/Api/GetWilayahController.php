@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\SimeviTrait;
 use Illuminate\Http\Request;
 use App\Models\MasterProvinsi;
 use App\Models\MasterKabupaten;
@@ -11,6 +12,7 @@ use App\Models\MasterDesa;
 
 class GetWilayahController extends Controller
 {
+	use SimeviTrait;
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -18,63 +20,68 @@ class GetWilayahController extends Controller
 	 */
 	public function getAllProvinsi()
 	{
-		$provinsis = MasterProvinsi::all();
-		$result = [];
-
-		foreach ($provinsis as $provinsi) {
-			$result[] = [
-				'provinsi_id' => $provinsi->provinsi_id,
-				'nama' => $provinsi->nama,
+		$provinsis = $this->getAPIProvinsiAll();
+		$result = array_map(function ($provinsi) {
+			return [
+				'provinsi_id' => $provinsi['kd_prop'],
+				'nama' => $provinsi['nm_prop'],
 			];
-		}
+		}, $provinsis['data']);
 
+		// dd($result);
 		return response()->json($result);
 	}
 
 
 	public function getKabupatenByProvinsi($provinsiId)
 	{
-		$kabupatens = MasterKabupaten::where('provinsi_id', $provinsiId)->get();
+		$kabupatens = $this->getAPIKabupatenAll();
 		$result = [];
 
-		foreach ($kabupatens as $kabupaten) {
-			$result[] = [
-				'provinsi_id' => $kabupaten->provinsi_id,
-				'kabupaten_id' => $kabupaten->kabupaten_id,
-				'nama_kab' => $kabupaten->nama_kab,
-			];
+		foreach ($kabupatens['data'] as $kabupaten) {
+			if ($kabupaten['kd_prop_id'] == $provinsiId) {
+				$result[] = [
+					'provinsi_id' => $kabupaten['kd_prop_id'] ?? null,
+					'kabupaten_id' => $kabupaten['kd_kab'] ?? null,
+					'nama_kab' => $kabupaten['nama_kab'] ?? null,
+				];
+			}
 		}
 
 		return response()->json($result);
 	}
 
+
 	public function getKecamatanByKabupaten($kabupatenId)
 	{
-		$kecamatans = MasterKecamatan::where('kabupaten_id', $kabupatenId)->get();
+		$kecamatans = $this->getAPIKecamatanAll();
 		$result = [];
 
-		foreach ($kecamatans as $kecamatan) {
-			$result[] = [
-				'kabupaten_id' => $kecamatan->kabupaten_id,
-				'kecamatan_id' => $kecamatan->kecamatan_id,
-				'nama_kecamatan' => $kecamatan->nama_kecamatan,
-			];
+		foreach ($kecamatans['data'] as $kecamatan) {
+			if ($kecamatan['kd_kab_id'] == $kabupatenId) {
+				$result[] = [
+					'kabupaten_id' => $kecamatan['kd_kab_id'],
+					'kecamatan_id' => $kecamatan['kd_kec'],
+					'nama_kecamatan' => $kecamatan['nm_kec'],
+				];
+			}
 		}
-
 		return response()->json($result);
 	}
 
 	public function getDesaBykecamatan($kecamatanId)
 	{
-		$desas = MasterDesa::where('kecamatan_id', $kecamatanId)->get();
+		$desas = $this->getAPIDesaKec($kecamatanId);
 		$result = [];
 
-		foreach ($desas as $desa) {
-			$result[] = [
-				'kecamatan_id' => $desa->kecamatan_id,
-				'desa_id' => $desa->desa_id,
-				'nama_desa' => $desa->nama_desa,
-			];
+		foreach ($desas['data'] as $desa) {
+			if ($desa['kd_kec_id'] == $kecamatanId) {
+				$result[] = [
+					'kecamatan_id' => $desa['kd_kec_id'],
+					'kelurahan_id' => $desa['kd_desa'],
+					'nama_desa' => $desa['nm_desa'],
+				];
+			}
 		}
 
 		return response()->json($result);

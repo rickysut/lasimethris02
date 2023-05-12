@@ -27,14 +27,12 @@
 							<th>Vol. Import</th>
 							<th>Kewajiban</th>
 							<th>Tindakan</th>
+							<th>Status</th>
 						</thead>
 						<tbody>
 							@foreach ($commitments as $commitment)
 							<tr>
 								<td>
-									<span title="Anda belum mengajukan verifikasi">
-										<i class="fa fa-exclamation-circle text-warning fs-nano"></i>
-									</span>
 									{{$commitment->no_ijin}}
 								</td>
 								<td>{{$commitment->periodetahun}}</td>
@@ -43,16 +41,16 @@
 								<td>{{ number_format($commitment->volume_riph, 2, ',','.') }} ton</td>
 								<td>
 									<div class="row">
-										<div class="col-2">
-											ha
+										<div class="col-3">
+											Luas
 										</div>
 										<div class="col-9">
 											{{ number_format($commitment->volume_riph * 0.05/6, 2, ',','.') }} ha
 										</div>
 									</div>
 									<div class="row">
-										<div class="col-2">
-											ton
+										<div class="col-3">
+											Volume
 										</div>
 										<div class="col-9">
 											{{ number_format($commitment->volume_riph * 0.05, 2, ',','.') }} ton
@@ -70,7 +68,7 @@
 										title="Data Penangkar Mitra">
 										<i class="fal fa-seedling"></i>
 									</a>
-									@if (is_null($commitment->status))
+									@if (empty($commitment->status) || $commitment->status === '3' || $commitment->status === '5')
 										<a href="{{ route('admin.task.commitments.edit', $commitment->id) }}"
 											class="btn btn-icon btn-xs btn-warning"
 											title="Ubah Data Komitmen">
@@ -78,7 +76,7 @@
 										</a>
 									@else
 										<a href="{{ route('admin.task.commitments.read', $commitment->id) }}"
-											class="btn btn-icon btn-xs btn-warning"
+											class="btn btn-icon btn-xs btn-primary"
 											title="Lihat Data Komitmen">
 											<i class="fal fa-eye"></i>
 										</a>
@@ -93,15 +91,47 @@
 												<i class="fal fa-trash-alt"></i>
 											</button>
 										</form>
-									@else
-										<span class="btn btn-icon btn-xs btn-default disabled"
-											title="Tidak dapat dihapus">
-											<i class="fas fa-trash-alt"></i>
+									@endif
+								</td>
+								<td class="justify-content-center">
+									@if (empty($commitment->status))
+										<span class="badge btn-warning btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Belum Mengajukan Verifikasi">
+											<i class="fal fa-exclamation-circle"></i>
+										</span>
+									@elseif ($commitment->status === '1')
+										<span class="badge btn-primary btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Verifikasi sudah diajukan">
+											<i class="fal fa-hourglass"></i>
+										</span>
+									@elseif ($commitment->status === '2')
+										<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Verifikasi Data Selesai">
+											<i class="fal fa-check-circle"></i>
+										</span>
+									@elseif ($commitment->status === '3')
+										<span class="badge btn-danger btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Maaf. Verifikasi Data tidak dapat dilanjutkan. Perbaiki Data Anda terlebih dahulu">
+											<i class="fa fa-exclamation-circle"></i>
+										</span>
+									@elseif ($commitment->status === '4')
+										<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Verifikasi Lapangan Selesai">
+											<i class="fal fa-map-marker-check"></i>
+										</span>
+									@elseif ($commitment->status === '5')
+										<span class="badge btn-danger btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Maaf. Verifikasi Lapangan tidak dapat dilanjutkan. Perbaiki Data Anda terlebih dahulu">
+											<i class="fal fa-exclamation-circle"></i>
+										</span>
+									@elseif ($commitment->status === '6')
+										<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"
+											title data-original-title="Hore!. SKL Telah Terbit">
+											<i class="fal fa-award"></i>
 										</span>
 									@endif
 								</td>
 							</tr>
-								
 							@endforeach
 						</tbody>
 					</table>
@@ -164,9 +194,9 @@
 						className: 'btn-outline-primary btn-sm btn-icon mr-1'
 					},
 					{
-						text: '<i class="fa fa-calendar-alt"></i>',
-						titleAttr: 'Select Period',
-						className: 'btn btn-info btn-sm btn-icon ml-2',
+						text: '<i class="fa fa-plus mr-1"></i>Komitmen Baru',
+						titleAttr: 'Data Komitmen baru',
+						className: 'btn btn-info btn-xs ml-2',
 						action: function(e, dt, node, config) {
 							window.location.href = '{{ route('admin.task.commitments.create') }}';
 						}
@@ -184,7 +214,7 @@
 						table.column(1).search(year ? '^' + year + '$' : '', true, false).draw();
 					});
 				
-				$('<option>').val('').text('Pilih Tahun').appendTo(select);
+				$('<option>').val('').text('Semua Tahun').appendTo(select);
 				$.each(years, function(i, year) {
 					$('<option>').val(year).text(year).appendTo(select);
 				});

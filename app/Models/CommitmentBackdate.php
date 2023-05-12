@@ -33,7 +33,7 @@ class Commitmentbackdate extends Model
 		'status',
 		'formRiph',
 		'formSptjm',
-		'logBook',
+		'logbook',
 		'formRt',
 		'formRta',
 		'formRpo',
@@ -64,6 +64,11 @@ class Commitmentbackdate extends Model
 		return $this->hasMany(PksMitra::class);
 	}
 
+	public function anggotamitras()
+	{
+		return $this->hasMany(AnggotaMitra::class);
+	}
+
 	public function penangkarmitra()
 	{
 		return $this->hasMany(PenangkarMitra::class);
@@ -71,6 +76,11 @@ class Commitmentbackdate extends Model
 
 	public function pengajuanV2()
 	{
-		return $this->hasOne(PengajuanV2::class);
+		return $this->hasMany(PengajuanV2::class);
+	}
+
+	public function sklV2()
+	{
+		return $this->hasOne(SklV2::class, 'id', 'skl');
 	}
 }

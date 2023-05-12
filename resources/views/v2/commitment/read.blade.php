@@ -223,6 +223,128 @@
 					</div>
 				</div>
 			</div>
+			<div class="panel" id="panel-5">
+				<div class="panel-hdr">
+					<h2>
+						Berkas <span class="fw-300"><i>lampiran</i></span>
+					</h2>
+					<div class="panel-toolbar">
+						<span class="help-block"><i class="fas fa-exclamation-circle text-danger mr-1"></i>Berkas-berkas ini diperlukan untuk verifikasi dan Penerbitan SKL.</span>
+					</div>
+				</div>
+				<div class="panel-container show">
+					<div class="panel-content">
+						<div class="row">
+							<div class="form-group col-md-6">
+								<label class="form-label h6">RIPH</label>
+								<div class="custom-file input-group">
+									<input type="file" class="custom-file-input" name="formRiph" value="{{ old('formRiph', $commitments->formRiph) }}">
+									<label class="custom-file-label {{ $commitments->formRiph ? 'text-primary fw-400' : 'text-muted' }}" for="formRiph">
+										{{ $commitments->formRiph ? $commitments->formRiph : 'Pilih file...' }}
+									  </label>
+								</div>
+								<span class="help-block">Surat Persetujuan RIPH (.jpg / .pdf).
+									@if($commitments->formRiph)
+										<a href="{{ url('storage/docs/commitmentsv2/' .$commitments->periodetahun.'/formRiph/'.$commitments->formRiph) }}" target="_blank">
+											Lihat Berkas RIPH.
+										</a>
+									@endif
+								</span>
+							</div>
+							<div class="form-group col-md-6">
+								<label class="form-label h6">Form SPTJM</label>
+								<div class="custom-file input-group">
+									<input type="file" class="custom-file-input" name="formSptjm" value="{{ old('formSptjm', $commitments->formSptjm) }}">
+									<label class="custom-file-label" for="formSptjm">{{ $commitments->formSptjm ? $commitments->formSptjm : 'Pilih file...' }}</label>
+								</div>
+								<span class="help-block">
+									Form Pertanggungjawaban Mutlak. (.jpg / .pdf).
+									@if($commitments->formSptjm)
+										<a href="{{ url('storage/docs/commitmentsv2/' .$commitments->periodetahun.'/formSptjm/'.$commitments->formSptjm) }}" target="_blank">
+											Lihat Berkas SPTJM.
+										</a>
+									@endif
+								</span>
+							</div>
+							<div class="form-group col-md-6">
+								<label class="form-label h6">Form Logbook</label>
+								<div class="custom-file input-group">
+									<input type="file" class="custom-file-input" name="logbook" value="{{ old('logbook', $commitments->logbook) }}">
+									<label class="custom-file-label" for="logbook">{{ $commitments->logbook ? $commitments->logbook : 'Pilih file...' }}</label>
+								</div>
+								<span class="help-block">
+									Form Pertanggungjawaban Mutlak. (.jpg / .pdf).
+									@if($commitments->formSptjm)
+										<a href="{{ url('storage/docs/commitmentsv2/' .$commitments->periodetahun.'/logbook/'.$commitments->logbook) }}" target="_blank">
+											Lihat Berkas Logbook.
+										</a>
+									@endif
+								</span>
+							</div>
+							<div class="form-group col-md-6">
+								<label class="form-label h6">Form-RT</label>
+								<div class="custom-file input-group">
+									<input type="file" class="custom-file-input" name="formRt" value="{{ old('formRt', $commitments->formRt) }}">
+									<label class="custom-file-label" for="formRt">{{ $commitments->formRt ? $commitments->formRt : 'Pilih file...' }}</label>
+								</div>
+								<span class="help-block">
+									Form Rencana Tanam. (.jpg / .pdf).
+									@if($commitments->formRt)
+										<a href="{{ url('storage/docs/commitmentsv2/' .$commitments->periodetahun.'/formRt/'.$commitments->formRt) }}" target="_blank">
+											Lihat Berkas RT.
+										</a>
+									@endif
+								</span>
+							</div>
+							<div class="form-group col-lg-4">
+								<label class="form-label h6">Form-RTA</label>
+								<div class="custom-file input-group">
+									<input type="file" class="custom-file-input" name="formRta" value="{{ old('formRta', $commitments->formRta) }}">
+									<label class="custom-file-label" for="formRta">{{ $commitments->formRta ? $commitments->formRta : 'Pilih file...' }}</label>
+								</div>
+								<span class="help-block">
+									Form Realisasi tanam. (.jpg / .pdf).
+									@if($commitments->formRta)
+										<a href="{{ url('storage/docs/commitmentsv2/' .$commitments->periodetahun.'/formRta/'.$commitments->formRta) }}" target="_blank">
+											Lihat Berkas Rta.
+										</a>
+									@endif
+								</span>
+							</div>
+							<div class="form-group col-lg-4">
+								<label class="form-label h6">Form RPO</label>
+								<div class="custom-file input-group">
+									<input type="file" class="custom-file-input" name="formRpo" value="{{ old('formRpo', $commitments->formRpo) }}">
+									<label class="custom-file-label" for="formRpo">{{ $commitments->formRpo ? $commitments->formRpo : 'Pilih file...' }}</label>
+								</div>
+								<span class="help-block">
+									Form Realisasi Produksi. (.jpg / .pdf).
+									@if($commitments->formRpo)
+										<a href="{{ url('storage/docs/commitmentsv2/' .$commitments->periodetahun.'/formRpo/'.$commitments->formRpo) }}" target="_blank">
+											Lihat Berkas Rpo.
+										</a>
+									@endif
+								</span>
+							</div>
+							<div class="form-group col-lg-4">
+								<label class="form-label h6">Form LA</label>
+								<div class="custom-file input-group">
+									<input type="file" class="custom-file-input" name="formLa" value="{{ old('formLa', $commitments->formLa) }}">
+									<label class="custom-file-label" for="formLa">{{ $commitments->formLa ? $commitments->formLa : 'Pilih file...' }}</label>
+								</div>
+								<span class="help-block">
+									Form Laporan Akhir. (.jpg / .pdf).
+									@if($commitments->formLa)
+										<a href="{{ url('storage/docs/commitmentsv2/' .$commitments->periodetahun.'/formLa/'.$commitments->formLa) }}" target="_blank">
+											Lihat Berkas La
+										</a>
+									@endif
+								</span>
+							</div> 
+						</div>
+					</div>
+				</div>
+			</div>
 		</fieldset>
 		</div>
 	</div>

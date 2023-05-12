@@ -1,15 +1,20 @@
 @extends('layouts.admin')
+@section('styles')
+<link rel="stylesheet" media="screen, print" href="{{ asset('css/formplugins/bootstrap-colorpicker/bootstrap-colorpicker.css') }}">
+@endsection
 @section('content')
 @include('partials.breadcrumb')
 @include('partials.subheader')
-
-@can('poktan_access')
-<div class="row">
-	<div class="col-12">
+    @can('feeds_access')
+	@include('partials.sysalert')
 		<div class="panel" id="panel-1">
 			<div class="panel-hdr">
 				<h2>
-					Daftar Mitra Penangkar
+					<i class="subheader-icon fal fa-ballot-check mr-1"></i>
+					<span>
+						<i class="fw-300 mr-1">Kelompoktani:</i>
+						<span>{{$poktan->nama_kelompok}}</span>
+					</span>
 				</h2>
 				<div class="panel-toolbar">
 					@include('partials.globaltoolbar')
@@ -17,27 +22,59 @@
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table id="datatable" class="table table-bordered table-hover table-striped w-100">
-						<thead>
-							<th>Nama Lembaga</th>
-							<th>Pimpinan</th>
-						</thead>
-						<tbody>
-							@foreach($penangkarmitras as $penangkarmitra)
-								<td>{{ $penangkarmitra->masterpenangkar->nama_lembaga }}</td>
-							@endforeach
-						</tbody>
-					</table>
+					<div>
+						<table id="datatable" class="table table-bordered table-hover table-striped w-100">
+							<thead class="bg-primary-600">
+								<tr>
+									<th>Nama Anggota</th>
+									<th>NIK/No. KTP</th>
+									<th>Lahan Dimiliki</th>
+									<th>Jadwal Tanam</th>
+									<th>Tindakan</th>
+								</tr>
+							</thead>
+							<tbody>
+									@foreach ($anggotas as $anggota)
+										<tr>
+											<td> <a href="" class="fw-500">{{$anggota->nama_petani}}</a> </td>
+											<td> {{$anggota->nik_petani}} </td>
+											<td> {{$anggota->luas_lahan}} </td>
+											<td> {{$anggota->jadwal_tanam}} </td>
+											<td class="d-flex justify-content-end">
+												<div class="col">
+													<a href="{{route('admin.task.anggotapoktan.edit', $anggota->id)}}"
+														class="btn btn-icon btn-xs btn-primary"
+														title="Ubah data anggota">
+														<i class="fal fa-user-edit"></i>
+													</a>
+												</div>
+												<div class="col">
+													<form action="{{ route('admin.task.anggotapoktan.destroy', $anggota->id) }}"
+														method="POST" style="display: inline-block;">
+														@csrf
+														@method('DELETE')
+														<button type="submit" class="btn btn-icon btn-xs btn-danger"
+															title="hapus data anggota"
+															onclick="return confirm('Anda yakin ingin menghapus data ini?');">
+															<i class="fal fa-trash-alt"></i>
+														</button>
+													</form>
+												</div>
+											</td>
+										</tr>
+									@endforeach
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</div>
-@endcan
+    @endcan
 @endsection
 
 @section('scripts')
 @parent
+
 <script>
 	$(document).ready(function()
 	{
@@ -111,15 +148,11 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-user-plus mr-1"></i>',
-					titleAttr: 'Add Poktan Member',
-					className: 'btn btn-outline-warning btn-sm btn-icon ml-2',
+					text: '<i class="fa fa-user-plus mr-1"></i>Anggota Baru',
+					titleAttr: 'Tambah Anggota',
+					className: 'btn btn-info btn-xs ml-2',
 					action: function(e, dt, node, config) {
-					// find the modal element
-						var $modal = $('#myModal');
-
-						// trigger the modal's show method
-						$modal.modal('show');
+						window.location.href = '{{ route('admin.task.masterpoktan.addanggota', $poktan->id) }}';
 					}
 				}
 			]
@@ -129,4 +162,3 @@
 </script>
 
 @endsection
-

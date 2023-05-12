@@ -18,14 +18,6 @@ class PenangkarMitraController extends Controller
 	 */
 	public function index()
 	{
-
-		$module_name = 'Commitments';
-		$page_title = 'Commitment';
-		$page_heading = 'Daftar Commitment';
-		$heading_class = 'fa fa-file-invoice';
-		$penangkarmitras = PenangkarMitra::with('masterpenangkar')->get();
-		// dd($penangkarmitras);
-		return view('v2.mitrapenangkar.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'penangkarmitras'));
 	}
 
 	/**

@@ -26,6 +26,7 @@
 					@method('PUT')
 					<div class="panel-container show">
 						<div class="panel-content">
+							<input type="hidden" id="commitmentbackdate_id" name="commitmentbackdate_id" value="{{$commitment->id}}">
 							<div class="row d-flex">
 								<div class="col-md-6 mb-3">
 									<div class="form-group">
@@ -72,7 +73,7 @@
 											<div class="input-group-prepend">
 												<span class="input-group-text"><i class="fal fa-calendar-day"></i></span>
 											</div>
-											<input type="text" name="tgl_perjanjian_start" id="tgl_perjanjian_start"
+											<input type="date" name="tgl_perjanjian_start" id="tgl_perjanjian_start"
 												value="{{ old('tgl_perjanjian_start', $pksmitra->tgl_perjanjian_start) }}"
 												class="form-control " placeholder="tanggal mulai perjanjian"
 												aria-describedby="helpId">
@@ -89,7 +90,7 @@
 											<div class="input-group-prepend">
 												<span class="input-group-text"><i class="fal fa-calendar-day"></i></span>
 											</div>
-											<input type="text" name="tgl_perjanjian_end" id="tgl_perjanjian_end"
+											<input type="date" name="tgl_perjanjian_end" id="tgl_perjanjian_end"
 												value="{{ old('tgl_perjanjian_end', $pksmitra->tgl_perjanjian_end) }}"
 												class="form-control " placeholder="tanggal akhir perjanjian"
 												aria-describedby="helpId">
@@ -151,15 +152,11 @@
 									<div class="form-group">
 										<label class="form-label" for="provinsi">Provinsi</label>
 										<div class="input-group">
-											<select class="select2-prov form-control" id="provinsi_id" name="provinsi_id" required>
-												<option value="{{ isset($pksmitra) ? $pksmitra->provinsi_id : '' }}">
-													{{ isset($pksmitra->provinsi) ? $pksmitra->provinsi->nama : '' }}
-												</option>												
-												@foreach ($provinsis as $provinsi)
-													<option value="{{$provinsi->provinsi_id}}">
-														{{$provinsi->provinsi_id}} - {{$provinsi->nama}}
-													</option>
-												@endforeach
+											<select class="form-control custom-select select2-prov"
+											name="provinsi_id" id="provinsi_id" required>
+												<option value="{{ isset($pksmitra) ? $pksmitra->provinsi->provinsi_id : '' }}">
+													{{ isset($pksmitra) ? $pksmitra->provinsi->provinsi_id. '. ' .  $pksmitra->provinsi->nama   : 'Load Record' }}
+												</option>
 											</select>
 										</div>
 										<div class="help-block">
@@ -172,8 +169,9 @@
 										<label class="form-label" for="kabupaten">Kabupaten/Kota</label>
 										<div class="input-group">
 											<select class="select2-kab form-control" id="kabupaten_id" name="kabupaten_id" required>
-												<option value="{{ isset($pksmitra) ? $pksmitra->kabupaten_id : '' }}">
-													{{ isset($pksmitra->kabupaten_id) ? $pksmitra->kabupaten->nama_kab : '' }}
+												<option value="{{ isset($pksmitra) ? $pksmitra->kabupaten->kabupaten_id : '' }}">
+													{{ isset($pksmitra) ? $pksmitra->kabupaten->kabupaten_id. '. ' . 
+													$pksmitra->kabupaten->nama_kab   : 'Load Record' }}
 												</option>
 											</select>
 										</div>
@@ -184,11 +182,12 @@
 								</div>
 								<div class="col-md-6 mb-3">
 									<div class="form-group">
-										<label class="form-label" for="kecamatan">Kecamatan</label>
+										<label class="form-label" for="kecamatan_id">Kecamatan</label>
 										<div class="input-group">
 											<select class="select2-kec form-control" id="kecamatan_id" name="kecamatan_id" required>
-												<option value="{{ isset($pksmitra) ? $pksmitra->kecamatan_id : '' }}">
-													{{ isset($pksmitra->kecamatan_id) ? $pksmitra->kecamatan->nama_kecamatan : '' }}
+												<option value="{{ isset($pksmitra) ? $pksmitra->kecamatan->kecamatan_id : '' }}">
+													{{ isset($pksmitra) ? $pksmitra->kecamatan->kecamatan_id. '. ' . 
+													$pksmitra->kecamatan->nama_kecamatan   : 'Load Record' }}
 												</option>
 											</select>
 										</div>
@@ -199,11 +198,12 @@
 								</div>
 								<div class="col-md-6 mb-3">
 									<div class="form-group">
-										<label class="form-label" for="desa_id">Desa</label>
+										<label class="form-label" for="kelurahan_id">Desa</label>
 										<div class="input-group">
 											<select class="select2-des form-control" name="kelurahan_id" id="kelurahan_id" required>
-												<option value="{{ isset($pksmitra) ? $pksmitra->kelurahan_id : '' }}">
-													{{ isset($pksmitra->kelurahan_id) ? $pksmitra->desa->nama_desa : '' }}
+												<option value="{{ isset($pksmitra) ? $pksmitra->desa->kelurahan_id : '' }}">
+													{{ isset($pksmitra) ? $pksmitra->desa->kelurahan_id. '. ' . 
+													$pksmitra->desa->nama_desa  : 'Load Record' }}
 												</option>
 											</select>
 										</div>
@@ -219,7 +219,8 @@
 											<span class="input-group-text" id="inputGroupPrepend3">PKS</span>
 										</div>
 										<div class="custom-file">
-											<input type="file" class="custom-file-input" id="attachment" name="attachment">
+											<input type="file" class="custom-file-input" id="berkas_pks" name="berkas_pks">
+											<input type="hidden" name="prev_file_name" value="{{ $pksmitra->berkas_pks }}">
 											<label class="custom-file-label" for="attachment">Choose file...</label>
 										</div>
 									</div>
@@ -230,7 +231,7 @@
 									<div class="d-flex flex-row align-items-center mt-1 mb-1">
 										<div class="mr-2 d-inline-block">
 											<a class="btn btn-outline-danger btn-icon rounded-circle waves-effect waves-themed"
-												href="{{ url('storage/docs/pks/' . $pksmitra->berkas_pks) }}" data-toggle="button">
+												href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$pksmitra->berkas_pks) }}" data-toggle="button">
 												@if(in_array(pathinfo($pksmitra->berkas_pks, PATHINFO_EXTENSION), [
 													'doc', 'docx', 'xls','xlsx', 'pdf']))
 													<i class="fal fa-file fs-md"></i>
@@ -245,7 +246,7 @@
 											</a>
 										</div>
 										<div class="info-card-text">
-											<a href="{{ url('storage/docs/pks/' . $pksmitra->berkas_pks) }}"
+											<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$pksmitra->berkas_pks) }}"
 												class="fs-lg text-truncate text-truncate-md">
 												{{ $pksmitra->berkas_pks }}
 											</a>
@@ -262,7 +263,8 @@
 							<a href="{{route('admin.task.commitments.show', $commitment->id)}}" class="btn btn-warning btn-sm">
 								<i class="fal fa-undo mr-1"></i>Batal
 							</a>
-							<button class="btn btn-primary btn-sm" type="submit">
+							<button class="btn btn-primary btn-sm" type="submit"
+								@if ($disabled) disabled @endif>
 								<i class="fal fa-save mr-1"></i>Simpan Perubahan
 							</button>
 						</div>
@@ -280,30 +282,45 @@
 @parent
 
 
-
 <script>
     $(document).ready(function() {
         $(function() {
-            $(".select2-prov").select2({
-                placeholder: "--pilih Provinsi"
+			@isset($pksmitra->id)
+			$(".selecteditpoktan").select2({
+                placeholder: "--Pilih Kelompoktani",
             });
-            $(".select2-kab").select2({
-                placeholder: "--pilih Kabupaten"
-            });
-            $(".select2-kec").select2({
-                placeholder: "--pilih Kecamatan"
-            });
-            $(".select2-des").select2({
-                placeholder: "--pilih Desa"
-            });
+			@endisset
         });
     });
 </script>
+<script>
+    $(document).ready(function() {
+        $(".select2-prov").select2({
+            placeholder: "--Pilih Provinsi",
+        });
+
+        const $provinsiSelect = $('#provinsi_id');
+        // Populate the provinsi select element with the fetched data
+        $.get('/api/getAllProvinsi/', function(data) {
+            // Clear the provinsi select element
+            $provinsiSelect.empty().append('<option value=""></option>');
+            // Populate the provinsi select element with the fetched data
+            $.each(data, function(key, value) {
+                $provinsiSelect.append('<option value="' + value.provinsi_id + '">' + value.provinsi_id + ' - ' + value.nama + '</option>');
+            });
+            // Set the selected value, if available
+            $provinsiSelect.val('{{ isset($pksmitra) ? $pksmitra->provinsi->provinsi_id : '' }}');
+        });
+    });
+</script>
+
 
 <script>
 	$(document).ready(function() {
 		// Get the kabupaten select element
 		const $kabupatenSelect = $('#kabupaten_id');
+		const $kecamatanSelect = $('#kecamatan_id');
+		const $desaSelect = $('#kelurahan_id');
 
 		// Add an event listener to the provinsi select element
 		$('#provinsi_id').on('change', function() {
@@ -313,6 +330,8 @@
 			$.get('/api/getKabupatenByProvinsi/' + provinsiId, function(data) {
 				// Clear the kabupaten select element
 				$kabupatenSelect.empty().append('<option value=""></option>');
+				$kecamatanSelect.empty().append('<option value=""></option>');
+				$desaSelect.empty().append('<option value=""></option>');
 				// Populate the kabupaten select element with the fetched data
 				$.each(data, function(key, value) {
 				$kabupatenSelect.append('<option value="' + value.kabupaten_id + '">' + value.kabupaten_id + ' - ' + value.nama_kab + '</option>');
@@ -325,7 +344,7 @@
 		});
 
 		// Get the kecamatan select element
-		const $kecamatanSelect = $('#kecamatan_id');
+		
 
 		// Add an event listener to the provinsi select element
 		$('#kabupaten_id').on('change', function() {
@@ -347,8 +366,7 @@
 		});
 
 		// Get the kecamatan select element
-		const $desaSelect = $('#kelurahan_id');
-
+		
 		// Add an event listener to the provinsi select element
 		$('#kecamatan_id').on('change', function() {
 			const kecamatanId = $(this).val();
@@ -371,6 +389,33 @@
 </script>
 
 <script>
+    document.getElementById('berkas_pks').addEventListener('change', function(e) {
+        var fileName = e.target.files[0].name;
+        var label = document.querySelector('.custom-file-label');
+        label.innerHTML = fileName;
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $(function() {
+            // $(".select2-prov").select2({
+            //     placeholder: "--pilih Provinsi"
+            // });
+            $(".select2-kab").select2({
+                placeholder: "--pilih Kabupaten"
+            });
+            $(".select2-kec").select2({
+                placeholder: "--pilih Kecamatan"
+            });
+            $(".select2-des").select2({
+                placeholder: "--pilih Desa"
+            });
+        });
+    });
+</script>
+
+<script>
     $("#js-login-btn").click(function(event) {
 
         // Fetch form to apply custom Bootstrap validation
@@ -387,15 +432,4 @@
 </script>
 
 
-<script>
-    $(document).ready(function() {
-        $(function() {
-			@isset($pksmitra->id)
-			$(".selecteditpoktan").select2({
-                placeholder: "--Pilih Kelompoktani",
-            });
-			@endisset
-        });
-    });
-</script>
 @endsection

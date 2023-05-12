@@ -449,8 +449,8 @@
                     <div class="form-group col">
                         <label class="form-label h6">Logbook</label>
                         <div class="custom-file input-group">
-                            <input type="file" class="custom-file-input" name="logBook" required>
-                            <label class="custom-file-label" for="logBook">Pilih file...</label>
+                            <input type="file" class="custom-file-input" name="logbook" required>
+                            <label class="custom-file-label" for="logbook">Pilih file...</label>
                         </div>
                         <span class="help-block">Logbook. (.jpg / .pdf).</span>
                     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MasterAnggota;
+use App\Models\MasterKelompok;
 use Illuminate\Http\Request;
 
 class AnggotaPoktanController extends Controller
@@ -13,9 +14,17 @@ class AnggotaPoktanController extends Controller
 		//
 	}
 
-	public function create()
+	public function addanggota($id)
 	{
-		//
+		$module_name = 'Anggota Poktan';
+		$page_title = 'Tambah Anggota';
+		$page_heading = 'Tambah Anggota';
+		$heading_class = 'fa fa-user-plus';
+
+		//load poktan for current id that has anggota
+		$poktan = MasterKelompok::with('masteranggota')->findOrFail($id);
+
+		return view('v2.anggota.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'poktan'));
 	}
 
 	public function store(Request $request)
@@ -40,6 +49,13 @@ class AnggotaPoktanController extends Controller
 	public function edit($id)
 	{
 		//
+		$module_name = 'Anggota Poktan';
+		$page_title = 'Ubah Data';
+		$page_heading = 'Ubah Data Anggota';
+		$heading_class = 'fa fa-user-edit';
+
+		$anggota = MasterAnggota::findOrFail($id);
+		return view('v2.anggota.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'anggota'));
 	}
 
 	public function update(Request $request, $id)

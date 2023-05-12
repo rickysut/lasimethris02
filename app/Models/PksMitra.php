@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \DateTimeInterface;
 
+
 class PksMitra extends Model
 {
 	use HasFactory, SoftDeletes;
