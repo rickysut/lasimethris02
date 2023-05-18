@@ -70,6 +70,9 @@ class CommitmentController extends Controller
             $table->editColumn('tgl_ijin', function ($row) {
                 return $row->tgl_ijin ? date('d/m/Y', strtotime($row->tgl_ijin)) : '';
             });
+            $table->editColumn('tgl_akhir', function ($row) {
+                return $row->tgl_akhir ? date('d/m/Y', strtotime($row->tgl_akhir)) : '';
+            });
             $table->editColumn('periodetahun', function ($row) {
                 return $row->periodetahun ? $row->periodetahun : '';
             });
@@ -92,9 +95,9 @@ class CommitmentController extends Controller
         }
 
         $module_name = 'Proses RIPH' ;
-        $page_title = 'Daftar RIPH';
-        $page_heading = 'Daftar RIPH' ;
-        $heading_class = 'fal fa-ballot-check';
+        $page_title = 'Daftar Komitmen';
+        $page_heading = 'Daftar Komitmen' ;
+        $heading_class = 'fa fa-file-invoice';
         return view('admin.commitment.index', compact('module_name', 'page_title', 'page_heading', 'heading_class')); 
     }
 

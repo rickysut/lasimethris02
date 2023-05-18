@@ -26,9 +26,9 @@ class CommitmentBackdateController extends Controller
 	public function index(Request $request)
 	{
 		//
-		$module_name = 'Commitments';
-		$page_title = 'Commitment';
-		$page_heading = 'Daftar Commitment';
+		$module_name = 'Proses RIPH';
+		$page_title = 'Daftar Komitmen';
+		$page_heading = 'Daftar Komitmen';
 		$heading_class = 'fa fa-file-invoice';
 
 		$masterpenangkars = MasterPenangkar::all();

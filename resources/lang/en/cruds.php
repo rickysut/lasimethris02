@@ -86,8 +86,8 @@ return [
         'level'          => '1',
     ],
     'commitment' => [
-        'title'          => 'Commitment List',
-        'title_lang'     => 'Commitment List',
+        'title'          => 'RIPH List',
+        'title_lang'     => 'RIPH List',
         'is_parent'      => '0',
         'is_hidden'      => '0',
         'can_view'       => '1',
