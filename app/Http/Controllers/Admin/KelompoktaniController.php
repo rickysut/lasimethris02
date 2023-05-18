@@ -63,8 +63,8 @@ class KelompoktaniController extends Controller
             });
             
             $table->editColumn('id_kecamatan', function ($row) {
-                $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
-                $datakecamatan = $this->getAPIKecamatan($access_token, $row->id_kecamatan);
+                // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+                $datakecamatan = $this->getAPIKecamatan( $row->id_kecamatan);
                 if($datakecamatan['data'][0]){
                     return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
                 } 
@@ -228,8 +228,8 @@ class KelompoktaniController extends Controller
             });
             
             $table->editColumn('id_kecamatan', function ($row) {
-                $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
-                $datakecamatan = $this->getAPIKecamatan($access_token, $row->id_kecamatan);
+                // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+                $datakecamatan = $this->getAPIKecamatan($row->id_kecamatan);
                 if($datakecamatan['data'][0]){
                     return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
                 } 

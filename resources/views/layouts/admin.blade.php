@@ -54,7 +54,6 @@
 
 		<link href="{{ asset('css/toastr.css') }}" rel="stylesheet" />
 
-
 		
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		@yield('styles')

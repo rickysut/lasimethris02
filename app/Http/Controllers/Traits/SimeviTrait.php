@@ -2,109 +2,204 @@
 
 namespace App\Http\Controllers\Traits;
 
+use App\Jobs\getdesa;
+use App\Jobs\getdesakec;
+use App\Jobs\getdesakode;
 use \SpreadsheetReader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\getprovinsi;
+use App\Jobs\getkabupaten;
+use App\Jobs\getkabprop;
+use App\Jobs\getkabkode;
+use App\Jobs\getkecamatan;
+use App\Jobs\getkeckab;
+use App\Jobs\getkeckode;
 
 trait SimeviTrait
 {
-    public function getAPIAccessToken($username, $pass){
-        $response = Http::asForm()->post(config('app.simevi_url').'getToken', [
-            'username' => $username,
-            'password' => $pass
-        ]);
 
-        $access_token = $response->json('access_token');
-        return $access_token;
+    public function getAPIProvinsiAll(){
+        $filepath = 'master/provinsi.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getprovinsi();
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
     }
 
-    public function getAPIProvinsiAll($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'provinsis');
-        return $response->json();
+    public function getAPIKabupatenAll(){
+        $filepath = 'master/kabupaten.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getkabupaten();
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
     }
 
-    public function getAPIKabupatenAll($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatens');
+    public function getAPIKabupatenProp($provinsi){
+        $filepath = 'master/kabprov_'.$provinsi.'.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getkabprop($provinsi);
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
+    }
+
+    public function getAPIKabupaten($kode){
+        $filepath = 'master/kabkode_'.$kode.'.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getkabkode($kode);
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
+    }
+
+    public function getAPIKecamatanAll(){
+        $filepath = 'master/kecamatan.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getkecamatan();
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
 
         
-        return $response->json();
+        
     }
 
-    public function getAPIKabupatenProp($token, $provinsi){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatenwithprop/'.$provinsi);
+    public function getAPIKecamatanKab($kabupaten){
+
+        $filepath = 'master/keckab_'.$kabupaten.'.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getkeckab($kabupaten);
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
 
         
-        return $response->json();
     }
 
-    public function getAPIKabupaten($token, $kode){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatens/'.$kode);
+    public function getAPIKecamatan($kode){
+        $filepath = 'master/keckode_'.$kode.'.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getkeckode($kode);
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
 
         
-        return $response->json();
     }
 
-    public function getAPIKecamatanAll($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatans');
+    public function getAPIDesaAll(){
+        $filepath = 'master/desa.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getdesa();
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
 
-        
-        return $response->json();
+        return $response;
     }
 
-    public function getAPIKecamatanKab($token, $kabupaten){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatanwithkab/'.$kabupaten);
+    public function getAPIDesaKec($kecamatan){
 
-        
-        return $response->json();
+        $filepath = 'master/desakec_'.$kecamatan.'.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+
+            $job = new getdesakec($kecamatan);
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
     }
 
-    public function getAPIKecamatan($token, $kode){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatans/'.$kode);
+    public function getAPIDesa ($kode){
+        $filepath = 'master/desakode_'.$kode.'.json';
+        if (Storage::disk('local')->exists($filepath)) {
+            $pathjson = Storage::disk('local')->path($filepath);
+            $response = json_decode(file_get_contents($pathjson), true);
+        } else {
+            $job = new getdesakode($kode);
+            $this->dispatch($job);
+            if (Storage::disk('local')->exists($filepath)) {
+                $pathjson = Storage::disk('local')->path($filepath);
+                $response = json_decode(file_get_contents($pathjson), true);
+            }
+        }
+
+        return $response;
 
         
-        return $response->json();
-    }
-
-    public function getAPIDesaAll($token){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desas');
-
-        
-        return $response->json();
-    }
-
-    public function getAPIDesaKec($token, $kecamatan){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desawithkec/'.$kecamatan);
-
-        
-        return $response->json();
-    }
-
-    public function getAPIDesa($token, $kode){
-        $response = Http::withToken($token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desas/'.$kode);
-
-        
-        return $response->json();
     }
 
     public function pull($npwp, $nomor)

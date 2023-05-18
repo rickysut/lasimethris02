@@ -597,11 +597,10 @@
             
             $('#province').on('change', function() {
                 var province_id =$(this).val();
-                var token = "{{ $access_token }}";
                 $.ajax({
                     type: 'get',
                     url: '/api/getAPIKabupatenProp',
-                    data: {'token': token, 'provinsi':province_id},
+                    data: {'provinsi':province_id},
                     success: function(data){
                         $('#kabupaten').find('option').remove().end();
                         $('#kecamatan').find('option').remove().end();
@@ -621,11 +620,10 @@
             });
             $('#kabupaten').on('change', function() {
                 var kab_id =$(this).val();
-                var token = "{{ $access_token }}";
                 $.ajax({
                     type: 'get',
                     url: '/api/getAPIKecamatanKab',
-                    data: {'token': token, 'kabupaten':kab_id},
+                    data: {'kabupaten':kab_id},
                     success: function(data){
                         $('#kecamatan').find('option').remove().end();
                         $('#desa').find('option').remove().end();
@@ -644,12 +642,11 @@
             });
             $('#kecamatan').on('change', function() {
                 var kec_id =$(this).val();
-                var token = "{{ $access_token }}";
                 console
                 $.ajax({
                     type: 'get',
                     url: '/api/getAPIDesaKec',
-                    data: {'token': token, 'kecamatan':kec_id},
+                    data: {'kecamatan':kec_id},
                     success: function(data){
                         $('#desa').find('option').remove().end();
                         for (var i = 0; i < data.data.length; i++){

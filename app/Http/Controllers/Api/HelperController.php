@@ -3,95 +3,80 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\SimeviTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\JsonResponse;
 
 class HelperController extends Controller
 {
-    public function getAPIAccessToken(Request $request){
-        $request->validate([
-            'username' => 'required',
-            'password' => 'required'
-        ]);
+    use SimeviTrait;
+
+    public function getprovinsi(Request $request){
+        $response = $this->getAPIProvinsiAll();
         
-        $response = Http::asForm()->post(config('app.simevi_url').'getToken', [
-            'username' => $request->username,
-            'password' => $request->password
-        ]);
-
-        $access_token = $response->json('access_token');
-        return $access_token;
+        return $response;
     }
 
-    public function getAPIProvinsiAll(Request $request){
-        $response = Http::withToken($request->token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'provinsis');
-
+    public function getkabupaten(Request $request){
+        $response = $this->getAPIKabupatenAll();
         
-        return $response->json();
+        return $response;
     }
 
-    public function getAPIKabupatenAll(Request $request){
-        $response = Http::withToken($request->token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatens');
-
+    public function getKabupatenProp(Request $request){
+        $response = $this->getAPIKabupatenProp($request->provinsi);
         
-        return $response->json();
-    }
-
-    public function getAPIKabupatenProp(Request $request){
-        $response = Http::withToken($request->token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kabupatenwithprop/'.$request->provinsi);
-
+        return $response;
         
-        return $response->json();
     }
 
-    public function getAPIKecamatanAll(Request $request){
-        $response = Http::withToken($request->token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatans');
+    public function getkecamatan(Request $request){
 
+        $response = $this->getAPIKecamatanAll();
         
-        return $response->json();
+        return $response;
+
     }
 
-    public function getAPIKecamatan(Request $request){
-        $response = Http::withToken($request->token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatans/'. $request->kecamatan);
+    public function getKecamatanKode(Request $request){
 
-        return $response->json();
-    }
-
-    public function getAPIKecamatanKab(Request $request){
-        $response = Http::withToken($request->token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'kecamatanwithkab/'.$request->kabupaten);
-
+        $response = $this->getAPIKecamatan($request->kecamatan);
         
-        return $response->json();
+        return $response;
+
     }
 
-    public function getAPIDesaAll(Request $request){
-        $response = Http::withToken($request->token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desas');
+    public function getKecamatanKab(Request $request){
 
+        $response = $this->getAPIKecamatanKab($request->kabupaten);
         
-        return $response->json();
-    }
-
-    public function getAPIDesaKec(Request $request){
-        $response = Http::withToken($request->token)->withHeaders([
-            'Accept' => 'application/json'
-        ])->get(config('app.simevi_url').'desawithkec/'.$request->kecamatan);
-
+        return $response;
         
-        return $response->json();
     }
+
+    public function getdesa(Request $request){
+        $response = $this->getAPIDesaAll();
+        
+        return $response;
+        
+    }
+
+    public function getDesaKec(Request $request){
+
+        $response = $this->getAPIDesaKec($request->kecamatan);
+        
+        return $response;
+    
+    }
+
+    public function getDesaKode(Request $request){
+
+        $response = $this->getAPIDesa($request->desa);
+        
+        return $response;
+    
+    }
+
+
 }
