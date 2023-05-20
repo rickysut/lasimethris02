@@ -118,9 +118,13 @@ class PksController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($no_riph, $idpoktan)
+    public function create(Request $request)
     {
         abort_if(Gate::denies('pks_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $no_riph = $request->no_riph;
+        $idpoktan = $request->idpoktan;
+        // dd($no_riph, $idpoktan);
 
         $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
 
@@ -192,7 +196,7 @@ class PksController extends Controller
      * @param  \App\Models\Pks  $pks
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pks $pks)
+    public function edit(Request $request)
     {
         //
     }

@@ -1,9 +1,10 @@
 @can($viewGate)
-    <a class="ml-3 btn btn-icon btn-xs btn-primary" data-toggle="tooltip" title data-original-title="Lihat Rincian" href="{{ route('admin.' . $crudRoutePart . '.show', $row->id) }}">
-        <i class="fal fa-search-plus"></i><!--{{ trans('global.view') }}-->
+    <a href="{{ route('admin.' . $crudRoutePart . '.show', $row->id) }}"
+        class="btn btn-icon btn-xs btn-info"
+        title="Laporan Realisasi Komitmen">
+        <i class="fal fa-ballot-check"></i>
     </a>
 @endcan
-
 
 @can($deleteGate)
     <form action="{{ route('admin.' . $crudRoutePart . '.destroy', $row->id) }}"  method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
@@ -12,6 +13,5 @@
         <button type="submit" class="ml-3 btn btn-icon btn-xs btn-danger" title="Hapus data komitment"> 
 			<i class="fal fa-trash-alt"></i>
 		</button>
-        {{-- <button type="submit" class="btn btn-xs btn-danger"  value="{{ trans('global.delete') }}"><i class="fas fa-trash"></i></button> --}}
     </form>
 @endcan
