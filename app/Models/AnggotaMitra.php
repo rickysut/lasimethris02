@@ -61,4 +61,9 @@ class AnggotaMitra extends Model
 	{
 		return $this->belongsTo(MasterAnggota::class, 'master_anggota_id', 'id');
 	}
+
+	public function commitmentbackdate()
+	{
+		return $this->belongsTo(CommitmentBackdate::class, 'commitmentbackdate_id', 'id');
+	}
 }

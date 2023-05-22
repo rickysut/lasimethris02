@@ -16,6 +16,7 @@ use App\Jobs\getkabkode;
 use App\Jobs\getkecamatan;
 use App\Jobs\getkeckab;
 use App\Jobs\getkeckode;
+use Illuminate\Support\Facades\Log;
 
 trait SimeviTrait
 {
@@ -110,11 +111,13 @@ trait SimeviTrait
 
     public function getAPIKecamatanKab($kabupaten){
 
+        // Log::debug("Kecamatan kab :" . $kabupaten);
         $filepath = 'master/keckab_'.$kabupaten.'.json';
         if (Storage::disk('local')->exists($filepath)) {
             $pathjson = Storage::disk('local')->path($filepath);
             $response = json_decode(file_get_contents($pathjson), true);
         } else {
+            // Log::debug("Call getkeckab");
             $job = new getkeckab($kabupaten);
             $this->dispatch($job);
             if (Storage::disk('local')->exists($filepath)) {

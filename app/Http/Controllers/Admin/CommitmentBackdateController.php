@@ -7,17 +7,24 @@ use App\Models\Commitment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Carbon;
 
-use App\Models\User;
 use App\Models\Commitmentbackdate;
 use App\Models\MasterPenangkar;
 use App\Models\MasterKelompok;
 use App\Models\PenangkarMitra;
-use App\Models\Pengajuan;
 use App\Models\PengajuanV2;
+use App\Models\verif_commitment;
+use App\Models\User;
 
 class CommitmentBackdateController extends Controller
 {
+	// use SimeviTrait;
+
+	// public $access_token = '';
+	// public $data_user;
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -26,41 +33,32 @@ class CommitmentBackdateController extends Controller
 	public function index(Request $request)
 	{
 		//
-		$module_name = 'Proses RIPH';
+
+		$module_name = 'Komitmen';
 		$page_title = 'Daftar Komitmen';
 		$page_heading = 'Daftar Komitmen';
 		$heading_class = 'fa fa-file-invoice';
 
 		$masterpenangkars = MasterPenangkar::all();
 		$user = Auth::user();
-		$commitments = $user->commitmentbackdate()->get();
+		$commitments = CommitmentBackdate::where('user_id', $user->id)->get();
+		// dd($user);
 
 		return view('v2.commitment.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'user', 'commitments', 'masterpenangkars'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
 	public function create()
 	{
 		//
-		$module_name = 'Commitments';
-		$page_title = 'Commitment';
-		$page_heading = 'Create New Commitment: ';
-		$heading_class = 'fa fa-file-edit';
+		$module_name = 'Komitmen';
+		$page_title = 'Komitmen Baru';
+		$page_heading = 'Tambah Komitmen Baru';
+		$heading_class = 'fa fa-file-invoice';
 		$masterpenangkars = MasterPenangkar::all();
 
 		return view('v2.commitment.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'masterpenangkars'));
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
 	public function store(Request $request)
 	{
 		//
@@ -80,81 +78,104 @@ class CommitmentBackdateController extends Controller
 		$commitments->za = $request->input('za');
 		$commitments->mulsa = $request->input('mulsa');
 		$commitments->poktan_share = $request->input('poktan_share');
+
+		//upload formRiph
+		if ($request->hasFile('formRiph')) {
+			$attch = $request->file('formRiph');
+			$attchname = 'formRiph_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRiph', $attch, $attchname);
+			$commitments->formRiph = $attchname;
+		}
+
+		//upload formSptjm
+		if ($request->hasFile('formSptjm')) {
+			$attch = $request->file('formSptjm');
+			$attchname = 'formSptjm_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formSptjm', $attch, $attchname);
+			$commitments->formSptjm = $attchname;
+		}
+
+		//upload logbook
+		if ($request->hasFile('logbook')) {
+			$attch = $request->file('logbook');
+			$attchname = 'logbook_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'logbook', $attch, $attchname);
+			$commitments->logbook = $attchname;
+		}
+
+		//upload formRt
+		if ($request->hasFile('formRt')) {
+			$attch = $request->file('formRt');
+			$attchname = 'formRt_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRt', $attch, $attchname);
+			$commitments->formRt = $attchname;
+		}
+
+		//upload formRta
+		if ($request->hasFile('formRta')) {
+			$attch = $request->file('formRta');
+			$attchname = 'formRta_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRta', $attch, $attchname);
+			$commitments->formRta = $attchname;
+		}
+
+		//upload formRpo
+		if ($request->hasFile('formRpo')) {
+			$attch = $request->file('formRpo');
+			$attchname = 'formRpo_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRpo', $attch, $attchname);
+			$commitments->formRpo = $attchname;
+		}
+
+		//upload formLa
+		if ($request->hasFile('formLa')) {
+			$attch = $request->file('formLa');
+			$attchname = 'formLa_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formLa', $attch, $attchname);
+			$commitments->formLa = $attchname;
+		}
+
 		// dd($commitments);
 		$commitments->save();
 
 		return redirect()->route('admin.task.commitments.index')->with('success', 'Data Commitment Saved successfully');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	public function show($id)
 	{
-		$module_name = 'Commitments';
-		$page_title = 'Commitment';
-		$page_heading = 'Detail Commitment';
+
+		$module_name = 'Komitmen';
+		$page_title = 'Detail';
+		$page_heading = 'Detail Komitmen';
 		$heading_class = 'fa fa-file-invoice';
 
 		$commitment = CommitmentBackdate::with('user', 'pksmitra.masterkelompok', 'penangkarmitra.masterpenangkar', 'pengajuanv2')
+			->where('user_id', Auth::id())
 			->findOrFail($id);
 		$masterkelompoks = MasterKelompok::all();
 		$masterpenangkars = MasterPenangkar::all();
-		$pengajuanv2 = Pengajuan::all();
+		$pengajuanv2 = PengajuanV2::all();
 		$pksmitras = $commitment->pksmitra;
 		$penangkarmitras = $commitment->penangkarmitra;
+
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
+			$disabled = false; // input di-enable
+		} else {
+			$disabled = true; // input di-disable
+		}
+
 		// dd();
-		return view('v2.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'masterpenangkars', 'penangkarmitras', 'commitment', 'masterkelompoks', 'pksmitras', 'pengajuanv2'));
+		return view('v2.commitment.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'masterpenangkars', 'penangkarmitras', 'commitment', 'masterkelompoks', 'pksmitras', 'pengajuanv2', 'disabled'));
 	}
 
-
-	public function penangkar($id)
-	{
-		$module_name = 'Commitments';
-		$page_title = 'Penangkar';
-		$page_heading = 'Penangkar Mitra';
-		$heading_class = 'fa fa-file-invoice';
-
-		$commitment = CommitmentBackdate::with('user')->findOrFail($id);
-		$masterpenangkars = MasterPenangkar::all();
-		$commitmentbackdate = CommitmentBackdate::with('penangkarmitra.masterpenangkar')
-			->findOrFail($id);
-		$penangkarmitras = $commitmentbackdate->penangkarmitra;
-
-		return view('v2.commitment.penangkarmitra', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterpenangkars', 'penangkarmitras', 'commitmentbackdate'));
-	}
-
-	public function pksmitra($id)
-	{
-		$module_name = 'Commitments';
-		$page_title = 'Kerjasama';
-		$page_heading = 'Perjanjian Kerjasama';
-		$heading_class = 'fa fa-file-signature';
-
-		$commitment = CommitmentBackdate::with('user')->findOrFail($id);
-		$masterkelompoks = MasterKelompok::all();
-		$commitmentbackdate = CommitmentBackdate::with('pksmitra.masterkelompok')
-			->findOrFail($id);
-		$pksmitras = $commitmentbackdate->pksmitra;
-
-		return view('v2.commitment.pksmitra.index', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitras', 'commitmentbackdate'));
-	}
-
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	public function edit($id)
 	{
 		//
 		//load all commitments for current user
-		$commitments = CommitmentBackdate::with('user')->findOrFail($id);
+		// $commitments = CommitmentBackdate::with('user')->findOrFail($id);
+		$commitments = CommitmentBackdate::with('user')
+			->where('user_id', Auth::id())
+			->findOrFail($id);
 
 		//load all Master Penangkar for reference in blade view
 		$masterpenangkars = MasterPenangkar::all();
@@ -162,49 +183,15 @@ class CommitmentBackdateController extends Controller
 		//load all Penangkar Mitra for current Commitment (commitment_backdate_id)
 		$penangkarmitras = PenangkarMitra::with('commitmentbackdate')->get();
 
-		$module_name = 'Commitments';
-		$page_title = 'Commitment';
-		$page_heading = 'Edit Commitment: ' . $commitments->no_ijin;
-		$heading_class = 'fa fa-file-edit';
+		$module_name = 'Komitmen';
+		$page_title = 'Ubah Data Komitmen';
+		$page_heading = 'Ubah data Komitmen: ' . $commitments->no_ijin;
+		$heading_class = 'fal fa-file-edit';
 
 
 		return view('v2.commitment.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'masterpenangkars', 'penangkarmitras'));
 	}
 
-	/**
-	 * Show the form in readonly the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function read($id)
-	{
-		//
-		//load all commitments for current user
-		$commitments = CommitmentBackdate::with('user')->findOrFail($id);
-
-		//load all Master Penangkar for reference in blade view
-		$masterpenangkars = MasterPenangkar::all();
-
-		//load all Penangkar Mitra for current Commitment (commitment_backdate_id)
-		$penangkarmitras = PenangkarMitra::with('commitmentbackdate')->get();
-
-		$module_name = 'Commitments';
-		$page_title = 'Commitment';
-		$page_heading = 'Data Commitment: ' . $commitments->no_ijin;
-		$heading_class = 'fal fa-file-invoice';
-
-
-		return view('v2.commitment.read', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'masterpenangkars', 'penangkarmitras'));
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
 	public function update(Request $request, $id)
 	{
 		//
@@ -224,111 +211,146 @@ class CommitmentBackdateController extends Controller
 		$commitments->za = $request->input('za');
 		$commitments->mulsa = $request->input('mulsa');
 		$commitments->poktan_share = $request->input('poktan_share');
-		// dd($commitments);
+
+		//upload formRiph
+		if ($request->hasFile('formRiph')) {
+			$attch = $request->file('formRiph');
+			$attchname = 'formRiph_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRiph', $attch, $attchname);
+			$commitments->formRiph = $attchname;
+		}
+
+		//upload formSptjm
+		if ($request->hasFile('formSptjm')) {
+			$attch = $request->file('formSptjm');
+			$attchname = 'formSptjm_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formSptjm', $attch, $attchname);
+			$commitments->formSptjm = $attchname;
+		}
+
+		//upload logbook
+		if ($request->hasFile('logbook')) {
+			$attch = $request->file('logbook');
+			$attchname = 'logbook_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'logbook', $attch, $attchname);
+			$commitments->logbook = $attchname;
+		}
+
+		//upload formRt
+		if ($request->hasFile('formRt')) {
+			$attch = $request->file('formRt');
+			$attchname = 'formRt_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRt', $attch, $attchname);
+			$commitments->formRt = $attchname;
+		}
+
+		//upload formRta
+		if ($request->hasFile('formRta')) {
+			$attch = $request->file('formRta');
+			$attchname = 'formRta_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRta', $attch, $attchname);
+			$commitments->formRta = $attchname;
+		}
+
+		//upload formRpo
+		if ($request->hasFile('formRpo')) {
+			$attch = $request->file('formRpo');
+			$attchname = 'formRpo_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formRpo', $attch, $attchname);
+			$commitments->formRpo = $attchname;
+		}
+
+		//upload formLa
+		if ($request->hasFile('formLa')) {
+			$attch = $request->file('formLa');
+			$attchname = 'formLa_' . $commitments->id . '_' . time() . '.' . $attch->getClientOriginalExtension();
+			Storage::disk('public')->putFileAs('docs/commitmentsv2/' . $request->input('periodetahun') . '/' . 'formLa', $attch, $attchname);
+			$commitments->formLa = $attchname;
+		}
+
 		$commitments->save();
 		return redirect()->route('admin.task.commitments.index')->with('success', 'Data Commitment updated successfully');
 	}
 
-	public function createpengajuan($id, Request $request)
+	public function read($id)
 	{
-		// Find commitment_backdate id
-		$commitments = CommitmentBackdate::find($id);
+		//
+		//load all commitments for current user
+		$commitments = CommitmentBackdate::with('user')
+			->where('user_id', Auth::id())
+			->findOrFail($id);
 
-		// Create no_pengajuan
-		$last_no_pengajuan = PengajuanV2::whereYear('created_at', date('Y'))
-			->whereMonth('created_at', date('m'))
-			->whereDay('created_at', date('d'))
-			->max('no_pengajuan');
-		$no_pengajuan = date('Ymd') . sprintf('%03d', intval(substr($last_no_pengajuan, -3)) + 1);
+		//load all Master Penangkar for reference in blade view
+		$masterpenangkars = MasterPenangkar::all();
 
-		// Create status pengajuanv2
-		$pengajuan = new PengajuanV2();
-		$pengajuan->no_pengajuan = $no_pengajuan;
-		$pengajuan->commitmentbackdate_id = $commitments->id;
-		$pengajuan->status = '1';
+		//load all Penangkar Mitra for current Commitment (commitment_backdate_id)
+		$penangkarmitras = PenangkarMitra::with('commitmentbackdate')->get();
 
-		// Update commitment_backdate
-		$commitments->status = '1';
-		$commitments->no_pengajuan = $no_pengajuan;
-		$commitments->pengajuan_id = $pengajuan->id;
-		$fileInputs = [
-			'formRiph',
-			'formSptjm',
-			'logbook',
-			'formRt',
-			'formRta',
-			'formRpo',
-			'formLa'
-		];
-		$commitment_id = $commitments->id;
-		$folder_name = "commitmentsv2/$commitment_id";
+		$module_name = 'Komitmen';
+		$page_title = 'Komitmen Detail';
+		$page_heading = 'Data Komitmen: ' . $commitments->no_ijin;
+		$heading_class = 'fal fa-file-invoice';
 
-		foreach ($fileInputs as $fileInput) {
-			if ($request->hasFile($fileInput)) {
-				$file = $request->file($fileInput);
-				$file_name = $fileInput . '_' . $commitment_id . '_' . date('Ymd') . '_' . time() . '.' . $file->getClientOriginalExtension();
-				Storage::disk('public')->putFileAs("docs/$folder_name", $file, $file_name);
-				$commitments->$fileInput = $file_name;
-			}
-		}
-		$commitments->save();
-		$pengajuan->save();
-		return redirect()->route('admin.task.commitments.show', $commitments->id)->with('success', 'Data Pengajuan submitted successfully');
+
+		return view('v2.commitment.read', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitments', 'masterpenangkars', 'penangkarmitras'));
 	}
 
-	public function pengajuanulang($id, Request $request)
+	public function penangkar($id)
 	{
-		// Find commitment_backdate id
-		$commitment = CommitmentBackdate::find($id);
+		$module_name = 'Komitmen';
+		$page_title = 'Penangkar';
+		$page_heading = 'Penangkar Mitra';
+		$heading_class = 'fa fa-file-invoice';
 
-		// Update pengajuanv2 status
-		$pengajuan = PengajuanV2::where('no_pengajuan', $request->input('no_pengajuan'))
-			->where('commitmentbackdate_id', $id)
-			->firstOrFail();
-		$pengajuan->status = '6';
-		$pengajuan->save();
+		$commitment = CommitmentBackdate::with('user')
+			->where('user_id', Auth::id())
+			->findOrFail($id);
+		$masterpenangkars = MasterPenangkar::all();
+		$commitmentbackdate = CommitmentBackdate::with('penangkarmitra.masterpenangkar')
+			->findOrFail($id);
+		$penangkarmitras = $commitmentbackdate->penangkarmitra;
 
-		// Update commitment_backdate
-		$commitment->status = '6';
-		$fileInputs = [
-			'formRiph',
-			'formSptjm',
-			'logbook',
-			'formRt',
-			'formRta',
-			'formRpo',
-			'formLa'
-		];
-		$commitment_id = $commitment->id;
-		$folder_name = "commitmentsv2/$commitment_id";
-
-		foreach ($fileInputs as $fileInput) {
-			if ($request->hasFile($fileInput)) {
-				$file = $request->file($fileInput);
-				$file_name = $fileInput . '_' . $commitment_id . '_' . date('Ymd') . '_' . time() . '.' . $file->getClientOriginalExtension();
-				Storage::disk('public')->putFileAs("docs/$folder_name", $file, $file_name);
-				$commitment->$fileInput = $file_name;
-			}
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
+			$disabled = false; // input di-enable
+		} else {
+			$disabled = true; // input di-disable
 		}
 
-		$commitment->save();
-
-		return redirect()->route('admin.task.commitments.show', $commitment->id)->with('success', 'Data Pengajuan submitted successfully');
+		return view('v2.commitment.penangkarmitra', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterpenangkars', 'penangkarmitras', 'commitmentbackdate', 'disabled'));
 	}
 
+	public function pksmitra($id)
+	{
+		$module_name = 'Komitmen';
+		$page_title = 'Kerjasama';
+		$page_heading = 'Perjanjian Kerjasama';
+		$heading_class = 'fa fa-file-signature';
 
+		$commitment = CommitmentBackdate::with(['user', 'pksmitra.masterkelompok'])
+			->where('user_id', Auth::id())
+			->findOrFail($id);
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
+		if (empty($commitment->status) || $commitment->status == 3 || $commitment->status == 5) {
+			$disabled = false; // input di-enable
+		} else {
+			$disabled = true; // input di-disable
+		}
+		$masterkelompoks = MasterKelompok::all();
+		// $commitmentbackdate = CommitmentBackdate::with('pksmitra.masterkelompok')
+		// 	->findOrFail($id);
+		$pksmitras = $commitment->pksmitra;
+
+		return view('v2.commitment.pksmitra.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'commitment', 'masterkelompoks', 'pksmitras', 'disabled'));
+	}
+
 	public function destroy($id)
 	{
-		$commitments = CommitmentBackdate::withTrashed()->findOrFail($id);
+		$commitments = CommitmentBackdate::withTrashed()
+			->where('user_id', Auth::id())
+			->findOrFail($id);
 		$commitments->penangkarmitra()->delete(); //delete related object here
 		$commitments->pengajuanv2()->delete(); //delete related object here
+		$commitments->pksmitra()->delete();
 		$commitments->delete();
 		return redirect()->route('admin.task.commitments.index')->with('success', 'Data Commitment deleted successfully');
 	}

@@ -33,7 +33,7 @@
 							<label for="">Kelompoktani</label>
 							<input disabled class="form-control form-control-sm fw-500 text-primary"
 							placeholder="" aria-describedby="helpId"
-							value="{{$masterkelompok->nama_kelompok}}">
+							value="{{$pksmitra->masterkelompok->nama_kelompok}}">
 						</div>
 					</div>
 				</div>
@@ -52,7 +52,7 @@
 						<!-- datatable start -->
 						<table id="tbl" class="table table-sm table-bordered table-hover table-striped w-100">
 							<thead>
-								<th></th>
+								{{-- <th></th> --}}
 								<th>Nama Lokasi</th>
 								<th>Petani Pelaksana</th>
 								<th>Luas Tanam</th>
@@ -64,13 +64,13 @@
 							<tbody>
 								@foreach ($anggotamitras as $anggotamitra)
 								<tr>
-									<td class="text-center">
+									{{-- <td class="text-center">
 										@if (!empty($warns))
 											<i class="fas fa-exclamation-circle text-danger" data-toggle="tooltip" data-html="true" title="{{ implode('<br>', $warns) }}"></i>
-										@elseif (empty($fault))
-											<i class="fas fa-check-circle text-success"></i>
+										@elseif (!empty($fault))
+											<i class="fal fa-check-circle text-success"></i>
 										@endif
-									</td>
+									</td> --}}
 									<td>{{$anggotamitra->nama_lokasi}}</td>
 									<td>{{$anggotamitra->masteranggota->nama_petani}} - 
 										{{$anggotamitra->masteranggota->nik_petani}}
@@ -111,8 +111,8 @@
 		<div class="modal-content">
 			<div class="modal-header card-header">
 				<div>
-					<h4 class="modal-title fw-500" id="myModalLabel">Tambah Petani Pelaksana</h4>
-					<small id="helpId" class="text-muted">Petani Pelaksana sesuai Kelompoktani dan Daftar Petani yang tercantum di dalam Perjanjian Kerjasama.</small>
+					<h4 class="modal-title fw-500" id="myModalLabel">Tambah Lokasi Tanam</h4>
+					<small id="helpId" class="text-muted">Lokasi Tanam Petani Pelaksana sesuai Kelompoktani dan Daftar Petani yang tercantum di dalam Perjanjian Kerjasama.</small>
 				</div>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
@@ -151,11 +151,12 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-outline-secondary btn-sm"
+					<button type="button" class="btn btn-warning btn-sm"
 					data-dismiss="modal">
-						<i class="fal fa-times-circle text-danger fw-500"></i> Close
+						<i class="fal fa-times-circle fw-500"></i> Close
 					</button>
-					<button class="btn btn-primary btn-sm" type="submit">
+					<button class="btn btn-primary btn-sm" type="submit"
+						@if ($disabled) disabled @endif>
 						<i class="fal fa-save"></i> Save changes
 					</button>
 				</div>
@@ -191,6 +192,7 @@
 		$('#tbl').dataTable(
 		{
 			responsive: true,
+			pageLength:10,
 			lengthChange: false,
 			dom:
 				/*	--- Layout Structure 
@@ -256,9 +258,9 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-user-plus"></i>',
-					titleAttr: 'Tambah Petani Pelaksana',
-					className: 'btn btn-primary btn-sm btn-icon ml-3',
+					text: '<i class="fa fa-map-marked-alt mr-1"></i> Lokasi Baru',
+					titleAttr: 'Tambah Lokasi Tanam',
+					className: 'btn btn-info btn-xs ml-2',
 					action: function(e, dt, node, config) {
 					// find the modal element
 						var $modal = $('#modalAddPetani');

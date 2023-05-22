@@ -17,13 +17,13 @@
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table class="table table-hover table-striped" id="datatable">
+					<table class="table table-hover table-striped table-bordered table-sm" id="datatable">
 						<thead>
 							<th>Nomor Pengajuan</th>
 							<th>No. Riph</th>
 							<th>Tanggal Pengajuan</th>
-							<th>Status Terakhir</th>
 							<th>Tanggal Status</th>
+							<th>Status Terakhir</th>
 							<th>Tindakan</th>
 						</thead>
 						<tbody>
@@ -32,8 +32,31 @@
 								<td>{{$pengajuan->no_pengajuan}}</td>
 								<td>{{$pengajuan->commitmentbackdate->no_ijin}}</td>
 								<td>{{$pengajuan->created_at}}</td>
-								<td>{{$pengajuan->status}}</td>
 								<td>{{$pengajuan->updated_at}}</td>
+								<td class="text-center">
+									@if($pengajuan->status === '1')
+										<span class="badge btn-xs btn-primary" title="sudah diajukan">Diajukan</span>
+									@elseif($pengajuan->status === '2')
+										<span class="badge btn-xs btn-info" title="Proses pemeriksaan data">Data</span>
+									@elseif($pengajuan->status === '3')
+										<span class="badge btn-xs btn-danger" title="Data laporan ditolak">Ditolak</span>
+									@elseif($pengajuan->status === '4')
+										<span class="badge btn-xs btn-info" title="Proses Verifikasi Lapangan">Lapangan</span>
+									@elseif($pengajuan->status === '5')
+										<span class="badge btn-xs btn-danger" title="Data laporan ditolak">Ditolak</span>
+									@elseif($pengajuan->status === '6')
+										<span class="badge btn-xs btn-success" title="SKL telah terbit">SKL Terbit</span>
+									@elseif($pengajuan->status === '7')
+										<span class="badge btn-xs btn-success" title="SKL telah diterbitkan">SKL Terbit</span>
+									@endif
+								</td>
+								<td class="text-center">
+									<a href="{{route('admin.task.submission.show', $pengajuan->id)}}"
+										class="btn btn-xs btn-icon btn-primary"
+										data-toggle="tooltip" title data-original-title="Lihat data pengajuan">
+										<i class="fa fa-file-invoice"></i>
+									</a>
+								</td>
 							</tr>
 							@endforeach
 						</tbody>
@@ -51,32 +74,54 @@
 <script>
 $(document).ready(function() {
   // initialize datatable
-	$('#datatable').dataTable({
-		pagingType: 'full_numbers',
-		responsive: true,
-		lengthChange: false,
-		pageLength: 10,
-		order: [
-		[0, 'asc']
-		],
-		dom: // Add the modal button inside the 'B' option of the 'dom' string
-		"<'row'<'col-sm-12 col-md-2'fl><'col-sm-12 col-md-8 d-flex'><'col-sm-12 col-md-2 d-flex justify-content-end'B>>" +
-		"<'row'<'col-sm-12 col-md-12'tr>>" +
-		"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
-		buttons: [
+  $('#datatable').dataTable(
 			{
-				text: '<i class="fal fa-plus mr-1"></i>Kelompok Tani baru',
-				className: 'btn btn-primary btn-xs',
-				action: function(e, dt, node, config) {
-				// find the modal element
-					var $modal = $('#myModal');
-
-					// trigger the modal's show method
-					$modal.modal('show');
+			responsive: true,
+			lengthChange: false,
+			order:[],
+			dom:
+				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'>>",
+			buttons: [
+				/*{
+					extend:    'colvis',
+					text:      'Column Visibility',
+					titleAttr: 'Col visibility',
+					className: 'mr-sm-3'
+				},*/
+				{
+					extend: 'pdfHtml5',
+					text: '<i class="fa fa-file-pdf"></i>',
+					titleAttr: 'Generate PDF',
+					className: 'btn-outline-danger btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'excelHtml5',
+					text: '<i class="fa fa-file-excel"></i>',
+					titleAttr: 'Generate Excel',
+					className: 'btn-outline-success btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'csvHtml5',
+					text: '<i class="fal fa-file-csv"></i>',
+					titleAttr: 'Generate CSV',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'copyHtml5',
+					text: '<i class="fa fa-copy"></i>',
+					titleAttr: 'Copy to clipboard',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'print',
+					text: '<i class="fa fa-print"></i>',
+					titleAttr: 'Print Table',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				}
-			}
-		]
-	});
+			]
+		});
 });
 
 </script>

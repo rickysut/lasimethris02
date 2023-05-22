@@ -39,9 +39,9 @@ return new class extends Migration
 			$table->string('formRta')->nullable();
 			$table->string('formRpo')->nullable();
 			$table->string('formLa')->nullable();
-			$table->string('no_pengajuan')->nullable();
-			$table->unsignedBigInteger('pengajuan_id')->nullable();
-			$table->string('SKL')->nullable();
+			// $table->unsignedBigInteger('pengajuan_id')->nullable();
+			// $table->string('no_pengajuan')->nullable();
+			// $table->string('SKL')->nullable();
 			$table->timestamps();
 			$table->softDeletes()->nullable();
 		});

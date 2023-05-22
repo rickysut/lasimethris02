@@ -1,7 +1,8 @@
 @extends('layouts.admin')
 @section('styles')
+<link rel="stylesheet" media="screen, print" href="{{ asset('css/miscellaneous/lightgallery/lightgallery.bundle.css') }}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ea90fk4RXPswzkOJzd17W3EZx_KNB1M&libraries=drawing,geometry"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GMAP_API_KEY') }}&libraries=drawing,geometry"></script>
 {{-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> --}}
 
 @endsection
@@ -20,15 +21,8 @@
 						</span>
 					</h2>
 					<div class="panel-toolbar">
-						<button class="btn btn-xs btn-default mr-1" type="button"
-							data-toggle="modal" data-target="#modalKml">
-							<a data-toggle="tooltip" data-offset="0,1"
-								title data-original-title="Unggah data geolokasi dalam format kml untuk lokasi ini.">
-								<i class="fas fa-upload"></i> Unggah
-							</a>
-						</button>
 						@include('partials.globaltoolbar')
-                    </div>
+					</div>
 				</div>
 				<div class="panel-container show">
 					<div class="panel-content card-header">
@@ -83,18 +77,18 @@
 								<div class="form-group">
 									<div class="input-group bg-grey shadow-inset-2">
 										<div class="input-group-prepend">
-											<span class="input-group-text bg-transparent border-right-0 py-1 px-3 text-success">
+											<span class="input-group-text border-right-0 py-1 px-3 text-success">
 												<i class="fal fa-globe"></i>
 											</span>
 										</div>
-										<input id="kml-url" placeholder="paste link" onchange="link_parser()"
-											class="form-control border-left-0 bg-transparent pl-0" disabled>
+										<input id="mapId" name="mapId" placeholder="contoh: 1cwFsptUJ7EdW1IoHxFB_VRHsD10TEJ0" class="form-control">
 										<div class="input-group-append">
+											
 											<button class="btn btn-default waves-effect waves-themed"
-												onclick="link_parser()" disabled>Open</button>
+												onclick="link_parser()">Open</button>
 										</div>
 									</div>
-									<span class="help-block">Dalam pengembangan, belum dapat difungsikan!</span>
+									<span class="help-block">Pastikan tautan yang Anda berikan telah diatur agar dapat dilihat oleh publik pada aplikasi google map.</span>
 								</div>
 							</div>
 						</div>
@@ -191,7 +185,8 @@
 									<i class="fa fa-door-open mr-1"></i>Kembali
 								</a>
 								
-								<button class="btn btn-sm btn-primary" role="button" type="submit">
+								<button class="btn btn-sm btn-primary" role="button" type="submit"
+									@if ($disabled) disabled @endif>
 									<i class="fa fa-save mr-1"></i>Simpan
 								</button>
 							</div>
@@ -206,7 +201,8 @@
 					<h2>Realisasi Wajib Tanam</h2>
 					<div class="panel-toolbar">
 						<button class="btn btn-xs btn-info mr-1" type="button"
-							data-toggle="modal" data-target="#modalTanam">
+							data-toggle="modal" data-target="#modalTanam"
+							@if ($disabled) disabled @endif>
 							<i class="fas fa-upload"></i> Dokumentasi
 						</button>
 					</div>
@@ -240,7 +236,7 @@
 													<span class="input-group-text"><i class="fal fa-ruler-combined"></i></span>
 												</div>
 												<input type="number" value="{{ old('luas_tanam', $anggotamitras->luas_tanam) }}"
-													name="luas_tanam" id="luas_tanam"
+													name="luas_tanam" id="luas_tanam" step="0.01"
 													class="font-weight-bold form-control form-control-sm bg-white" />
 											</div>
 											<span class="help-block">Luas area lahan diukur mandiri.</span>
@@ -263,7 +259,7 @@
 							<div>
 								<label class="form-label" for="tgl_prod">Dokumentasi Tanam</label>
 								<div class="d-flex align-items-center flex-row">
-									<a href="{{ url('storage/docs/pks/anggota/tanam/docs/' . $anggotamitras->tanam_doc) }}"
+									<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/tanam/'.$anggotamitras->tanam_doc) }}"
 										data-sub-html="{{$anggotamitras->tanam_doc}}" title="{{$anggotamitras->tanam_doc}}"
 										target="_blank">
 										<div class="d-flex align-items-center">
@@ -271,10 +267,10 @@
 										</div>
 									 </a>
 									<div id="js-galleryTanam">
-										<a href="{{ url('storage/docs/pks/anggota/tanam/img/' . $anggotamitras->tanam_pict) }}"
+										<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/tanam/'.$anggotamitras->tanam_pict) }}"
 											data-sub-html="{{$anggotamitras->tanam_pict}}" title="{{$anggotamitras->tanam_pict}}">
 											<img class="img-responsive"
-											src="{{ url('storage/docs/pks/anggota/tanam/img/' . $anggotamitras->tanam_pict) }}"
+											src="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/tanam/'.$anggotamitras->tanam_pict) }}"
 											alt="{{$anggotamitras->tanam_pict}}">
 										</a>
 									</div>
@@ -287,7 +283,7 @@
 									class="btn btn-sm btn-info" role="button">
 									<i class="fa fa-door-open mr-1"></i>Kembali
 								</a>
-								<button class="btn btn-sm btn-primary" role="button" type="submit">
+								<button class="btn btn-sm btn-primary" role="button" type="submit" @if ($disabled) disabled @endif>
 									<i class="fa fa-save mr-1"></i>Simpan
 								</button>
 							</div>
@@ -303,7 +299,8 @@
 					<h2>Realisasi Wajib Produksi</h2>
 					<div class="panel-toolbar">
 						<button class="btn btn-xs btn-info mr-1" type="button"
-							data-toggle="modal" data-target="#modalProduksi">
+							data-toggle="modal" data-target="#modalProduksi"
+							@if ($disabled) disabled @endif>
 							<i class="fas fa-upload"></i> Dokumentasi
 						</button>
 					</div>
@@ -337,7 +334,7 @@
 													<span class="input-group-text"><i class="fal fa-ruler-combined"></i></span>
 												</div>
 												<input type="number" value="{{ old('volume', $anggotamitras->volume) }}"
-													name="volume" id="volume"
+													name="volume" id="volume" step="0.01"
 													class="font-weight-bold form-control form-control-sm bg-white" />
 											</div>
 											<span class="help-block">Luas area lahan diukur mandiri.</span>
@@ -348,7 +345,7 @@
 							<div>
 								<label class="form-label" for="tgl_prod">Dokumentasi Produksi</label>
 								<div class="d-flex align-items-center flex-row">
-									<a href="{{ url('storage/docs/pks/anggota/panen/docs/' . $anggotamitras->panen_doc) }}"
+									<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/panen/'.$anggotamitras->panen_doc) }}"
 										data-sub-html="{{$anggotamitras->panen_doc}}" title="{{$anggotamitras->panen_doc}}"
 										target="_blank">
 										<div class="d-flex align-items-center">
@@ -356,11 +353,10 @@
 										</div>
 									</a>
 									<div id="js-galleryProduksi">
-										<a href="{{ url('storage/docs/pks/anggota/panen/img/' . $anggotamitras->panen_pict) }}"
+										<a href="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/panen/'.$anggotamitras->panen_pict) }}"
 											data-sub-html="{{$anggotamitras->panen_pict}}" title="{{$anggotamitras->panen_pict}}">
 											<img class="img-responsive"
-											src="{{ url('storage/docs/pks/anggota/panen/img/' . $anggotamitras->panen_pict) }}"
-											alt="{{$anggotamitras->panen_pict}}">
+											src="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$anggotamitras->pks_mitra_id.'/panen/'.$anggotamitras->panen_pict) }}">
 										</a>
 									</div>
 								</div>
@@ -372,7 +368,7 @@
 									class="btn btn-sm btn-info" role="button">
 									<i class="fa fa-door-open mr-1"></i>Kembali
 								</a>
-								<button class="btn btn-sm btn-primary" role="button" type="submit">
+								<button class="btn btn-sm btn-primary" role="button" type="submit" @if ($disabled) disabled @endif>
 									<i class="fa fa-save mr-1"></i>Simpan
 								</button>
 							</div>
@@ -433,7 +429,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-sm btn-info waves-effect waves-themed" type="submit"><i class="fal fa-save mr-1"></i>Unggah</button>
+						<button class="btn btn-sm btn-info waves-effect waves-themed" type="submit" @if ($disabled) disabled @endif><i class="fal fa-save mr-1"></i>Unggah</button>
 						<button class="btn btn-sm btn-warning waves-effect waves-themed"><i class="fal fa-undo mr-1"></i>Batal</button>
 					</div>
 				</form>
@@ -493,7 +489,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-sm btn-info waves-effect waves-themed" type="submit"><i class="fal fa-save mr-1"></i>Unggah</button>
+						<button class="btn btn-sm btn-info waves-effect waves-themed" type="submit" @if ($disabled) disabled @endif><i class="fal fa-save mr-1"></i>Unggah</button>
 						<button class="btn btn-sm btn-warning waves-effect waves-themed"><i class="fal fa-undo mr-1"></i>Batal</button>
 					</div>
 				</form>
@@ -509,8 +505,6 @@
 @section('scripts')
 <script src="{{ asset('js/miscellaneous/lightgallery/lightgallery.bundle.js') }}"></script>
 @parent
-{{-- <script src="{{ asset('js/gmap/geoxml3.js') }}"></script> --}}
-{{-- <script src="{{ asset('js/gmap/ProjectedOverlay.js') }}"></script> --}}
 <script src="{{ asset('js/gmap/map.js') }}"></script>
 <script src="{{ asset('js/gmap/location-search.js') }}"></script>
 <script src="{{ asset('js/gmap/kml_parser.js') }}"></script>

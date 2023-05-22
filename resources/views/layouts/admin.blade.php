@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
+<html lang="en" class="root-text-sm">
+	<head>
+		<meta charset="utf-8">
 		<title>
 			{{ env('APP_NAME')}} | {{ ($page_title ?? '3.0') }}
 		</title>
@@ -57,9 +57,9 @@
 		
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		@yield('styles')
-    </head>
+	</head>
 
-	<body class="mod-bg-1 mod-nav-link footer-function-fixed">
+	<body class="mod-bg-2 mod-nav-link mod-skin-dark blur">
 		<script src="{{ asset('js/smartadmin/pagesetting.js') }}"></script>
 		<!-- begin page wrapper -->
 		<div class="page-wrapper">
@@ -149,6 +149,7 @@
 		<script src="{{ asset('js/smartadmin/statistics/easypiechart/easypiechart.bundle.js') }}"></script>
 		<script src="{{ asset('js/smartadmin/statistics/sparkline/sparkline.bundle.js') }}"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+		
 
 		<script src="{{ asset('js/toastr.js') }}"></script>
 

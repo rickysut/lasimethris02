@@ -27,7 +27,7 @@ class MasterPenangkar extends Model
 		'kecamatan_id',
 		'desa_id',
 		'nama_pimpinan',
-		'no_kontak',
+		'hp_pimpinan',
 	];
 
 	protected function serializeDate(DateTimeInterface $date)
@@ -37,6 +37,26 @@ class MasterPenangkar extends Model
 
 	public function penangkarmitra()
 	{
-		return $this->hasMany(PenangkarMitra::class);
+		return $this->hasMany(PenangkarMitra::class, 'id', 'penangkar_id');
+	}
+
+	public function provinsi()
+	{
+		return $this->belongsTo(MasterProvinsi::class, 'provinsi_id', 'provinsi_id');
+	}
+
+	public function kabupaten()
+	{
+		return $this->belongsTo(MasterKabupaten::class, 'kabupaten_id', 'kabupaten_id');
+	}
+
+	public function kecamatan()
+	{
+		return $this->belongsTo(MasterKecamatan::class, 'kecamatan_id', 'kecamatan_id');
+	}
+
+	public function desa()
+	{
+		return $this->belongsTo(MasterDesa::class, 'kelurahan_id', 'kelurahan_id');
 	}
 }
