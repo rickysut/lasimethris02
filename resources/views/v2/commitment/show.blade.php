@@ -102,13 +102,13 @@
 										<span class="fw-700 small">Anda belum mengajukan verifikasi</span>
 									</div>
 								</div><hr>
-								<form action="{{ route('admin.task.commitments.createpengajuan', $commitment->id) }}" method="POST" enctype="multipart/form-data">
-									@csrf
-									@method('PUT')
+								{{-- <form action="{{ route('admin.task.commitments.createpengajuan', $commitment->id) }}" method="POST" enctype="multipart/form-data"> --}}
+									{{-- @csrf --}}
+									{{-- @method('PUT') --}}
 									<input type="text" value="{{($commitment->id)}}"
 										id="commitmentbackdate_id" name="commitmentbackdate_id">
 									<button type="submit">ajukan</button>
-								</form>
+								{{-- </form> --}}
 
 
 								<a href="#" class="btn btn-xs btn-danger d-block"
