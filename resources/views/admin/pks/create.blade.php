@@ -2,9 +2,11 @@
 @section('content')
 @include('partials.breadcrumb')
 
+@can('pks_create')
 <form method="POST" action="{{route('admin.task.pks.store')}}" enctype="multipart/form-data">
-    @method('PUT')
     @csrf
+    <input type="hidden" name="npwp" value="{{ $npwp }}">
+    <input type="hidden" name="no_riph" value="{{ $nomor }}">
     <div class="row">
         <div class="col-md-4">
             <div class="panel" id="panel-1">
@@ -92,12 +94,12 @@
                         <div class="row d-flex">
                             <div class="col-12 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" for="simpleinputInvalid">Nomor Perjanjian</label>
+                                    <label class="form-label">Nomor Perjanjian</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend3">123</span>
+                                            <span class="input-group-text">123</span>
                                         </div>
-                                        <input type="text" class="form-control " id="simpleinputInvalid" required>
+                                        <input type="text" class="form-control" name="no_perjanjian" required>
                                     </div>
                                     <div class="help-block">
                                         Masukkan nomor Surat Perjanjian Kerjasama dengan Kelompoktani Mitra.
@@ -107,11 +109,11 @@
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="form-group">
                                     <label class="form-label">Tanggal perjanjian</label>
-                                    <div class="input-daterange input-group" id="datepickerstart">
+                                    <div class="input-group" >
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fal fa-calendar-day"></i></span>
                                         </div>
-                                        <input type="text" class="form-control " name="start" required>
+                                        <input type="date" class="form-control" name="tgl_perjanjian_start" required>
                                     </div>
                                     <div class="help-block">
                                         Pilih Tanggal perjanjian ditandatangani.
@@ -121,11 +123,11 @@
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="form-group">
                                     <label class="form-label">Tanggal berakhir perjanjian</label>
-                                    <div class="input-daterange input-group" id="datepickerend">
+                                    <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fal fa-calendar-day"></i></span>
                                         </div>
-                                        <input type="text" class="form-control " name="end" required>
+                                        <input type="date" class="form-control " name="tgl_perjanjian_end" required>
                                     </div>
                                     <div class="help-block">
                                         Pilih Tanggal berakhirnya perjanjian.
@@ -134,14 +136,14 @@
                             </div>
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" for="simpleinputInvalid">Jumlah Anggota</label>
+                                    <label class="form-label">Jumlah Anggota</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend3">
+                                            <span class="input-group-text">
                                                 <i class="fal fa-users"></i>
                                             </span>
                                         </div>
-                                        <input type="number" class="form-control " id="simpleinputInvalid" required>
+                                        <input type="number" class="form-control " name="jumlah_anggota" required>
                                     </div>
                                     <div class="help-block">
                                         Jumlah Anggota sesuai dokumen perjanjian.
@@ -150,12 +152,12 @@
                             </div>
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" for="simpleinputInvalid">Luas Rencana</label>
+                                    <label class="form-label">Luas Rencana</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend3"><i class="fal fa-ruler"></i></span>
+                                            <span class="input-group-text" ><i class="fal fa-ruler"></i></span>
                                         </div>
-                                        <input type="number" class="form-control " id="simpleinputInvalid" required>
+                                        <input type="number" class="form-control " name="luas_rencana" required>
                                     </div>
                                     <div class="help-block">
                                         Jumlah Luas total sesuai dokumen perjanjian.
@@ -164,12 +166,12 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" for="varietas">Varietas Tanam</label>
+                                    <label class="form-label" >Varietas Tanam</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="varietas"><i class="fal fa-seedling"></i></span>
+                                            <span class="input-group-text" ><i class="fal fa-seedling"></i></span>
                                         </div>
-                                        <input type="text" class="form-control " id="varietas" required>
+                                        <input type="text" class="form-control" name="varietas_tanam" required>
                                     </div>
                                     <div class="help-block">
                                         Varietas ditanam sesuai dokumen perjanjian.
@@ -178,12 +180,12 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-group">
-                                    <label class="form-label" for="periode">Periode Tanam</label>
+                                    <label class="form-label">Periode Tanam</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="varietas"><i class="fal fa-calendar-week"></i></span>
+                                            <span class="input-group-text"><i class="fal fa-calendar-week"></i></span>
                                         </div>
-                                        <input type="text" class="form-control " id="periode" required>
+                                        <input type="month" class="form-control" name="periode_tanam" required>
                                     </div>
                                     <div class="help-block">
                                         Periode tanam sesuai dokumen perjanjian.
@@ -193,13 +195,14 @@
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="form-group">
                                     <label class="form-label" for="provinsi">Provinsi</label>
-                                    <div class="input-group">
-                                        <select class="select2-prov form-control" id="provinsi" required>
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
-                                        </select>
-                                    </div>
+                                    <select id="province" class="select2-prov form-control w-100" name="provinsi" required>
+                                        <optgroup label="Provinsi">
+                                            @foreach ($provinsi['data'] as $data )
+                                                <option value="{{ $data['kd_prop'] }}">{{ $data['nm_prop'] }}</option>    
+                                            @endforeach
+                                            
+                                        </optgroup>
+                                    </select>
                                     <div class="help-block">
                                         Provinsi tempat terjadinya perjanjian.
                                     </div>
@@ -208,13 +211,11 @@
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="form-group">
                                     <label class="form-label" for="kabupaten">Kabupaten/Kota</label>
-                                    <div class="input-group">
-                                        <select class="select2-kab form-control" id="kabupaten" required>
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
-                                        </select>
-                                    </div>
+                                    <select id="kabupaten" class="select2-kab form-control w-100" name="kabupaten" required>
+                                        @foreach ($kabupaten['data'] as $data )
+                                            <option value="{{ $data['kd_kab'] }}">{{ $data['nama_kab'] }}</option>    
+                                        @endforeach
+                                    </select>
                                     <div class="help-block">
                                         Pilih Kabupaten tempat terjadinya perjanjian.
                                     </div>
@@ -223,13 +224,12 @@
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="form-group">
                                     <label class="form-label" for="kecamatan">Kecamatan</label>
-                                    <div class="input-group">
-                                        <select class="select2-kec form-control" id="kecamatan" required>
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
-                                        </select>
-                                    </div>
+                                    <select id="kecamatan" class="select2-kec form-control w-100" name="kecamatan" required>
+                                        @foreach ($kecamatan['data'] as $data )
+                                            <option value="{{ $data['kd_kec'] }}">{{ $data['nm_kec'] }}</option>    
+                                        @endforeach
+                                        
+                                    </select>
                                     <div class="help-block">
                                         Pilih Kecamatan tempat terjadinya perjanjian.
                                     </div>
@@ -238,27 +238,25 @@
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="form-group">
                                     <label class="form-label" for="desa">Desa</label>
-                                    <div class="input-group">
-                                        <select class="select2-des form-control" id="desa" required>
-                                            <option></option>
-                                            <option></option>
-                                            <option></option>
-                                        </select>
-                                    </div>
+                                    <select id="desa" class="select2-des form-control w-100" name="desa" required>
+                                        @foreach ($desa['data'] as $data )
+                                            <option value="{{ $data['kd_desa'] }}">{{ $data['nm_desa'] }}</option>    
+                                        @endforeach
+                                    </select>   
                                     <div class="help-block">
                                         Pilih Desa tempat terjadinya perjanjian.
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label">Unggah Berkas PKS (Perjanjian Kerjasama</label>
+                                <label class="form-label">Unggah Berkas PKS (Perjanjian Kerjasama)</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupPrepend3">PKS</span>
+                                        <span class="input-group-text">PKS</span>
                                     </div>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="pksFile" required>
-                                        <label class="custom-file-label" for="pksFile">Choose file...</label>
+                                        <input type="file" class="custom-file-input" id="berkas_pks"  name="berkas_pks" required>
+                                        <label class="custom-file-label" for="berkas_pks">Choose file...</label>
                                     </div>
                                 </div>
                                 <div class="help-block">Unggah hasil pemindaian berkas Form-5 dalam bentuk pdf. Ukuran berkas tidak lebih dari 2 megabytes.</div>
@@ -276,5 +274,81 @@
         </div>
     </div>
 </form>
+@endcan
 
+@endsection
+
+@section('scripts')
+@parent
+<script src="/js/formplugins/select2/select2.bundle.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#province').on('change', function() {
+            var province_id =$(this).val();
+            $.ajax({
+                type: 'get',
+                url: '/api/getAPIKabupatenProp',
+                data: {'provinsi':province_id},
+                success: function(data){
+                    $('#kabupaten').find('option').remove().end();
+                    $('#kecamatan').find('option').remove().end();
+                    $('#desa').find('option').remove().end();
+                    for (var i = 0; i < data.data.length; i++){
+                        $('#kabupaten')
+                        .find('option')
+                        .end()
+                        .append('<option value="'+data.data[i].kd_kab+'">'+data.data[i].nama_kab+'</option>');
+                    }
+                    $('#kabupaten').trigger("change");
+                },
+                error: function(){
+                    console.log('error load kabupaten');
+                },
+            });
+        });
+        $('#kabupaten').on('change', function() {
+            var kab_id =$(this).val();
+            $.ajax({
+                type: 'get',
+                url: '/api/getAPIKecamatanKab',
+                data: {'kabupaten':kab_id},
+                success: function(data){
+                    $('#kecamatan').find('option').remove().end();
+                    $('#desa').find('option').remove().end();
+                    for (var i = 0; i < data.data.length; i++){
+                        $('#kecamatan')
+                        .find('option')
+                        .end()
+                        .append('<option value="'+data.data[i].kd_kec+'">'+data.data[i].nm_kec+'</option>');
+                    }
+                    $('#kecamatan').trigger("change");
+                },
+                error: function(){
+                    console.log('error load kecamatan');
+                },
+            });
+        });
+        $('#kecamatan').on('change', function() {
+            var kec_id =$(this).val();
+            $.ajax({
+                type: 'get',
+                url: '/api/getAPIDesaKec',
+                data: {'kecamatan':kec_id},
+                success: function(data){
+                    $('#desa').find('option').remove().end();
+                    for (var i = 0; i < data.data.length; i++){
+                        $('#desa')
+                        .find('option')
+                        .end()
+                        .append('<option value="'+data.data[i].kd_desa+'">'+data.data[i].nm_desa+'</option>');
+                    }
+                },
+                error: function(){
+                    console.log('error load desa');
+                },
+            });
+        });
+        
+    });
+</script>
 @endsection

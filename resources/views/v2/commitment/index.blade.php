@@ -10,7 +10,7 @@
 		<div class="panel" id="panel-1">
 			<div class="panel-hdr">
 				<h2>
-					Daftar Komitment (RIPH Bawang Putih Konsumsi)
+					RIPH Bawang Putih Konsumsi
 				</h2>
 				<div class="panel-toolbar">
 					@include('partials.globaltoolbar')
@@ -147,6 +147,7 @@
 @section('scripts')
 @parent
 <script>
+
 	$(document).ready(function() {
 		var table = $('#datatable').DataTable({
 			responsive: true,
@@ -156,6 +157,7 @@
 				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
 				"<'row'<'col-sm-12'tr>>" +
 				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+
 				buttons: [
 					/*{
 						extend:    'colvis',
@@ -194,6 +196,7 @@
 						className: 'btn-outline-primary btn-sm btn-icon mr-1'
 					},
 					{
+
 						text: '<i class="fa fa-plus mr-1"></i>Komitmen Baru',
 						titleAttr: 'Data Komitmen baru',
 						className: 'btn btn-info btn-xs ml-2',
@@ -221,6 +224,7 @@
 	
 				// Add the select element before the first datatable button
 			$('.dt-buttons').before(select);
+
 		});
 	</script>
 

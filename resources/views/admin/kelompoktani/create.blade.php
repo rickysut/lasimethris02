@@ -161,6 +161,7 @@
 <!-- @parent -->
 <!-- start script for this page -->
 @section('scripts')
+@parent
 <script src="/js/formplugins/select2/select2.bundle.js"></script>
 <script>
     $(document).ready(function() {

@@ -63,8 +63,8 @@ class KelompoktaniController extends Controller
             });
             
             $table->editColumn('id_kecamatan', function ($row) {
-                $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
-                $datakecamatan = $this->getAPIKecamatan($access_token, $row->id_kecamatan);
+                // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+                $datakecamatan = $this->getAPIKecamatan( $row->id_kecamatan);
                 if($datakecamatan['data'][0]){
                     return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
                 } 
@@ -198,9 +198,8 @@ class KelompoktaniController extends Controller
             $query = 'select g.no_riph, g.id_kecamatan, g.nama_kelompok, g.nama_pimpinan, g.hp_pimpinan, g.id_poktan, count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
             from poktans p, group_tanis g
             where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan and g.no_riph = p.no_riph and p.no_riph = "'.
-            $realno .'"'. 'GROUP BY g.nama_kelompok';
+            $realno .'"'. ' GROUP BY g.nama_kelompok';
 
-            
             $table = Datatables::of(DB::select(DB::raw($query)));
             $table->addColumn('actions', '&nbsp;');
 
@@ -209,9 +208,9 @@ class KelompoktaniController extends Controller
                 $riph = Str::replace('.', '', $row->no_riph);
                 $riph = Str::replace('/', '', $riph);
                 $nomor = $row->id_poktan;
-                $urlView = route('admin.task.kelompoktani.showtani', [$riph, $nomor] );
-                $urlCreate = route('admin.task.pks.create', [$riph , $nomor] );
-                $urlEdit = route('admin.task.pks.edit', [$riph, $nomor] );
+                //$urlView = route('admin.task.kelompoktani.showtani', [$riph, $nomor] );
+                $urlCreate = route('admin.task.pks.create', ['no_riph' => $riph , 'idpoktan' => $nomor] );
+                $urlEdit = route('admin.task.pks.edit', [$riph , $nomor] );
                 
                 return '<a class="btn btn-xs btn-primary btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Tambah PKS"  href='.$urlCreate.'>'.
                 '    <i class="fal fa-plus-circle"></i></a>'.
@@ -228,8 +227,8 @@ class KelompoktaniController extends Controller
             });
             
             $table->editColumn('id_kecamatan', function ($row) {
-                $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
-                $datakecamatan = $this->getAPIKecamatan($access_token, $row->id_kecamatan);
+                // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+                $datakecamatan = $this->getAPIKecamatan($row->id_kecamatan);
                 if($datakecamatan['data'][0]){
                     return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
                 } 

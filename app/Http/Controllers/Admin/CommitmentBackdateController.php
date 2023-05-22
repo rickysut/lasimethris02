@@ -33,6 +33,7 @@ class CommitmentBackdateController extends Controller
 	public function index(Request $request)
 	{
 		//
+
 		$module_name = 'Komitmen';
 		$page_title = 'Daftar Komitmen';
 		$page_heading = 'Daftar Komitmen';

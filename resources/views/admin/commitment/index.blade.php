@@ -1,40 +1,35 @@
 @extends('layouts.admin')
 @section('content')
 @include('partials.breadcrumb')
-{{-- @include('partials.subheader') --}}
+@include('partials.subheader')
+
 @can('commitment_access')
-@if (!empty($pagedata['alerttitle']))
-<div class="" data-title="System Alert" data-intro="Ini adalah Panel yang berisi informasi atau pemberitahuan penting untuk Anda." data-step="1">@include('partials.sysalert')</div>
-@endif
+@include('partials.sysalert')
 <div class="row">
-    <div class="col-md-12">
-        <div id="panel-1" class="panel" data-title="Panel Data" data-intro="Panel ini berisi data-data" data-step="2">
-            <div class="panel-hdr">
-                <h2>
-                    Daftar<span class="fw-300"><i>RIPH</i></span>
-                </h2>
-                <div class="panel-toolbar">
-                    @include('partials.globaltoolbar')
-                </div>
-            </div>
+	<div class="col-12">
+		<div class="panel" id="panel-1">
+			<div class="panel-hdr">
+				<h2>
+					RIPH Bawang Putih Konsumsi
+				</h2>
+				<div class="panel-toolbar">
+					@include('partials.globaltoolbar')
+				</div>
+			</div>
             <div class="panel-container show">
                 <div class="panel-content">
                     <div class="table dataTables_wrapper dt-bootstrap4">
                         <table class="table table-sm table-bordered table-striped table-hover ajaxTable datatable datatable-Riph w-100">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th ></th>
-                                    {{-- <th hidden>ID</th> --}}
-                                    <th >Periode Tahun</th>
-                                    <th class="text-center">No. RIPH</th>
-                                    <th >Tanggal.Terbit</th>
-                                    <th class="text-center">V. RIPH (ton)</th>
-                                    <th class="text-center">V. Produksi (ton)</th>
-                                    <th class="text-center">L. Wajib Tanam (ha)</th>
-                                    <th class="text-center">Status</th>
-                                    <th style="width:15%">
-                                        {{ trans('global.actions') }}
-                                    </th>
+                                    <th>No. RIPH</th>
+                                    <th>Tahun</th>
+                                    <th>Tgl. Terbit</th>
+                                    <th>Tgl. Akhir</th>
+                                    <th class="text-center">Vol. Import</th>
+                                    <th class="text-center">Kewajiban</th>
+                                    <th>Status</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                         </table>
@@ -56,80 +51,102 @@
 	$(function () 
 	{
 
-        $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
-            toastr.options.timeOut = 10000;
-            toastr.options = {
-                positionClass: 'toast-top-full-width'
-            };
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        // $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+        //     toastr.options.timeOut = 10000;
+        //     toastr.options = {
+        //         positionClass: 'toast-top-full-width'
+        //     };
 
-            toastr.error( 'Gagal mengambil data');
-        };
+        //     toastr.error( 'Gagal mengambil data');
+        // };
 
-		let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-        @can('commitment_delete')
-            let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
-            let deleteButton = {
-                text: deleteButtonTrans,
-                url: "{{ route('admin.task.commitment.massDestroy') }}",
-                className: 'btn-danger btn-sm waves-effect waves-themed  mr-1', 
-                action: function (e, dt, node, config) {
-                var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
-                    return entry.id
-                });
-
-                if (ids.length === 0) {
-                    alert('{{ trans('global.datatables.zero_selected') }}')
-
-                    return
-                }
-
-                if (confirm('{{ trans('global.areYouSure') }}')) {
-                    $.ajax({
-                    headers: {'x-csrf-token': _token},
-                    method: 'POST',
-                    url: config.url,
-                    data: { ids: ids, _method: 'DELETE' }})
-                    .done(function () { location.reload() })
-                }
-                }
-            }
-            dtButtons.push(deleteButton)
-        @endcan
+		
         let dtOverrideGlobals = {
-            buttons: dtButtons,
+            responsive: true,
+			lengthChange: false,
+			dom:
+				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+			buttons: [
+				{
+					extend: 'pdfHtml5',
+					text: '<i class="fa fa-file-pdf"></i>',
+					titleAttr: 'Generate PDF',
+					className: 'btn-outline-danger btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'excelHtml5',
+					text: '<i class="fa fa-file-excel"></i>',
+					titleAttr: 'Generate Excel',
+					className: 'btn-outline-success btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'csvHtml5',
+					text: '<i class="fal fa-file-csv"></i>',
+					titleAttr: 'Generate CSV',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'copyHtml5',
+					text: '<i class="fa fa-copy"></i>',
+					titleAttr: 'Copy to clipboard',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'print',
+					text: '<i class="fa fa-print"></i>',
+					titleAttr: 'Print Table',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					text: '<i class="fa fa-plus"></i>',
+					titleAttr: 'Add new Commitment',
+					className: 'btn btn-info btn-sm btn-icon ml-2',
+					action: function(e, dt, node, config) {
+						window.location.href = '{{ route('admin.task.pull') }}';
+					}
+				}
+			],
+            // buttons: dtButtons,
             processing: true,
             serverSide: true,
             retrieve: true,
             aaSorting: [],
-            columnDefs: [{
-                                orderable: false,
-                                className: 'select-checkbox',
-                                targets: 0
-                            },  {
-                                orderable: false,
-                                searchable: false,
-                                targets: -1
-                            }
-                        ],
-            select: {
-                        style:    'multi+shift',
-                        selector: 'td:first-child'
-            },
-            dom: 
-					"<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 d-flex'B><'col-sm-12 col-md-2 d-flex justify-content-end'f>>" +
-					"<'row'<'col-sm-12 col-md-12'tr>>" +
-					"<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
-            
+            columnDefs: [
+                {
+                    orderable: false,
+                    searchable: false,
+                    targets: -1
+                }
+            ],
             ajax: "{{ route('admin.task.commitment') }}",
             columns: [
-                { data: 'placeholder', name: 'placeholder' },
+                // { data: 'placeholder', name: 'placeholder' },
                 // { data: 'id', name: 'id',  },
-                { data: 'periodetahun', name: 'periodetahun' },
-                { data: 'no_ijin', name: 'no_ijin' },
+                { data: 'no_ijin', name: 'no_ijin', render: function( data, type, row ) {
+                    return data.toUpperCase();
+                 }},
+                { data: 'periodetahun', name: 'periodetahun',class: 'text-center' },
                 { data: 'tgl_ijin', name: 'tgl_ijin',class: 'text-center'  },
-                { data: 'volume_riph', name: 'volume_riph', class: 'text-right' },
-                { data: 'volume_produksi', name: 'volume_produksi', class: 'text-right' },
-                { data: 'luas_wajib_tanam', name: 'luas_wajib_tanam', class: 'text-right' },
+                { data: 'tgl_akhir', name: 'tgl_akhir',class: 'text-center'  },
+                { data: 'volume_riph', name: 'volume_riph', class: 'text-right', 
+                    render: function( data, type, row ) {
+                        return numberWithCommas(data) + ' ton';
+                    }
+                },
+                { data: 'volume_produksi', name: 'volume_produksi',  
+                    render: function( data, type, row ) {
+                        return '<i class="fal fa-ruler-combined"></i> ' + numberWithCommas(row.luas_wajib_tanam) +  ' ha' + 
+                        '<br>' + 
+                        '<i class="fal fa-weight-hanging"></i> ' + numberWithCommas(data) + ' ton' ;
+                    }
+                    
+                },
+                // { data: 'luas_wajib_tanam', name: 'luas_wajib_tanam', class: 'text-right' },
                 { data: 'status', name: 'status', class: 'text-center',
                   render: function( data, type, row ) {
                     out = '';
@@ -139,7 +156,7 @@
                     if (data == 3) out = 'Pengajuan SKL';
                     if (data == 4) out = 'Review SKL';
                     if (data == 5) out = 'SKL Sudah Terbit';
-                    return out;
+                    return '<span class="badge badge-info">'+out+'</span>';
                   }
              },
                 { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
