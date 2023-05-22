@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="root-text-sm">
 
 <head>
     <meta charset="utf-8">
@@ -48,7 +48,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
 </head>
 
-<body>
+<body class="mod-skin-dark">
     <div class="page-wrapper">
         <div class="page-inner bg-brand-gradient">
             <div class="page-content-wrapper bg-transparent m-0">

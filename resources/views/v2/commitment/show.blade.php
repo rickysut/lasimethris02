@@ -18,62 +18,71 @@
 								<div class="row">
 									<div class="col-12 text-center mb-1">
 										<span class="icon-stack icon-stack-sm">
-											<i class="base-7 icon-stack-3x color-warning-700"></i>
+											<i class="base-7 icon-stack-3x color-success-50"></i>
 											<i class="fal fa-hourglass icon-stack-1x text-white"></i>
 										</span>
 									</div>
 									<div class="col-12 text-center">
-										<span class="fw-700">Verifikasi diproses.</span>
+										<span class="fw-700">Sudah Diajukan.</span>
 									</div>
 								</div><hr>
-								<p class="small help-block">Pengajuan Verifikasi Anda telah diterima dan dalam proses.<br> Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
+								<p class="small help-block">Pengajuan Verifikasi Anda telah diterima dan segera diproses.<br> Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
 								</p>
-								@break
+							@break
 							@case(2)
 								<div class="row">
 									<div class="col-12 text-center mb-1">
 										<span class="icon-stack icon-stack-sm">
-											<i class="base-7 icon-stack-3x color-success-700"></i>
-											<i class="fal fa-badge-check icon-stack-1x text-white"></i>
+											<i class="base-7 icon-stack-3x color-info-700"></i>
+											<i class="fal fa-file-check icon-stack-1x text-white"></i>
 										</span>
 									</div>
 									<div class="col-12 text-center">
-										<span class="fw-700">Verifikasi selesai dan sesuai</span>
+										<span class="fw-700">Verifikasi Data</span>
 									</div>
 								</div><hr>
-								<a href="#" class="btn btn-xs btn-success d-block" data-toggle="tooltip"
-									data-original-title="Ajukan Penerbitan Surat Keterangan Lunas">
+								<p class="small help-block">Verifikasi Data SELESAI diproses.<br> Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
+								</p>
+								{{-- <span class="btn btn-xs btn-warning d-block" data-toggle="tooltip"
+									data-original-title="Dalam Proses Verifikasi">
 									Ajukan SKL
-								</a>
-								@break
+								</span> --}}
+							@break
 							@case(3)
 								<div class="row">
 									<div class="col-12 text-center mb-1">
-										<span class="icon-stack icon-stack-sm">
-											<i class="base-7 icon-stack-3x color-primary-500"></i>
-											<i class="fal fa-hourglass icon-stack-1x text-white"></i>
-										</span>
+										<i class="fas fa-exclamation-circle fa-2x text-warning"></i>
 									</div>
 									<div class="col-12 text-center">
-										<span class="fw-700">Pemeriksaan SKL.</span>
+										<span class="fw-700">Perbaikan Data</span>
 									</div>
 								</div><hr>
-								<p class="small help-block">Pengajuan penerbitan SKL Anda dalam proses pemeriksaan.<br>Selama Masa Tunggu, Anda tidak dapat: menambah, mengubah, dan atau menghapus data terkait.
-								</p>
-								@break
+								<p class="small help-block">Verifikasi Data SELESAI diproses. System menyatakan Anda HARUS MEMPERBAIKI DATA terlebih dahulu, lalu Ajukan Pemeriksaan Ulang
+								</p><hr>
+								<a href="{{ route('admin.task.submission.create', $commitment->id) }}"
+									class="btn btn-xs btn-danger d-block">
+									Ajukan Review dan Verifikasi Ulang
+								</a>
+								{{-- <a href="#" class="btn btn-xs btn-danger d-block"
+									data-toggle="modal" data-target="#verifikasiModal">
+									Ajukan Pemeriksaan Ulang
+								</a> --}}
+							@break
 							@case(4)
 								<div class="row">
 									<div class="col-12 text-center mb-1">
-										<i class="fal fa-file-certificate fa-4x text-danger"></i>
+										<span class="icon-stack icon-stack-sm">
+											<i class="base-7 icon-stack-3x color-success-700"></i>
+											<i class="fal fa-map-marker-check icon-stack-1x text-white"></i>
+										</span>
 									</div>
 									<div class="col-12 text-center">
-										<span class="fw-700">SKL TERBIT</span>
+										<span class="fw-700">Verifikasi Lapangan</span>
 									</div>
 								</div><hr>
-								<a href="#" class="btn btn-xs btn-danger d-block">
-									Lihat SKL
-								</a>
-								@break
+								<p class="small help-block">Verifikasi Lapangan SELESAI diproses.<br> Surat Keterangan Lunas segera diterbitkan.
+								</p>
+							@break
 							@case(5)
 								<div class="row">
 									<div class="col-12 text-center mb-1">
@@ -85,10 +94,25 @@
 								</div><hr>
 								<p class="small help-block">Pemeriksaan data Anda telah selesai dengan hasil PERBAIKAN.<br>Silahkan perbaiki data-data yang diperlukan, lalu ajukan pemeriksaan ulang.
 								</p><hr>
-								<a href="#" class="btn btn-xs btn-danger d-block"
-									data-toggle="modal" data-target="#verifikasiModal">
-									Ajukan Pemeriksaan Ulang
+								<a href="{{ route('admin.task.submission.create', $commitment->id) }}"
+									class="btn btn-xs btn-danger d-block">
+									Ajukan Review dan Verifikasi Ulang
 								</a>
+							@break
+							@case(6)
+								<div class="row">
+									<div class="col-12 text-center mb-1">
+										<span class="icon-stack icon-stack-sm">
+											<i class="base-7 icon-stack-3x color-success-700"></i>
+											<i class="fal fa-award icon-stack-1x text-white"></i>
+										</span>
+									</div>
+									<div class="col-12 text-center">
+										<span class="fw-700">SKL TERBIT</span>
+									</div>
+								</div><hr>
+								<p class="small help-block">Selamat! Surat Keterangan Lunas untuk RIPH terkait telah diterbitkan.
+								</p>
 								@break
 							@default
 								<div class="row">
@@ -102,17 +126,9 @@
 										<span class="fw-700 small">Anda belum mengajukan verifikasi</span>
 									</div>
 								</div><hr>
-								{{-- <form action="{{ route('admin.task.commitments.createpengajuan', $commitment->id) }}" method="POST" enctype="multipart/form-data"> --}}
-									{{-- @csrf --}}
-									{{-- @method('PUT') --}}
-									<input type="text" value="{{($commitment->id)}}"
-										id="commitmentbackdate_id" name="commitmentbackdate_id">
-									<button type="submit">ajukan</button>
-								{{-- </form> --}}
 
-
-								<a href="#" class="btn btn-xs btn-danger d-block"
-									data-toggle="modal" data-target="#verifikasiModal">
+								<a href="{{ route('admin.task.submission.create', $commitment->id) }}"
+									class="btn btn-xs btn-danger d-block">
 									Ajukan Review dan Verifikasi
 								</a>
 						@endswitch
@@ -342,6 +358,17 @@
 											title="Edit/Ubah Data Perjanjian" class="btn btn-xs btn-icon btn-warning">
 											<i class="fal fa-edit"></i>
 										</a>
+										
+										<form action="{{ route('admin.task.pksmitra.destroy', $pksmitra->id) }}"
+											method="POST" style="display: inline-block;">
+											@csrf
+											@method('DELETE')
+											<button type="submit" class="ml-3 btn btn-icon btn-xs btn-danger" title="Hapus data pks"
+												onclick="return confirm('Anda yakin ingin menghapus data ini?');"
+												@if ($disabled) disabled @endif>
+												<i class="fal fa-trash-alt"></i>
+											</button>
+										</form>
 									</td>
 								</tr>
 								@endforeach
@@ -476,117 +503,6 @@
 		</div>
 	</div>
 
-	{{-- Modal Pengajuan Verifikasi --}}
-	<div class="modal fade" id="verifikasiModal" tabindex="-1" role="dialog"
-		aria-labelledby="verifikasiModal" aria-hidden="true">
-		<div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-			<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">
-				Pengajuan <span class="fw-300"><i>Verifikasi</i></span>
-				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="alert alert-warning border-0 mb-0">
-				<div class="d-flex align-item-center">
-					<div class="alert-icon">
-						<div class="icon-stack icon-stack-sm mr-3 flex-shrink-0">
-							<i class="base base-7 icon-stack-3x opacity-100 color-warning-400"></i>
-							<i class="base base-7 icon-stack-2x opacity-100 color-warning-900"></i>
-							<i class="fa fa-exclamation icon-stack-1x opacity-100 color-white"></i>
-						</div>
-					</div>
-					<div class="flex-1 help-block">
-						<span><h5>Berikut ini adalah berkas-berkas yang <span class="fw-900 text-danger">HARUS Anda unggah </span>(salinan hasil pindai) sebagai syarat wajib pengajuan verifikasi. </h5></span>
-					</div>
-				</div>
-			</div>
-			<div class="modal-body">
-				<form action="{{ $commitment->status == null ? route('admin.task.commitments.createpengajuan', $commitment->id) : route('admin.task.commitments.pengajuanulang', $commitment->id) }}" method="POST" enctype="multipart/form-data">
-
-					@csrf
-					@method('PUT')
-					<div class="row">
-						<div class="form-group col">
-							<label class="form-label h6">RIPH</label>
-							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formRiph" value="{{ old('formRiph', $commitment->formRiph) }}">
-								<label class="custom-file-label {{ $commitment->formRiph ? 'text-primary fw-400' : 'text-muted' }}" for="formRiph">
-									{{ $commitment->formRiph ? $commitment->formRiph : 'Pilih file...' }}
-								  </label>
-							</div>
-							<span class="help-block">Surat Persetujuan RIPH. (.jpg / .pdf).</span>
-						</div>
-						<div class="form-group col">
-							<label class="form-label h6">Form SPTJM</label>
-							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formSptjm" value="{{ old('formSptjm', $commitment->formSptjm) }}">
-								<label class="custom-file-label" for="formSptjm">{{ $commitment->formSptjm ? $commitment->formSptjm : 'Pilih file...' }}</label>
-							</div>
-							<span class="help-block">Form Pertanggungjawaban Mutlak. (.jpg / .pdf).</span>
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col">
-							<label class="form-label h6">Logbook</label>
-							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="logbook" value="{{ old('logbook', $commitment->logbook) }}">
-								<label class="custom-file-label" for="logbook">{{ $commitment->logbook ? $commitment->logbook : 'Pilih file...' }}</label>
-							</div>
-							<span class="help-block">logbook. (.jpg / .pdf).</span>
-						</div>
-						<div class="form-group col">
-							<label class="form-label h6">Form-RT</label>
-							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formRt" value="{{ old('formRt', $commitment->formRt) }}">
-								<label class="custom-file-label" for="formRt">{{ $commitment->formRt ? $commitment->formRt : 'Pilih file...' }}</label>
-							</div>
-							<span class="help-block">Form Rencana Tanam. (.jpg / .pdf).</span>
-						</div>        
-					</div>
-					
-					<div class="row">
-						<div class="form-group col">
-							<label class="form-label h6">Form-RTA</label>
-							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formRta" value="{{ old('formRta', $commitment->formRta) }}">
-								<label class="custom-file-label" for="formRta">{{ $commitment->formRta ? $commitment->formRta : 'Pilih file...' }}</label>
-							</div>
-							<span class="help-block">Form Realisasi tanam. (.jpg / .pdf).</span>
-						</div>
-						<div class="form-group col">
-							<label class="form-label h6">Form RPO</label>
-							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formRpo" value="{{ old('formRpo', $commitment->formRpo) }}">
-								<label class="custom-file-label" for="formRpo">{{ $commitment->formRpo ? $commitment->formRpo : 'Pilih file...' }}</label>
-							</div>
-							<span class="help-block">Form Realisasi Produksi. (.jpg / .pdf).</span>
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col">
-							<label class="form-label h6">Form LA</label>
-							<div class="custom-file input-group">
-								<input type="file" class="custom-file-input" name="formLa" value="{{ old('formLa', $commitment->formLa) }}">
-								<label class="custom-file-label" for="formLa">{{ $commitment->formLa ? $commitment->formLa : 'Pilih file...' }}</label>
-							</div>
-							<span class="help-block">Form Laporan Akhir. (.jpg / .pdf).</span>
-						</div>
-						<div class="modal-footer col">
-							<button type="button" class="btn btn-secondary align-bottom" data-dismiss="modal">Batal</button>
-							<button type="submit" class="btn btn-primary align-bottom">Unggah</button>
-						</div>    
-					</div>
-				</form>
-				
-			</div>
-			
-			</div>
-		</div>
-	</div>
-
 	
 
 @endcan
@@ -668,9 +584,9 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-cart-plus"></i>',
+					text: '<i class="fa fa-plus mr-1"></i>Mitra Penangkar',
 					titleAttr: 'Tambah Penangkar Mitra',
-					className: 'btn btn-info btn-sm btn-icon ml-2',
+					className: 'btn btn-info btn-xs ml-2',
 					action: function(e, dt, node, config) {
 						window.location.href = '{{ route('admin.task.commitments.penangkar', $commitment->id) }}';
 					}
@@ -753,9 +669,9 @@
 					className: 'btn-outline-primary btn-sm btn-icon mr-1'
 				},
 				{
-					text: '<i class="fa fa-signature"></i>',
+					text: '<i class="fa fa-plus mr-1"></i>Perjanjian Baru',
 					titleAttr: 'Buat Perjanjian Baru',
-					className: 'btn btn-info btn-sm btn-icon ml-2',
+					className: 'btn btn-info btn-xs ml-2',
 					action: function(e, dt, node, config) {
 						window.location.href = '{{ route('admin.task.commitments.pksmitra', $commitment->id) }}';
 					}

@@ -34,6 +34,7 @@ return new class extends Migration
 			$table->string('tanam_pict')->nullable();
 			$table->string('panen_doc')->nullable();
 			$table->string('panen_pict')->nullable();
+			$table->string('pengajuan_id')->nullable();
 			$table->integer('status')->nullable();
 			$table->timestamps();
 			$table->softDeletes();

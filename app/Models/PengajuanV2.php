@@ -15,12 +15,37 @@ class PengajuanV2 extends Model
 
 	protected $fillable = [
 		'commitmentbackdate_id',
-		'no_doc',
-		'status'
+		'no_pengajuan',
+		'jenis',
+		'status',
+		'note',
+		'luas_verif',
+		'volume_verif',
+		'onlinestatus',
+		'onlinenote',
+		'onlinedate',
+		'onlineattch',
+		'onlineverificator',
+		'onfarmstatus',
+		'onfarmnote',
+		'onfarmdate',
+		'onfarmattch',
+		'onfarmverificator',
+		'verif_at',
 	];
 
 	public function commitmentbackdate()
 	{
 		return $this->belongsTo(CommitmentBackdate::class, 'commitmentbackdate_id', 'id');
+	}
+
+	public function verifcommitment()
+	{
+		return $this->hasOne(verif_commitment::class);
+	}
+
+	public function sklv2()
+	{
+		return $this->hasOne(Sklv2::class, 'pengajuan_id', 'id');
 	}
 }

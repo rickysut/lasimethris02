@@ -35,7 +35,7 @@ class CommitmentBackdateFactory extends Factory
 			'status' => null,
 			'formRiph' => null,
 			'formSptjm' => null,
-			'logBook' => null,
+			'logbook' => null,
 			'formRt' => null,
 			'formRta' => null,
 			'formRpo' => null,

@@ -463,7 +463,9 @@
                         $('#kabupaten').find('option').remove().end();
                         $('#kecamatan').find('option').remove().end();
                         $('#desa').find('option').remove().end();
+                        
                         for (var i = 0; i < data.data.length; i++){
+                            
                             $('#kabupaten')
                             .find('option')
                             .end()
