@@ -15,6 +15,7 @@ class gettoken implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private PendingRequest $http; 
     /**
      * Create a new job instance.
      *
@@ -32,11 +33,13 @@ class gettoken implements ShouldQueue
      */
     public function handle()
     {
+        dd('masuk get token');
         $response = Http::asForm()->post(config('app.simevi_url').'getToken', [
             'username' => config('app.simevi_user'),
             'password' => config('app.simevi_pwd')
         ]);
-        // print_r($response->json());
+        
+        dd($response->json());
         $filepath = 'master/token.json';
         if (Storage::disk('local')->exists($filepath)) 
             Storage::disk('local')->delete($filepath); 

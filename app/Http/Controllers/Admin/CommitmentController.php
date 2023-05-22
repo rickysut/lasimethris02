@@ -256,7 +256,8 @@ class CommitmentController extends Controller
             $poktans = DB::select(DB::raw($query));
             
             foreach($poktans as $poktan){
-                $datakecamatan = $this->getAPIKecamatan(    $poktan->id_kecamatan);
+                $datakecamatan = $this->getAPIKecamatan($poktan->id_kecamatan);
+                // dd($datakecamatan);
                 $kec = $datakecamatan['data'][0]['nm_kec'];
                 $poktan->kecamatan = $kec ;
             }
