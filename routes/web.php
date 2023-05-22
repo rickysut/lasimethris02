@@ -123,8 +123,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::get('template/{berkas}/edit', 'BerkasController@edittemplate')->name('template.edit');
 		Route::put('template/{berkas}', 'BerkasController@updatetemplate')->name('template.update');
 		Route::get('template', 'BerkasController@indextemplate')->name('template');
-	
-	
+		
 		//route for backdate (v2)
 		//commitment (v2)
 		Route::resource('commitments', 'CommitmentBackdateController');
