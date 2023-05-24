@@ -131,14 +131,14 @@ class PksController extends Controller
         $nomor = Str::substr($no_riph, 0, 4) . '/' . Str::substr($no_riph, 4, 2) . '.' . Str::substr($no_riph, 6, 3) . '/' . 
         Str::substr($no_riph, 9, 1) . '/' . Str::substr($no_riph, 10, 2) . '/' . Str::substr($no_riph, 12, 4);
         
-        $query = 'select g.nama_kelompok, g.id_kecamatan, g.id_kelurahan , count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+        $query = 'select g.nama_kelompok, SUBSTR(g.id_kecamatan,1,2) as id_provinsi, g.id_kabupaten, g.id_kecamatan, g.id_kelurahan , count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
             from poktans p, group_tanis g
             where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan and g.no_riph= "' .$nomor . '" and g.id_poktan = "' . $idpoktan . '"
             GROUP BY g.nama_kelompok';
 
             
         $poktans = DB::select(DB::raw($query));
-        // dd($poktans);
+        //  dd($poktans);
         foreach ($poktans as $poktan){
             // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
             $datakecamatan = $this->getAPIKecamatan( $poktan->id_kecamatan);
@@ -154,13 +154,13 @@ class PksController extends Controller
         }
 
         $provinsi = $this->getAPIProvinsiAll();
-        $kabupaten = $this->getAPIKabupatenProp('11');
-        $kecamatan = $this->getAPIKecamatanKab('1101');
-        $desa = $this->getAPIDesaKec('1101010');
+        $kabupaten = $this->getAPIKabupatenProp($poktans[0]->id_provinsi);
+        $kecamatan = $this->getAPIKecamatanKab($poktans[0]->id_kabupaten);
+        $desa = $this->getAPIDesaKec($poktans[0]->id_kecamatan);
 
         // dd($poktans);
         $module_name = 'Proses RIPH' ;
-        $page_title = 'Kelompok Tani';
+        $page_title = 'Buat PKS';
         $page_heading = 'Buat PKS ' ;
         $heading_class = 'fal fa-ballot-check';
         return view('admin.pks.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'npwp', 'nomor', 'poktans', 'provinsi', 'kabupaten', 'kecamatan', 'desa','idpoktan' ));

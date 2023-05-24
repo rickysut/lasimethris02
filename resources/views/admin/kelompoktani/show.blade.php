@@ -111,16 +111,55 @@
             dtButtons.push(deleteButton)
         @endcan
         let dtOverrideGlobals = {
-            buttons: dtButtons,
+            responsive: true,
+			lengthChange: false,
+			dom:
+				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
+				"<'row'<'col-sm-12'tr>>" +
+				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+			buttons: [
+				{
+					extend: 'pdfHtml5',
+					text: '<i class="fa fa-file-pdf"></i>',
+					titleAttr: 'Generate PDF',
+					className: 'btn-outline-danger btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'excelHtml5',
+					text: '<i class="fa fa-file-excel"></i>',
+					titleAttr: 'Generate Excel',
+					className: 'btn-outline-success btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'csvHtml5',
+					text: '<i class="fal fa-file-csv"></i>',
+					titleAttr: 'Generate CSV',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'copyHtml5',
+					text: '<i class="fa fa-copy"></i>',
+					titleAttr: 'Copy to clipboard',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				{
+					extend: 'print',
+					text: '<i class="fa fa-print"></i>',
+					titleAttr: 'Print Table',
+					className: 'btn-outline-primary btn-sm btn-icon mr-1'
+				},
+				
+			],
+            // buttons: dtButtons,
             processing: true,
             serverSide: false,
             responsive: true,
             retrieve: true,
             aaSorting: [],
-            dom: 
-                    "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 d-flex'B><'col-sm-12 col-md-2 d-flex justify-content-end'f>>" +
-                    "<'row'<'col-sm-12 col-md-12'tr>>" +
-                    "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
+            // dom: 
+            //         "<'row'<'col-sm-12 col-md-2'l><'col-sm-12 col-md-8 d-flex'B><'col-sm-12 col-md-2 d-flex justify-content-end'f>>" +
+            //         "<'row'<'col-sm-12 col-md-12'tr>>" +
+            //         "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>",
             
             
             ajax: "{{ route('admin.task.kelompoktani.show', [$nomor]) }}",
