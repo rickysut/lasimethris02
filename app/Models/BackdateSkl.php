@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DaftarPejabat extends Model
+class BackdateSkl extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public $table = 'daftar_pejabats';
+    public $table = 'backdate_skls';
 
     protected $dates = [
         'created_at',
@@ -19,9 +19,10 @@ class DaftarPejabat extends Model
     ];
 
     protected $fillable = [
-        'nama',
-        'nip',
-        'ttd',
-        'status',
+        'periode',
+        'no_ijin',
+        'no_skl',
+        'berkas_skl',
+        'berkas_dukung',
     ];
 }

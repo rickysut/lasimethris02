@@ -21,7 +21,6 @@ class DaftarPejabat extends Model
     protected $fillable = [
         'nama',
         'nip',
-        'ttd',
         'status',
     ];
 }

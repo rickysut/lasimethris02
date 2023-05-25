@@ -78,6 +78,34 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 	Route::get('dir_check_b', 'MessengerController@showReply')->name('verifikasi.dir_check_b');
 	Route::get('dir_check_c', 'MessengerController@showReply')->name('verifikasi.dir_check_c');
 
+	//daftar pejabat penandatangan SKL
+	Route::get('daftarpejabats', 'PejabatController@index')->name('pejabats');
+	Route::get('pejabat/create', 'PejabatController@create')->name('pejabat.create');
+	Route::post('pejabat/store', 'PejabatController@store')->name('pejabat.store');
+	Route::get('pejabat/{id}/show', 'PejabatController@show')->name('pejabat.show');
+	Route::get('pejabat/{id}/edit', 'PejabatController@edit')->name('pejabat.edit');
+	Route::put('pejabat/{id}/update', 'PejabatController@update')->name('pejabat.update');
+	Route::delete('pejabat/{id}/delete', 'PejabatController@destroy')->name('pejabat.delete');
+	Route::put('pejabat/{id}/activate', 'PejabatController@activate')->name('pejabat.activate');
+
+	//daftar varietas
+	Route::get('varietas', 'VarietasController@index')->name('varietas');
+	Route::get('varietas/create', 'VarietasController@create')->name('varietas.create');
+	Route::get('varietas/{id}/edit', 'VarietasController@edit')->name('varietas.edit');
+	Route::get('varietas/{id}/show', 'VarietasController@show')->name('varietas.show');
+	Route::post('varietas/store', 'VarietasController@store')->name('varietas.store');
+	Route::put('varietas/{id}/update', 'VarietasController@update')->name('varietas.update');
+	Route::delete('varietas/{id}/delete', 'VarietasController@destroy')->name('varietas.delete');
+	Route::patch('varietas/{id}/restore', 'VarietasController@restore')->name('varietas.restore');
+
+	//backdate SKL yang dibuat secara manual
+	Route::get('backdateskl', 'BackdateSklController@index')->name('backdateskl');
+	Route::get('backdateskl/create', 'BackdateSklController@create')->name('backdateskl.create');
+	Route::post('backdateskl/store', 'BackdateSklController@store')->name('backdateskl.store');
+	Route::get('backdateskl/{id}/edit', 'BackdateSklController@edit')->name('backdateskl.edit');
+	Route::put('backdateskl/{id}/update', 'BackdateSklController@update')->name('backdateskl.update');
+	Route::delete('backdateskl/{id}/delete', 'BackdateSklController@destroy')->name('backdateskl.delete');
+
 	//user task
 	Route::group(['prefix' => 'task', 'as' => 'task.'], function () {
 
@@ -123,7 +151,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::get('template/{berkas}/edit', 'BerkasController@edittemplate')->name('template.edit');
 		Route::put('template/{berkas}', 'BerkasController@updatetemplate')->name('template.update');
 		Route::get('template', 'BerkasController@indextemplate')->name('template');
-		
+
 		//route for backdate (v2)
 		//commitment (v2)
 		Route::resource('commitments', 'CommitmentBackdateController');
