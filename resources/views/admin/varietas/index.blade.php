@@ -9,7 +9,7 @@
 		<div class="panel" id="panel-1">
 			<div class="panel-hdr">
 				<h2>
-					Daftar Pejabat Penandatangan SKL
+					Daftar Varietas Wajib Tanam
 				</h2>
 				<div class="panel-toolbar">
 					@include('partials.globaltoolbar')
@@ -17,42 +17,35 @@
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table id="datatable" class="table table-bordered table-hover table-striped w-100">
+					<table id="datatable" class="table table-bordered table-hover table-striped w-100 table-sm">
 						<thead>
-							<th>Nama Pejabat</th>
-							<th>NIP</th>
-							<th>Created at</th>
-							<th>Updated at</th>
-							<th>Status</th>
+							<th hidden>Nama Komoditas</th>
+							<th>Nama Varietas</th>
+							<th>Kode Varietas</th>
+							<th>Datalain</th>
+							<th>Keterangan</th>
 							<th>Tindakan</th>
 						</thead>
 						<tbody>
-							@foreach ($pejabats as $pejabat)
+							@foreach ($varieties as $variety)
 							<tr>
-								<td>{{$pejabat->nama}}</td>
-								<td>{{$pejabat->nip}}</td>
-								<td>{{$pejabat->created_at}}</td>
-								<td>{{$pejabat->updated_at}}</td>
+								<td hidden>{{$variety->nama_komoditas}}</td>
+								<td>{{$variety->nama_varietas}}</td>
+								<td>{{$variety->kode_varietas}}</td>
+								<td>{{$variety->datalain}}</td>
+								<td>{{$variety->keterangan}}</td>
 								<td>
-									@if ($pejabat->status ===0)
-										<form action="{{ route('admin.pejabat.activate', $pejabat->id) }}" method="POST" style="display: inline-block;">
-											@csrf
-											@method('PUT')
-											<button type="submit" class="btn btn-xs btn-outline-default rounded-circle btn-icon" onclick="return confirm('Anda akan mengaktifkan Pejabat ini sebagai default Penandatangan SKL?');">
-												<i class="fa fa-power-off text-muted"></i>
-											</button>
-										</form>
-									@else
-										<button class="btn btn-xs btn-icon btn-outline-default rounded-circle">
-											<i class="fa fa-power-off text-danger"></i>
-										</button>
-									@endif
-								</td>
-								<td>
-									<a href="{{ route('admin.pejabat.edit', [$pejabat->id]) }}" class="btn btn-icon btn-xs btn-outline-default rounded-circle"
-										title="ubah data Pejabat ini">
+									<a href="{{ route('admin.varietas.edit', [$variety->id]) }}" class="btn btn-icon btn-xs btn-outline-default rounded-circle"
+										title="ubah data varietas ini">
 										<i class="fa fa-edit text-primary"></i>
 									</a>
+									<form action="{{ route('admin.varietas.delete', $variety->id) }}" method="POST" style="display: inline-block;">
+										@csrf
+										@method('DELETE')
+										<button type="submit" class="btn btn-xs btn-outline-default rounded-circle btn-icon" onclick="return confirm('Anda akan menghapus varietas ini?');">
+											<i class="fa fa-trash text-danger"></i>
+										</button>
+									</form>
 								</td>
 							</tr>
 							@endforeach
@@ -77,7 +70,10 @@
 		{
 			responsive: true,
 			lengthChange: false,
-			order: [[4, 'desc']],
+			order: [[1, 'desc']],
+			rowGroup: {
+                dataSrc: 0
+            },
 			dom:
 				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
 				"<'row'<'col-sm-12'tr>>" +
@@ -118,7 +114,7 @@
 					titleAttr: 'Tambah Pejabat Penandatangan',
 					className: 'btn btn-info btn-sm btn-icon ml-2',
 					action: function(e, dt, node, config) {
-						window.location.href = '{{ route('admin.pejabat.create') }}';
+						window.location.href = '{{ route('admin.varietas.create') }}';
 					}
 				}
 			]

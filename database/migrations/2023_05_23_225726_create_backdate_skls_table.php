@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('daftar_pejabats', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama')->nullable();
-            $table->string('nip', 18)->nullable();
-            $table->string('ttd')->nullable;
-            $table->unsignedTinyInteger('status')->nullable();
+        Schema::create('backdate_skls', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('periode', 4)->nullable();
+            $table->string('no_ijin')->nullable();
+            $table->string('no_skl')->nullable();
+            $table->string('berkas_skl')->nullable();
+            $table->string('berkas_dukung')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('daftar_pejabats');
+        Schema::dropIfExists('backdate_skls');
     }
 };

@@ -703,6 +703,31 @@
 						</ul> --}}
 					</li>
 				@endcan
+				@can('template_access')
+					<li class="c-sidebar-nav-item {{ request()->is('admin/backdateskl')
+						|| request()->is('admin/backdateskl*') ? 'active' : '' }}">
+						<a href="{{ route('admin.backdateskl') }}"
+							data-filter-tags="backdate skl manual">
+							<i class="fa-fw fal fa-file-certificate c-sidebar-nav-icon">
+							</i>
+							Backdate SKL
+						</a>
+					</li>
+					<li class="{{ request()->is('admin/daftarpejabat*') ? 'active open' : '' }} ">
+						<a href="{{route('admin.pejabats')}}" title="Daftar Pejabat Penandatangan SKL"
+							data-filter-tags="setting permission user">
+							<i class="fal fa-user-tie"></i>
+							<span class="nav-link-text">Daftar Pejabat</span>
+						</a>
+					</li>
+					<li class="{{ request()->is('admin/varietas*') ? 'active open' : '' }} ">
+						<a href="{{route('admin.varietas')}}" title="Daftar Varietas Hortikultura"
+							data-filter-tags="setting permission user">
+							<i class="fal fa-seedling"></i>
+							<span class="nav-link-text">Daftar Varietas</span>
+						</a>
+					</li>
+				@endcan
 			@endcan
 
 			{{-- personalisasi --}}
