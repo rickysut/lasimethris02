@@ -198,7 +198,7 @@
                                     <select id="province" class="select2-prov form-control w-100" name="provinsi" required>
                                         <optgroup label="Provinsi">
                                             @foreach ($provinsi['data'] as $data )
-                                                <option value="{{ $data['kd_prop'] }}">{{ $data['nm_prop'] }}</option>    
+                                                <option value="{{ $data['kd_prop'] }}" @if($poktans[0]->id_provinsi == $data['kd_prop']) selected @endif >{{ $data['nm_prop'] }}</option>    
                                             @endforeach
                                             
                                         </optgroup>
@@ -213,7 +213,7 @@
                                     <label class="form-label" for="kabupaten">Kabupaten/Kota</label>
                                     <select id="kabupaten" class="select2-kab form-control w-100" name="kabupaten" required>
                                         @foreach ($kabupaten['data'] as $data )
-                                            <option value="{{ $data['kd_kab'] }}">{{ $data['nama_kab'] }}</option>    
+                                            <option value="{{ $data['kd_kab'] }}" @if($poktans[0]->id_kabupaten== $data['kd_kab']) selected @endif>{{ $data['nama_kab'] }}</option>    
                                         @endforeach
                                     </select>
                                     <div class="help-block">
@@ -226,7 +226,7 @@
                                     <label class="form-label" for="kecamatan">Kecamatan</label>
                                     <select id="kecamatan" class="select2-kec form-control w-100" name="kecamatan" required>
                                         @foreach ($kecamatan['data'] as $data )
-                                            <option value="{{ $data['kd_kec'] }}">{{ $data['nm_kec'] }}</option>    
+                                            <option value="{{ $data['kd_kec'] }}" @if($poktans[0]->id_kecamatan == $data['kd_kec']) selected @endif>{{ $data['nm_kec'] }}</option>    
                                         @endforeach
                                         
                                     </select>
@@ -240,7 +240,7 @@
                                     <label class="form-label" for="desa">Desa</label>
                                     <select id="desa" class="select2-des form-control w-100" name="desa" required>
                                         @foreach ($desa['data'] as $data )
-                                            <option value="{{ $data['kd_desa'] }}">{{ $data['nm_desa'] }}</option>    
+                                            <option value="{{ $data['kd_desa'] }}" @if($poktans[0]->id_kelurahan == $data['kd_desa']) selected @endif>{{ $data['nm_desa'] }}</option>    
                                         @endforeach
                                     </select>   
                                     <div class="help-block">

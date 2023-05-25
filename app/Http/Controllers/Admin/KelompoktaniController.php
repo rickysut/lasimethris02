@@ -226,14 +226,15 @@ class KelompoktaniController extends Controller
                 return $row->no_riph ? $row->no_riph : '';
             });
             
+
             $table->editColumn('id_kecamatan', function ($row) {
-                // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
                 $datakecamatan = $this->getAPIKecamatan($row->id_kecamatan);
                 if($datakecamatan['data'][0]){
                     return $datakecamatan['data'][0]['nm_kec'] ? $datakecamatan['data'][0]['nm_kec']  : '';   
                 } 
                 return $row->id_kecamatan ? $row->id_kecamatan : '';
             });
+
             
             $table->editColumn('nama_kelompok', function ($row) {
                 return $row->nama_kelompok ? $row->nama_kelompok : '';

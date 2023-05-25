@@ -9,7 +9,7 @@ var classHolder = document.getElementsByTagName("BODY")[0],
 	 * Load from localstorage
 	 **/
 
-	//themeSettings =  JSON.parse('{"themeOptions":"mod-bg-1 mod-nav-link header-function-fixed  mod-skin-light","themeURL":"' + window.location.origin +'/css/smartadmin/themes/cust-theme-3.css"}'),
+	// themeSettings =  JSON.parse('{"themeOptions":"mod-bg-1 mod-nav-link header-function-fixed  mod-skin-light","themeURL":"' + window.location.origin +'/css/smartadmin/themes/cust-theme-3.css"}'),
 	themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
 	{},
 	themeURL = themeSettings.themeURL || '',
