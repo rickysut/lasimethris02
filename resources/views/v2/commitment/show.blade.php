@@ -126,6 +126,7 @@
 										<span class="fw-700 small">Anda belum mengajukan verifikasi</span>
 									</div>
 								</div><hr>
+
 								<a href="{{ route('admin.task.submission.create', $commitment->id) }}"
 									class="btn btn-xs btn-danger d-block">
 									Ajukan Review dan Verifikasi

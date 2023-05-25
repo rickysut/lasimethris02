@@ -9,7 +9,7 @@
 		<div class="panel" id="panel-1">
 			<div class="panel-hdr">
 				<h2>
-					Daftar Pejabat Penandatangan SKL
+					Daftar Pejabat Penandatangan
 				</h2>
 				<div class="panel-toolbar">
 					@include('partials.globaltoolbar')
@@ -17,40 +17,33 @@
 			</div>
 			<div class="panel-container show">
 				<div class="panel-content">
-					<table id="datatable" class="table table-bordered table-hover table-striped w-100">
+					<table id="datatable" class="table table-bordered table-hover table-striped table-sm w-100">
 						<thead>
-							<th>Nama Pejabat</th>
-							<th>NIP</th>
-							<th>Created at</th>
-							<th>Updated at</th>
-							<th>Status</th>
+							<th>No. SKL</th>
+							<th>No. RIPH</th>
+							<th>Periode</th>
+							<th>Berkas SKL</th>
+							<th>Berkas Dukung</th>
 							<th>Tindakan</th>
 						</thead>
 						<tbody>
-							@foreach ($pejabats as $pejabat)
+							@foreach ($skls as $skl)
 							<tr>
-								<td>{{$pejabat->nama}}</td>
-								<td>{{$pejabat->nip}}</td>
-								<td>{{$pejabat->created_at}}</td>
-								<td>{{$pejabat->updated_at}}</td>
+								<td>{{$skl->no_skl}}</td>
+								<td>{{$skl->no_ijin}}</td>
+								<td>{{$skl->periode}}</td>
 								<td>
-									@if ($pejabat->status ===0)
-										<form action="{{ route('admin.pejabat.activate', $pejabat->id) }}" method="POST" style="display: inline-block;">
-											@csrf
-											@method('PUT')
-											<button type="submit" class="btn btn-xs btn-outline-default rounded-circle btn-icon" onclick="return confirm('Anda akan mengaktifkan Pejabat ini sebagai default Penandatangan SKL?');">
-												<i class="fa fa-power-off text-muted"></i>
-											</button>
-										</form>
-									@else
-										<button class="btn btn-xs btn-icon btn-outline-default rounded-circle">
-											<i class="fa fa-power-off text-danger"></i>
-										</button>
-									@endif
+									<a href="{{ asset('storage/arsip/backdateskl/'.$skl->berkas_skl) }}" target="_blank">
+										Lihat Berkas SKL
+									</a>
 								</td>
 								<td>
-									<a href="{{ route('admin.pejabat.edit', [$pejabat->id]) }}" class="btn btn-icon btn-xs btn-outline-default rounded-circle"
-										title="ubah data Pejabat ini">
+									<a href="{{ asset('storage/arsip/backdateskl/'.$skl->berkas_dukung) }}" target="_blank">
+										Lihat Berkas Data Dukung
+									</a>
+								</td>
+								<td>
+									<a href="{{route('admin.backdateskl.edit', $skl->id)}}" class="btn btn-icon btn-xs btn-outline-default rounded-circle">
 										<i class="fa fa-edit text-primary"></i>
 									</a>
 								</td>
@@ -77,7 +70,10 @@
 		{
 			responsive: true,
 			lengthChange: false,
-			order: [[4, 'desc']],
+			order: [[0, 'desc']],
+			rowGroup: {
+                dataSrc: 2
+            },
 			dom:
 				"<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'lB>>" +
 				"<'row'<'col-sm-12'tr>>" +
@@ -118,7 +114,7 @@
 					titleAttr: 'Tambah Pejabat Penandatangan',
 					className: 'btn btn-info btn-sm btn-icon ml-2',
 					action: function(e, dt, node, config) {
-						window.location.href = '{{ route('admin.pejabat.create') }}';
+						window.location.href = '{{ route('admin.backdateskl.create') }}';
 					}
 				}
 			]

@@ -79,7 +79,7 @@
                     <div class="row justify-content-center">
                         <div class="col-md-12 order-md-2 mb-4">
                             <div class="row justify-content-center text-center">
-                                <div class="card border m-auto m-lg-2" style="max-width: 18rem;">
+                                <div class="card border m-auto m-lg-2" style="max-width: 24rem;">
                                     <img src="img/card-backgrounds/cover-kementan.jpg" class="card-img-top" alt="...">
                                     <div class="card-body">
                                         <h5 class="card-title fw-500">Administrator & Verifikator</h5>
@@ -98,11 +98,10 @@
 
                                     </div>
                                     <div class="card-footer">
-                                        {{-- <a href="/v2" class="btn btn-sm btn-danger"><i class="fal fa-plane-departure mr-1"></i>Masuk</a> --}}
                                         <button type="button" class="btn btn-sm btn-danger waves-effect waves-themed" data-toggle="modal" data-target="#login1" onclick="loginClick(3)"><i class="fal fa-plane-departure mr-1"></i>Masuk</button>
                                     </div>
                                 </div>
-                                <div class="card border m-auto m-lg-2" style="max-width: 18rem;">
+                                <div class="card border m-auto m-lg-2" style="max-width: 24rem;">
                                     <img src="img/card-backgrounds/cover-v3.jpg" class="card-img-top" alt="...">
                                     <div class="card-body">
                                         <h5 class="card-title fw-500">Simethris versi 3.0</h5>

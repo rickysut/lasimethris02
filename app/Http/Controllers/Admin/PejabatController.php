@@ -37,7 +37,15 @@ class PejabatController extends Controller
 	 */
 	public function create()
 	{
-		//
+		abort_if(Auth::user()->roleaccess != 1, Response::HTTP_FORBIDDEN, '403 Forbidden');
+		$module_name = 'Daftar Pejabat';
+		$page_title = 'Pejabat';
+		$page_heading = 'Tambah Pejabat';
+		$heading_class = 'fa fa-user-tie';
+
+		$pejabats = DaftarPejabat::all();
+
+		return view('admin.pejabats.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pejabats'));
 	}
 
 	/**
@@ -48,7 +56,32 @@ class PejabatController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		//
+		abort_if(Auth::user()->roleaccess != 1, Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+		$newpejabat = new DaftarPejabat();
+		$newpejabat->nama = $request->input('nama');
+		$newpejabat->nip = $request->input('nip');
+		$ttdname = $request->input('nip');
+
+		if ($request->hasFile('ttd')) {
+			$file = $request->file('ttd');
+			$filename = 'ttd_' . $ttdname . '.' . $file->getClientOriginalExtension();
+			$file->storeAs('arsip/pejabat/', $filename, 'public');
+			$newpejabat->ttd = $filename;
+		};
+
+		// Check if there are any existing rows
+		$existingRows = DaftarPejabat::count();
+
+		if ($existingRows == 0) {
+			$newpejabat->status = '1'; // Set status to 1 for the first record
+		} else {
+			$newpejabat->status = '0'; // Set status to 0 for subsequent records
+		}
+
+		$newpejabat->save();
+
+		return redirect()->route('admin.pejabats')->with('success', 'Data Pejabat berhasil ditambahkan');
 	}
 
 	/**
@@ -70,7 +103,16 @@ class PejabatController extends Controller
 	 */
 	public function edit($id)
 	{
-		//
+		abort_if(Auth::user()->roleaccess != 1, Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+		$module_name = 'Pejabat';
+		$page_title = 'Ubah Data';
+		$page_heading = 'Ubah Data Pejabat';
+		$heading_class = 'fa fa-user-tie';
+
+		$pejabat = DaftarPejabat::findOrfail($id);
+
+		return view('admin.pejabats.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pejabat'));
 	}
 
 	/**
@@ -82,7 +124,22 @@ class PejabatController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		//
+		abort_if(Auth::user()->roleaccess != 1, Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+		$pejabat = DaftarPejabat::findOrFail($id);
+		$pejabat->nama = $request->input('nama');
+		$pejabat->nip = $request->input('nip');
+		$ttdname = $request->input('nip');
+		if ($request->hasFile('ttd')) {
+			$file = $request->file('ttd');
+			$filename = 'ttd_' . $ttdname . '.' . $file->getClientOriginalExtension();
+			$file->storeAs('arsip/pejabat/', $filename, 'public');
+			$pejabat->ttd = $filename;
+		};
+
+		$pejabat->save();
+
+		return redirect()->route('admin.pejabats')->with('success', 'Data Pejabat berhasil diubah');
 	}
 
 	/**
@@ -93,6 +150,21 @@ class PejabatController extends Controller
 	 */
 	public function destroy($id)
 	{
-		//
+		$pejabat = DaftarPejabat::findOrFail($id);
+		$pejabat->delete();
+	}
+
+	public function activate($id)
+	{
+		$pejabat = DaftarPejabat::findOrFail($id);
+
+		// Set the status of all records to 0
+		DaftarPejabat::where('status', 1)->update(['status' => 0]);
+
+		// Set the status of the current record to 1
+		$pejabat->status = 1;
+		$pejabat->save();
+
+		return redirect()->route('admin.pejabats')->with('success', 'Pejabat berhasil diaktifkan');
 	}
 }
