@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\SimeviTrait;
 use App\Models\GroupTani;
+use App\Models\PullRiph;
 use Gate;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -64,6 +65,9 @@ class PksController extends Controller
             });
             $table->editColumn('no_riph', function ($row) {
                 return $row->no_riph ? $row->no_riph : '';
+            });
+            $table->editColumn('id_poktan', function ($row) {
+                return $row->id_poktan ? $row->id_poktan : '';
             });
             $table->editColumn('no_perjanjian', function ($row) {
                 return $row->no_perjanjian ? $row->no_perjanjian : '';
@@ -125,13 +129,13 @@ class PksController extends Controller
         $no_riph = $request->no_riph;
         $idpoktan = $request->idpoktan;
         // dd($no_riph, $idpoktan);
-
         $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
 
         $nomor = Str::substr($no_riph, 0, 4) . '/' . Str::substr($no_riph, 4, 2) . '.' . Str::substr($no_riph, 6, 3) . '/' . 
         Str::substr($no_riph, 9, 1) . '/' . Str::substr($no_riph, 10, 2) . '/' . Str::substr($no_riph, 12, 4);
+        $pull = PullRiph::where('no_ijin', $nomor)->first();
         
-        $query = 'select g.nama_kelompok, SUBSTR(g.id_kecamatan,1,2) as id_provinsi, g.id_kabupaten, g.id_kecamatan, g.id_kelurahan , count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+        $query = 'select g.nama_kelompok, g.nama_pimpinan, g.id_poktan, SUBSTR(g.id_kecamatan,1,2) as id_provinsi, g.id_kabupaten, g.id_kecamatan, g.id_kelurahan , count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
             from poktans p, group_tanis g
             where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan and g.no_riph= "' .$nomor . '" and g.id_poktan = "' . $idpoktan . '"
             GROUP BY g.nama_kelompok';
@@ -159,11 +163,16 @@ class PksController extends Controller
         $desa = $this->getAPIDesaKec($poktans[0]->id_kecamatan);
 
         // dd($poktans);
-        $module_name = 'Proses RIPH' ;
-        $page_title = 'Buat PKS';
-        $page_heading = 'Buat PKS ' ;
-        $heading_class = 'fal fa-ballot-check';
-        return view('admin.pks.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'npwp', 'nomor', 'poktans', 'provinsi', 'kabupaten', 'kecamatan', 'desa','idpoktan' ));
+        $module_name = 'Proses RIPH';
+		$page_title = 'Kerjasama';
+		$page_heading = 'Perjanjian Kerjasama';
+		$heading_class = 'fa fa-file-signature';
+
+        // $module_name = 'Proses RIPH' ;
+        // $page_title = 'Buat PKS';
+        // $page_heading = 'Buat PKS ' ;
+        // $heading_class = 'fal fa-ballot-check';
+        return view('admin.pks.create', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'npwp', 'nomor', 'poktans', 'provinsi', 'kabupaten', 'kecamatan', 'desa','idpoktan','pull' ));
     }
 
     /**
@@ -175,7 +184,26 @@ class PksController extends Controller
     public function store(Request $request)
     {
         //dd($request->all());
-        Pks::create($request->all());
+        $data = $request->all();
+        $realnpwp = $data['npwp'];
+        $npwp = str_replace('.', '', $realnpwp);
+        $npwp = str_replace('-', '', $npwp);
+
+        $nomor = Str::replace('.', '', $data['no_riph']);
+        $noriph = Str::replace('/', '', $nomor);
+
+        if (array_key_exists('berkas_pks', $data)) {
+            if  ($data['berkas_pks']!=null){
+                $file_name = $noriph.'_'.$data['id_poktan']. '_berkaspks.'.$data['berkas_pks']->getClientOriginalExtension();
+                $file_path = $data['berkas_pks']->storeAs('uploads/'.$npwp, $file_name, 'public');
+                $spath = $file_path;
+                $data['berkas_pks'] = $spath;
+            };
+        }
+
+        Pks::create($data);
+
+
         return redirect()->route('admin.task.pks.index')->with('success', 'Task created successfully.');
     }
 
@@ -221,6 +249,10 @@ class PksController extends Controller
      */
     public function destroy(Pks $pks)
     {
-        //
+        abort_if(Gate::denies('pks_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $pks->delete();
+
+        return back();
     }
 }

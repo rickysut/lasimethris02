@@ -14,7 +14,9 @@ class Pks extends Model
     public $table = 'pks';
 
     protected $fillable = [
+        'npwp',
         'no_riph',
+        'id_poktan',
         'no_perjanjian',
         'tgl_perjanjian_start',
         'tgl_perjanjian_end',

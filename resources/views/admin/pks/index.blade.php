@@ -25,20 +25,21 @@
                                 <tr>
                                     <th ></th>
                                     {{-- <th hidden>ID</th> --}}
-                                    <th class="text-center">NPWP</th>
+                                    {{-- <th class="text-center">NPWP</th> --}}
                                     <th class="text-center">No. RIPH</th>
+                                    {{-- <th class="text-center">ID Poktan</th> --}}
                                     <th class="text-center">No. Perjanjian</th>
                                     <th class="text-center">Tgl. Mulai</th>
                                     <th class="text-center">Tgl. Berakhir</th>
-                                    <th class="text-center">Jumlah Anggota</th>
+                                    {{-- <th class="text-center">Jumlah Anggota</th> --}}
                                     <th class="text-center">Luas Rencana</th>
                                     <th class="text-center">Varietas Tanam</th>
                                     <th class="text-center">Periode Tanam</th>
-                                    <th class="text-center">Provinsi</th>
+                                    {{-- <th class="text-center">Provinsi</th>
                                     <th class="text-center">Kabupaten</th>
                                     <th class="text-center">Kecamatan</th>
-                                    <th class="text-center">Desa</th>
-                                    <th class="text-center">Berkas</th>
+                                    <th class="text-center">Desa</th> --}}
+                                    {{-- <th class="text-center">Berkas</th> --}}
                                     <th style="width:15%">
                                         {{ trans('global.actions') }}
                                     </th>
@@ -77,7 +78,7 @@
             let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
             let deleteButton = {
                 text: deleteButtonTrans,
-                url: "{{ route('admin.task.pks.massDestroy') }}",
+                url: "{{ route('admin.task.pks.index') }}",
                 className: 'btn-danger btn-sm waves-effect waves-themed  mr-1', 
                 action: function (e, dt, node, config) {
                 var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
@@ -132,20 +133,23 @@
             columns: [
                 { data: 'placeholder', name: 'placeholder' },
                 // { data: 'id', name: 'id',  },
-                { data: 'npwp', name: 'npwp' },
+                // { data: 'npwp', name: 'npwp' },
                 { data: 'no_riph', name: 'no_riph' },
+                // { data: 'id_poktan', name: 'id_poktan' },
                 { data: 'no_perjanjian', name: 'no_perjanjian' },
                 { data: 'tgl_perjanjian_start', name: 'tgl_perjanjian_start',class: 'text-center'  },
                 { data: 'tgl_perjanjian_end', name: 'tgl_perjanjian_end',class: 'text-center'  },
-                { data: 'jumlah_anggota', name: 'jumlah_anggota', class: 'text-right' },
-                { data: 'luas_rencana', name: 'luas_rencana', class: 'text-right' },
+                // { data: 'jumlah_anggota', name: 'jumlah_anggota', class: 'text-right' },
+                { data: 'luas_rencana', name: 'luas_rencana', class: 'text-right', render: function( data, type, row ) {
+                    return data + ' ha';
+                 } },
                 { data: 'varietas_tanam', name: 'varietas_tanam' },
                 { data: 'periode_tanam', name: 'periode_tanam' },
-                { data: 'provinsi', name: 'provinsi' },
-                { data: 'kabupaten', name: 'kabupaten' },
-                { data: 'kecamatan', name: 'kecamatan' },
-                { data: 'desa', name: 'desa' },
-                { data: 'berkas_pks', name: 'berkas_pks' },
+                // { data: 'provinsi', name: 'provinsi' },
+                // { data: 'kabupaten', name: 'kabupaten' },
+                // { data: 'kecamatan', name: 'kecamatan' },
+                // { data: 'desa', name: 'desa' },
+                // { data: 'berkas_pks', name: 'berkas_pks' },
                 { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
             ],
             orderCellsTop: true,

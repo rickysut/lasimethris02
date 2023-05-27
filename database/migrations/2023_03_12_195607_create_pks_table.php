@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('npwp');
             $table->string('no_riph');
+            $table->string('id_poktan');
             $table->string('no_perjanjian');
             $table->date('tgl_perjanjian_start');
             $table->date('tgl_perjanjian_end');
