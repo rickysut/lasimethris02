@@ -54,14 +54,14 @@
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
-        // $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
-        //     toastr.options.timeOut = 10000;
-        //     toastr.options = {
-        //         positionClass: 'toast-top-full-width'
-        //     };
+        $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+            toastr.options.timeOut = 10000;
+            toastr.options = {
+                positionClass: 'toast-top-full-width'
+            };
 
-        //     toastr.error( 'Gagal mengambil data');
-        // };
+            toastr.error( 'Gagal mengambil data');
+        };
 
 		
         let dtOverrideGlobals = {
@@ -150,19 +150,19 @@
                 { data: 'status', name: 'status', class: 'text-center',
                   render: function( data, type, row ) {
                     out = '';
-                    if (data == 0) out = 'Belum Diverifikasi';
-                    if (data == 1) out = 'Menunggu review verifikasi';
-                    if (data == 2) out = 'Sudah Diverifikasi';
-                    if (data == 3) out = 'Pengajuan SKL';
-                    if (data == 4) out = 'Review SKL';
-                    if (data == 5) out = 'SKL Sudah Terbit';
-                    return '<span class="badge badge-info">'+out+'</span>';
+                    if (data == 0) out = '<span class="badge badge-danger">Belum Diverifikasi</span>';
+                    if (data == 1) out = '<span class="badge badge-warning">Menunggu review verifikasi</span>';
+                    if (data == 2) out = '<span class="badge badge-info">Sudah Diverifikasi</span>';
+                    if (data == 3) out = '<span class="badge badge-secondary">Pengajuan SKL</span>';
+                    if (data == 4) out = '<span class="badge badge-primary">Review SKL</span>';
+                    if (data == 5) out = '<span class="badge badge-success">SKL Sudah Terbit</span>';
+                    return out;
                   }
              },
                 { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
             ],
             orderCellsTop: true,
-            order: [[ 1, 'desc' ]],
+            order: [[ 0, 'desc' ]],
             pageLength: 10,
         };
         let table = $('.datatable-Riph').DataTable(dtOverrideGlobals);

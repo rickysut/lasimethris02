@@ -85,6 +85,19 @@ return [
         'can_create'     => '1',
         'level'          => '1',
     ],
+
+    'mn_komitmen' => [
+        'title'          => 'Daftar Komitmen & PKS',
+        'title_lang'     => 'Daftar Komitmen & PKS',
+        'is_parent'      => '1',
+        'is_hidden'      => '0',
+        'can_view'       => '0',
+        'can_edit'       => '0',
+        'can_delete'     => '0',
+        'can_access'     => '1',
+        'can_create'     => '0',
+        'level'          => '0',
+    ],
     'commitment' => [
         'title'          => 'Daftar Komitmen',
         'title_lang'     => 'Daftar Komitmen',
@@ -97,9 +110,9 @@ return [
         'can_create'     => '1',
         'level'          => '1',
     ],
-    'kelompoktani' => [
-        'title'          => 'Kelompok Tani',
-        'title_lang'     => 'Kelompok Tani',
+    'daftarpks' => [
+        'title'          => 'Daftar PKS',
+        'title_lang'     => 'Daftar PKS',
         'is_parent'      => '0',
         'is_hidden'      => '0',
         'can_view'       => '1',
@@ -108,6 +121,18 @@ return [
         'can_access'     => '1',
         'can_create'     => '1',
         'level'          => '1',
+    ],
+    'kelompoktani' => [
+        'title'          => 'Kelompok Tani',
+        'title_lang'     => 'Kelompok Tani',
+        'is_parent'      => '1',
+        'is_hidden'      => '0',
+        'can_view'       => '0',
+        'can_edit'       => '0',
+        'can_delete'     => '0',
+        'can_access'     => '1',
+        'can_create'     => '0',
+        'level'          => '0',
     ],
     'daftarpoktan' => [
         'title'          => 'Daftar Kelompok Tani',
@@ -119,20 +144,9 @@ return [
         'can_delete'     => '1',
         'can_access'     => '1',
         'can_create'     => '1',
-        'level'          => '2',
+        'level'          => '1',
     ],
-    'daftarpks' => [
-        'title'          => 'Daftar PKS',
-        'title_lang'     => 'Daftar PKS',
-        'is_parent'      => '0',
-        'is_hidden'      => '0',
-        'can_view'       => '1',
-        'can_edit'       => '1',
-        'can_delete'     => '1',
-        'can_access'     => '1',
-        'can_create'     => '1',
-        'level'          => '2',
-    ],
+    
 
     'verifikasi' => [
         'title'          => 'Permohonan',

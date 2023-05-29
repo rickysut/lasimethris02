@@ -284,9 +284,7 @@
 				@endcan
 				@can('commitment_access')
 					@if (Auth::user()->roles[0]->title == 'user_v2')
-						<li class="{{ request()->is('admin/task/commitments')
-							|| request()->is('admin/task/pksmitra')
-							? 'active open' : '' }}">
+						<li class="{{ request()->is('admin/task/commitments')|| request()->is('admin/task/pksmitra') ? 'active open' : '' }}">
 							<a href="#" title="Komitmen dan PKS"
 								data-filter-tags="data komitmen commitment pks">
 								<i class="fa-fw fal fa-ballot c-sidebar-nav-icon"></i>
@@ -310,26 +308,62 @@
 							</ul>
 						</li>
 					@else
-						<li class="c-sidebar-nav-item {{ request()->is('admin/task/commitment') ? 'active' : '' }}">
-							<a href="{{ route('admin.task.commitment') }}"
-								data-filter-tags="daftar komitmen riph index">
-								<i class="fa-fw fal fa-ballot c-sidebar-nav-icon"></i>
-								{{ trans('cruds.commitment.title_lang') }}
+						<li class="{{ request()->is('admin/task/commitment')  || request()->is('admin/task/commitment/*')  ||  request()->is('admin/task/pks') || request()->is('admin/task/pks/*') ? 'active open' : '' }} ">
+							<a href="#" title="menukomitmen" data-filter-tags="Menu Komitmen">
+								<i class="fa-fw fal fa-ballot"></i>
+								<span class="nav-link-text">{{ trans('cruds.mn_komitmen.title') }}</span>
 							</a>
+							<ul>
+								@can('commitment_access')
+								<li class="c-sidebar-nav-item {{ request()->is('admin/task/commitment') || request()->is('admin/task/commitment/*')  ? 'active' : '' }}">
+									<a href="{{ route('admin.task.commitment') }}"
+										data-filter-tags="daftar komitmen riph index">
+										<i class="fa-fw fal fa-ballot c-sidebar-nav-icon"></i>
+										{{ trans('cruds.commitment.title_lang') }}
+									</a>
+								</li>
+								@endcan
+								@can('pks_access')
+								<li
+									class="c-sidebar-nav-item {{ request()->is('admin/task/pks') 
+										|| request()->is('admin/task/pks/*')  ? 'active' : '' }}">
+									<a href="{{ route('admin.task.pks.index') }}" title="Daftar PKS"
+										data-filter-tags="daftar pks perjanjian kerjasama">
+										<i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
+										{{ trans('cruds.daftarpks.title_lang') }}
+									</a>
+								</li>
+								@endcan
+								
+							</ul>
 						</li>
+
+
+						
 					@endif
 				@endcan
 				@can('kelompoktani_access')
-					<li class="{{ request()->is('admin/task/masterpenangkar') 
+					<li class="c-sidebar-nav-item {{ request()->is('admin/task/kelompoktani') || request()->is('admin/task/kelompoktani/*')  ? 'active' : '' }}">
+						<a href="{{ route('admin.task.kelompoktani') }}"
+							data-filter-tags="Daftar poktan">
+							<i class="fa-fw fal fa-users c-sidebar-nav-icon">
+							</i>
+							{{ trans('cruds.daftarpoktan.title_lang') }}
+						</a>
+					</li>
+				@endcan
+					{{-- <li class="{{ 
+						request()->is('admin/task/masterpenangkar') 
 						|| request()->is('admin/task/kelompoktani') 
 						|| request()->is('admin/task/masterpoktan')
 						|| request()->is('admin/task/kelompoktani/*') 
 						|| request()->is('admin/task/pks') 
-						|| request()->is('admin/task/pks/*') ? 'active open' : '' }}">
-						<a href="#" title="Kelompok tani"
-							data-filter-tags="data master kelompoktani poktan penangkar pks">
+						|| request()->is('admin/task/pks/*') 
+						? 'active open' : '' }}">
+						<a href="{{ route('admin.task.kelompoktani') }}" title="Daftar poktan"
+							data-filter-tags="daftar poktan ">
 							<i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
-							<span class="nav-link-text">{{ trans('cruds.kelompoktani.title_lang') }} dan Penangkar</span>
+							{{ trans('cruds.daftarpoktan.title_lang') }}
 						</a>
 						<ul>
 							@can('poktan_access')
@@ -367,34 +401,24 @@
 								@else
 								@endif
 							@endcan
-							@can('pks_access')
-							<li
-								class="c-sidebar-nav-item {{ request()->is('admin/task/pks') 
-									|| request()->is('admin/task/pks/*') ? 'active' : '' }}">
-								<a href="{{ route('admin.task.pks.index') }}" title="Daftar PKS"
-									data-filter-tags="daftar pks perjanjian kerjasama">
-									<i class="fa-fw fal fa-users c-sidebar-nav-icon"></i>
-									{{ trans('cruds.daftarpks.title_lang') }}
-								</a>
-							</li>
-							@endcan
+							
 						</ul>
-					</li>
-				@endcan
+					</li> --}}
+				{{-- @endcan --}}
 
 				{{-- permohonan --}}
 				@can('permohonan_access')
 					<li class="{{ request()->is('admin/task/pengajuan*') 
 						|| request()->is('admin/task/skl*') ? 'active open' : '' }} ">
-						<a href="#" title="Verifikasi & SKL"
-							data-filter-tags="daftar pengajuan permohonan verifikasi skl">
+						<a href="#" title="Permohonan"
+							data-filter-tags="daftar permohonan">
 							<i class="fa-fw fal fa-ballot"></i>
 							<span class="nav-link-text">{{ trans('cruds.verifikasi.title_lang') }}</span>
 						</a>
 						<ul>
 							@can('pengajuan_access')
 								<li class="c-sidebar-nav-item {{ request()->is('admin/task/pengajuan') 
-									|| request()->is('admin/task/submission*') ? 'active' : '' }}">
+									|| request()->is('admin/task/pengajuan/*') || request()->is('admin/task/submission*') ? 'active' : '' }}">
 									@if (Auth::user()->roles[0]->title == 'user_v2')
 										<a href="{{ route('admin.task.submission') }}"
 											data-filter-tags="daftar pengajuan verifikasi data online onfarm">
