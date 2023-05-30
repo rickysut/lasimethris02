@@ -66,7 +66,7 @@
                                         @case(1)
                                             <div class="row">
                                                 <div class="col-md-12 my-1">
-                                                    Menunggu Review Verifikasi 
+                                                    Verifikasi sudah diajukan 
                                                 </div>
                                                 <div class="col-md-12 my-1">
                                                     No Dokumen: <a href="@if ($pengajuan[0]) {{ route('admin.task.pengajuan.show', $pengajuan[0]->id) }} @else # @endif" ><i class="fal fa-arrow-alt-right"></i>&nbsp;{{ $pullRiph->no_doc }}</a>
@@ -77,7 +77,7 @@
                                         @case(2)
                                             <div class="row">
                                                 <div class="col-md-12 my-1">
-                                                    Sudah Diverifikasi
+                                                    Verifikasi Data Selesai
                                                 </div>
                                                 <div class="col-md-12 my-1">
                                                     <a href="#" class="btn btn-sm btn-success" data-toggle="tooltip"><i class="fas fa-badge-check"></i> Ajukan SKL</a>
@@ -86,18 +86,21 @@
                                             
                                             @break
                                         @case(3)
-                                            Pengajuan SKL
+                                            Verifikasi Data tidak dapat dilanjutkan
                                             @break
                                         @case(4)
-                                            Review SKL
+                                            Verifikasi Lapangan Selesai
                                             @break
                                         @case(5)
-                                            SKL Sudah Terbit
+                                            Verifikasi Lapangan tidak dapat dilanjutkan.
+                                            @break
+                                        @case(6)
+                                            SKL Telah Terbit
                                             @break
                                         @default
                                             <div class="row">
                                                 <div class="col-md-12 my-1">
-                                                    Belum diajukan Verifikasi Oleh Importir
+                                                    Belum Mengajukan Verifikasi
                                                 </div>
                                                 <div class="col-md-12 my-1">
                                                     <a href="#" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#verifikasiModal"><i class="fas fa-badge-check"></i> Ajukan Verifikasi</a>

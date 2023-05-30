@@ -180,7 +180,7 @@ class BerkasController extends Controller
         abort_if(Gate::denies('galeri_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $dataUser = Auth::user()::find(Auth::user()->id)->data_user;
-
+        // dd($dataUser);
         $data_berkas = new Collection(); 
         $item = [];
         if (!empty($dataUser->avatar)){
@@ -226,6 +226,8 @@ class BerkasController extends Controller
             $item += array('fullpath' => '/'.$dataUser->ktp_image);
             $data_berkas->push($item);
         }
+
+        // dd($data_berkas);
 
 
         $module_name = 'Proses RIPH' ;

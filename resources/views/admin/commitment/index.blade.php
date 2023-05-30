@@ -150,16 +150,39 @@
                 { data: 'status', name: 'status', class: 'text-center',
                   render: function( data, type, row ) {
                     out = '';
-                    if (data == 0) out = '<span class="badge badge-danger">Belum Diverifikasi</span>';
-                    if (data == 1) out = '<span class="badge badge-warning">Menunggu review verifikasi</span>';
-                    if (data == 2) out = '<span class="badge badge-info">Sudah Diverifikasi</span>';
-                    if (data == 3) out = '<span class="badge badge-secondary">Pengajuan SKL</span>';
-                    if (data == 4) out = '<span class="badge badge-primary">Review SKL</span>';
-                    if (data == 5) out = '<span class="badge badge-success">SKL Sudah Terbit</span>';
+                    if (data == 0) out = '<span class="badge btn-warning btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Belum Mengajukan Verifikasi">'+
+                                            '<i class="fal fa-exclamation-circle"></i>'+
+                                        '</span>';
+                    if (data == 1) out = '<span class="badge btn-primary btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Verifikasi sudah diajukan">'+
+                                            '<i class="fal fa-hourglass"></i>'+
+                                        '</span>';
+                    if (data == 2) out =  '<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Verifikasi Data Selesai">'+
+                                            '<i class="fal fa-check-circle"></i>'+
+                                        '</span>';
+                    if (data == 3) out = '<span class="badge btn-danger btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Maaf. Verifikasi Data tidak dapat dilanjutkan. Perbaiki Data Anda terlebih dahulu">'+
+                                            '<i class="fal fa-check-circle"></i>'+
+                                        '</span>';
+                    if (data == 4) out = '<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Verifikasi Lapangan Selesai">'+
+                                            '<i class="fal fa-map-marker-check"></i>'+
+                                        '</span>';
+                    if (data == 5) out = '<span class="badge btn-danger btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Maaf. Verifikasi Lapangan tidak dapat dilanjutkan. Perbaiki Data Anda terlebih dahulu">'+
+                                            '<i class="fal fa-exclamation-circle"></i>'+
+                                        '</span>';
+                    if (data == 6) out = '<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Hore!. SKL Telah Terbit">'+
+                                            '<i class="fal fa-award"></i>'+
+                                        '</span>';
                     return out;
                   }
-             },
-                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
+                },
+                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center'}
+                
             ],
             orderCellsTop: true,
             order: [[ 0, 'desc' ]],
