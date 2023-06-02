@@ -23,11 +23,9 @@ class PengajuanController extends Controller
 
         if ($request->ajax()) {
             //harus di query berdasarkan no riph sesuai user
-            $no_doc = (Auth::user()::find(Auth::user()->id)->data_user->pullRiph[0]->no_doc ?? null);
-            if (!$no_doc) {
-                $query = Pengajuan::select(sprintf('%s.*', (new Pengajuan())->table));
-            } else 
-                $query = Pengajuan::where('no_doc', $no_doc)->orderBy('created_at', 'desc')->select(sprintf('%s.*', (new Pengajuan())->table));
+            $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
+            
+            $query = Pengajuan::where('npwp', $npwp)->orderBy('created_at', 'desc')->get();
             
             $table = Datatables::of($query);
 
@@ -51,8 +49,8 @@ class PengajuanController extends Controller
             $table->editColumn('no_doc', function ($row) {
                 return $row->no_doc ? $row->no_doc : '';
             });
-            $table->editColumn('detail', function ($row) {
-                return $row->detail ? $row->detail : '';
+            $table->editColumn('no_riph', function ($row) {
+                return $row->no_riph ? $row->no_riph : '';
             });
             $table->editColumn('jenis', function ($row) {
                 return $row->jenis ? $row->jenis : 0;

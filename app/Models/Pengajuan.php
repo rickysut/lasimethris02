@@ -32,7 +32,8 @@ class Pengajuan extends Model
      */
     protected $fillable = [
         'no_doc',
-        'detail',
+        'npwp',
+        'no_riph',
         'jenis', // 1 = Pengajuan verifikasi ; 2 = verifikasi lolos; 3 = pengajuan SKL; 4 = SKL sudah terbit
         'status'
     ];

@@ -123,7 +123,7 @@ class CommitmentController extends Controller
         
         $pullRiph = PullRiph::where('npwp', $realnpwp)->first();
 
-        
+        // dd($realnpwp, $pullRiph);
 
         DB::beginTransaction();
         try {
@@ -192,10 +192,11 @@ class CommitmentController extends Controller
                     ['detail' => $pullRiph->no_ijin],
                     ['jenis' => 1 , 'status' => 1]    
                 );
-                // dd($pengajuan);
+                
                 $userFiles += array('no_doc' => $pengajuan->no_doc);
+                
                 PullRiph::updateOrCreate(
-                    ['npwp' => $realnpwp, 'no_ijin' => $request->get('no_ijin')],
+                    ['npwp' => $realnpwp, 'no_ijin' => $pullRiph->no_ijin],
                     $userFiles
                 ); 
                 
@@ -204,12 +205,12 @@ class CommitmentController extends Controller
         } catch(ValidationException $e)
         {
             DB::rollback();
-            return  back()->withErrors('Terjadi kesalahan saat unggah file');
+            return  back()->withErrors('Error: ' . $e->getMessage());
         } catch(\Exception $e)
         {
             DB::rollback();
             //throw $e;
-            return back()->withErrors('Terjadi kesalahan saat unggah file');
+            return back()->withErrors('Error-' . $e->getMessage());
         }
         
         DB::commit();

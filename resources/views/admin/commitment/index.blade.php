@@ -54,14 +54,14 @@
         function numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
-        // $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
-        //     toastr.options.timeOut = 10000;
-        //     toastr.options = {
-        //         positionClass: 'toast-top-full-width'
-        //     };
+        $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+            toastr.options.timeOut = 10000;
+            toastr.options = {
+                positionClass: 'toast-top-full-width'
+            };
 
-        //     toastr.error( 'Gagal mengambil data');
-        // };
+            toastr.error( 'Gagal mengambil data');
+        };
 
 		
         let dtOverrideGlobals = {
@@ -150,19 +150,42 @@
                 { data: 'status', name: 'status', class: 'text-center',
                   render: function( data, type, row ) {
                     out = '';
-                    if (data == 0) out = 'Belum Diverifikasi';
-                    if (data == 1) out = 'Menunggu review verifikasi';
-                    if (data == 2) out = 'Sudah Diverifikasi';
-                    if (data == 3) out = 'Pengajuan SKL';
-                    if (data == 4) out = 'Review SKL';
-                    if (data == 5) out = 'SKL Sudah Terbit';
-                    return '<span class="badge badge-info">'+out+'</span>';
+                    if (data == 0) out = '<span class="badge btn-warning btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Belum Mengajukan Verifikasi">'+
+                                            '<i class="fal fa-exclamation-circle"></i>'+
+                                        '</span>';
+                    if (data == 1) out = '<span class="badge btn-primary btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Verifikasi sudah diajukan">'+
+                                            '<i class="fal fa-hourglass"></i>'+
+                                        '</span>';
+                    if (data == 2) out =  '<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Verifikasi Data Selesai">'+
+                                            '<i class="fal fa-check-circle"></i>'+
+                                        '</span>';
+                    if (data == 3) out = '<span class="badge btn-danger btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Maaf. Verifikasi Data tidak dapat dilanjutkan. Perbaiki Data Anda terlebih dahulu">'+
+                                            '<i class="fal fa-check-circle"></i>'+
+                                        '</span>';
+                    if (data == 4) out = '<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Verifikasi Lapangan Selesai">'+
+                                            '<i class="fal fa-map-marker-check"></i>'+
+                                        '</span>';
+                    if (data == 5) out = '<span class="badge btn-danger btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Maaf. Verifikasi Lapangan tidak dapat dilanjutkan. Perbaiki Data Anda terlebih dahulu">'+
+                                            '<i class="fal fa-exclamation-circle"></i>'+
+                                        '</span>';
+                    if (data == 6) out = '<span class="badge btn-success btn-icon btn-xs" data-toggle="tooltip"'+
+                                            'title="Hore!. SKL Telah Terbit">'+
+                                            '<i class="fal fa-award"></i>'+
+                                        '</span>';
+                    return out;
                   }
-             },
-                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center' }
+                },
+                { data: 'actions', name: '{{ trans('global.actions') }}', class: 'text-center'}
+                
             ],
             orderCellsTop: true,
-            order: [[ 1, 'desc' ]],
+            order: [[ 0, 'desc' ]],
             pageLength: 10,
         };
         let table = $('.datatable-Riph').DataTable(dtOverrideGlobals);
