@@ -132,6 +132,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 		Route::delete('pengajuan/destroy', 'PengajuanController@massDestroy')->name('pengajuan.massDestroy');
 
 		// daftar pks
+		Route::get('pks/editpks', 'PksController@editpks')->name('pks.editpks');
+		Route::get('pks/realisasi/{pks}', 'PksController@realisasi')->name('pks.realisasi');
 		Route::resource('pks', 'PksController');
 		Route::delete('pksmd', 'PksController@massDestroy')->name('pks.massDestroy');
 

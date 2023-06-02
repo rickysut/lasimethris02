@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Tests\Browser\KecamatanTest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Models\Pks;
 
 class KelompoktaniController extends Controller
 {
@@ -208,15 +209,26 @@ class KelompoktaniController extends Controller
                 $riph = Str::replace('.', '', $row->no_riph);
                 $riph = Str::replace('/', '', $riph);
                 $nomor = $row->id_poktan;
-                //$urlView = route('admin.task.kelompoktani.showtani', [$riph, $nomor] );
+                
+                $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
+                
+                $pks = Pks::where('no_riph', $row->no_riph)
+                    ->where('id_poktan', $row->id_poktan)
+                    ->where('npwp', $npwp)
+                    ->first();
+
                 $urlCreate = route('admin.task.pks.create', ['no_riph' => $riph , 'idpoktan' => $nomor] );
-                $urlEdit = route('admin.task.pks.edit', [$riph , $nomor] );
+                $urlEdit = route('admin.task.pks.editpks', ['no_riph' => $riph , 'idpoktan' => $nomor] );
                 
-                return '<a class="btn btn-xs btn-primary btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Tambah PKS"  href='.$urlCreate.'>'.
-                '    <i class="fal fa-plus-circle"></i></a>'.
-                '<a class="btn btn-xs btn-warning btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Edit PKS" href='.$urlEdit.'>'.
-                '    <i class="fal fa-pencil"></i></a>';
+                $html ='<a class="btn btn-xs btn-primary btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Tambah PKS"  href='.$urlCreate.'>'.
+                '    <i class="fal fa-plus-circle"></i></a>';
                 
+                if ($pks){
+                    $html .=
+                        '<a class="btn btn-xs btn-warning btn-icon waves-effect waves-themed" data-toggle="tooltip" data-original-title="Edit PKS" href='.$urlEdit.'>'.
+                        '    <i class="fal fa-pencil"></i></a>';
+                }
+                return $html;
                 // '<a class="btn btn-xs btn-success btn-icon" data-toggle="tooltip" title data-original-title="View poktan" href='.$urlView.'>'.
                 // '    <i class="fal fa-pencil"></i></a>';
             });

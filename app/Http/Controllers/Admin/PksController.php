@@ -48,7 +48,8 @@ class PksController extends Controller
                 $editGate = 'pks_edit';
                 $crudRoutePart = 'task.pks';
 
-                return view('partials.datatablesActions', compact(
+                return view('partials.pksActions', compact(
+                    'viewGate',
                     'viewGate',
                     'editGate',
                     'deleteGate',
@@ -213,9 +214,48 @@ class PksController extends Controller
      * @param  \App\Models\Pks  $pks
      * @return \Illuminate\Http\Response
      */
-    public function show(Pks $pks)
+    public function show($id)
     {
-        //
+        abort_if(Gate::denies('pks_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $pks = Pks::find($id);
+        $nomor = $pks->no_riph;
+        $pull = PullRiph::where('no_ijin', $nomor)->first();
+        $npwp = $pks->npwp;
+        $idpoktan = $pks->id_poktan;
+
+        $query = 'select g.nama_kelompok, g.nama_pimpinan, g.id_poktan, SUBSTR(g.id_kecamatan,1,2) as id_provinsi, g.id_kabupaten, g.id_kecamatan, g.id_kelurahan , count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+            from poktans p, group_tanis g
+            where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan and g.no_riph= "' .$nomor . '" and g.id_poktan = "' . $idpoktan . '"
+            GROUP BY g.nama_kelompok';
+
+        $poktans = DB::select(DB::raw($query));
+        foreach ($poktans as $poktan){
+            // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+            $datakecamatan = $this->getAPIKecamatan( $poktan->id_kecamatan);
+            if($datakecamatan['data'][0]){
+                $kec = $datakecamatan['data'][0]['nm_kec'];
+                $poktan->kecamatan = $kec;
+            }
+            $datakelurahan = $this->getAPIDesa($poktan->id_kelurahan);
+            if($datakelurahan['data'][0]){
+                $desa = $datakelurahan['data'][0]['nm_desa'];
+                $poktan->kelurahan = $desa;
+            }
+        }
+
+        $provinsi = $this->getAPIProvinsiAll();
+        $kabupaten = $this->getAPIKabupatenProp($poktans[0]->id_provinsi);
+        $kecamatan = $this->getAPIKecamatanKab($poktans[0]->id_kabupaten);
+        $desa = $this->getAPIDesaKec($poktans[0]->id_kecamatan);
+
+
+        $module_name = 'Proses RIPH';
+		$page_title = 'Kerjasama';
+		$page_heading = 'Perjanjian Kerjasama [View]';
+		$heading_class = 'fa fa-file-signature';
+
+        return view('admin.pks.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'npwp', 'nomor', 'poktans', 'provinsi', 'kabupaten', 'kecamatan', 'desa','idpoktan','pull', 'pks' ));
     }
 
     /**
@@ -224,9 +264,104 @@ class PksController extends Controller
      * @param  \App\Models\Pks  $pks
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit($id)
     {
-        //
+        abort_if(Gate::denies('pks_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $pks = Pks::find($id);
+        $nomor = $pks->no_riph;
+        $pull = PullRiph::where('no_ijin', $nomor)->first();
+        $npwp = $pks->npwp;
+        $idpoktan = $pks->id_poktan;
+
+        $query = 'select g.nama_kelompok, g.nama_pimpinan, g.id_poktan, SUBSTR(g.id_kecamatan,1,2) as id_provinsi, g.id_kabupaten, g.id_kecamatan, g.id_kelurahan , count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+            from poktans p, group_tanis g
+            where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan and g.no_riph= "' .$nomor . '" and g.id_poktan = "' . $idpoktan . '"
+            GROUP BY g.nama_kelompok';
+
+        $poktans = DB::select(DB::raw($query));
+        foreach ($poktans as $poktan){
+            // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+            $datakecamatan = $this->getAPIKecamatan( $poktan->id_kecamatan);
+            if($datakecamatan['data'][0]){
+                $kec = $datakecamatan['data'][0]['nm_kec'];
+                $poktan->kecamatan = $kec;
+            }
+            $datakelurahan = $this->getAPIDesa($poktan->id_kelurahan);
+            if($datakelurahan['data'][0]){
+                $desa = $datakelurahan['data'][0]['nm_desa'];
+                $poktan->kelurahan = $desa;
+            }
+        }
+
+        $provinsi = $this->getAPIProvinsiAll();
+        $kabupaten = $this->getAPIKabupatenProp($poktans[0]->id_provinsi);
+        $kecamatan = $this->getAPIKecamatanKab($poktans[0]->id_kabupaten);
+        $desa = $this->getAPIDesaKec($poktans[0]->id_kecamatan);
+
+
+        $module_name = 'Proses RIPH';
+		$page_title = 'Kerjasama';
+		$page_heading = 'Perjanjian Kerjasama [Edit]';
+		$heading_class = 'fa fa-file-signature';
+
+        return view('admin.pks.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'npwp', 'nomor', 'poktans', 'provinsi', 'kabupaten', 'kecamatan', 'desa','idpoktan','pull', 'pks' ));    
+    }
+
+    public function editpks(Request $request)
+    {
+        abort_if(Gate::denies('pks_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
+        $no_riph = $request->no_riph;
+        $idpoktan = $request->idpoktan;  
+        
+        $npwp = (Auth::user()::find(Auth::user()->id)->data_user->npwp_company ?? null);
+
+        $nomor = Str::substr($no_riph, 0, 4) . '/' . Str::substr($no_riph, 4, 2) . '.' . Str::substr($no_riph, 6, 3) . '/' . 
+        Str::substr($no_riph, 9, 1) . '/' . Str::substr($no_riph, 10, 2) . '/' . Str::substr($no_riph, 12, 4);
+        
+        $pks = Pks::where('no_riph', $nomor)
+            ->where('id_poktan', $idpoktan)
+            ->where('npwp', $npwp)
+            ->first();
+
+        // $nomor = $pks->no_riph;
+        $pull = PullRiph::where('no_ijin', $nomor)->first();
+        // $npwp = $pks->npwp;
+        $idpoktan = $pks->id_poktan;
+
+        $query = 'select g.nama_kelompok, g.nama_pimpinan, g.id_poktan, SUBSTR(g.id_kecamatan,1,2) as id_provinsi, g.id_kabupaten, g.id_kecamatan, g.id_kelurahan , count(p.nama_petani) as jum_petani, round(SUM(p.luas_lahan),2) as luas 
+            from poktans p, group_tanis g
+            where p.npwp = "' . $npwp . '"' . ' and p.id_poktan=g.id_poktan and g.no_riph= "' .$nomor . '" and g.id_poktan = "' . $idpoktan . '"
+            GROUP BY g.nama_kelompok';
+
+        $poktans = DB::select(DB::raw($query));
+        foreach ($poktans as $poktan){
+            // $access_token = $this->getAPIAccessToken(config('app.simevi_user'), config('app.simevi_pwd'));
+            $datakecamatan = $this->getAPIKecamatan( $poktan->id_kecamatan);
+            if($datakecamatan['data'][0]){
+                $kec = $datakecamatan['data'][0]['nm_kec'];
+                $poktan->kecamatan = $kec;
+            }
+            $datakelurahan = $this->getAPIDesa($poktan->id_kelurahan);
+            if($datakelurahan['data'][0]){
+                $desa = $datakelurahan['data'][0]['nm_desa'];
+                $poktan->kelurahan = $desa;
+            }
+        }
+
+        $provinsi = $this->getAPIProvinsiAll();
+        $kabupaten = $this->getAPIKabupatenProp($poktans[0]->id_provinsi);
+        $kecamatan = $this->getAPIKecamatanKab($poktans[0]->id_kabupaten);
+        $desa = $this->getAPIDesaKec($poktans[0]->id_kecamatan);
+
+
+        $module_name = 'Proses RIPH';
+		$page_title = 'Kerjasama';
+		$page_heading = 'Perjanjian Kerjasama [Edit]';
+		$heading_class = 'fa fa-file-signature';
+
+        return view('admin.pks.edit', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'npwp', 'nomor', 'poktans', 'provinsi', 'kabupaten', 'kecamatan', 'desa','idpoktan','pull', 'pks' )); 
     }
 
     /**
@@ -236,9 +371,31 @@ class PksController extends Controller
      * @param  \App\Models\Pks  $pks
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pks $pks)
+    public function update(Request $request, $id)
     {
-        //
+        $pks = Pks::find($id);
+
+        $data = $request->all();
+        $realnpwp = $data['npwp'];
+        $npwp = str_replace('.', '', $realnpwp);
+        $npwp = str_replace('-', '', $npwp);
+
+        $nomor = Str::replace('.', '', $data['no_riph']);
+        $noriph = Str::replace('/', '', $nomor);
+
+        if (array_key_exists('berkas_pks', $data)) {
+            if  ($data['berkas_pks']!=null){
+                $file_name = $noriph.'_'.$data['id_poktan']. '_berkaspks.'.$data['berkas_pks']->getClientOriginalExtension();
+                $file_path = $data['berkas_pks']->storeAs('uploads/'.$npwp, $file_name, 'public');
+                $spath = $file_path;
+                $data['berkas_pks'] = $spath;
+            };
+        }
+
+        $pks->update($data);
+
+
+        return redirect()->route('admin.task.pks.index')->with('success', 'Task created successfully.');
     }
 
     /**
@@ -247,12 +404,24 @@ class PksController extends Controller
      * @param  \App\Models\Pks  $pks
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pks $pks)
+    public function destroy($id)
     {
         abort_if(Gate::denies('pks_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $pks->delete();
+        $pks = Pks::find($id);
+        if($pks)
+            $pks->delete();
 
         return back();
+    }
+
+    public function realisasi($id)
+    {
+        $pks = Pks::find($id);
+        if($pks){
+
+        }
+
+        return back();
+    
     }
 }

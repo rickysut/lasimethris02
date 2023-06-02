@@ -64,14 +64,14 @@
 	$(function () 
 	{
 
-        $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
-            toastr.options.timeOut = 10000;
-            toastr.options = {
-                positionClass: 'toast-top-full-width'
-            };
+        // $.fn.dataTable.ext.errMode = function ( settings, helpPage, message ) { 
+        //     toastr.options.timeOut = 10000;
+        //     toastr.options = {
+        //         positionClass: 'toast-top-full-width'
+        //     };
 
-            toastr.error( 'Gagal mengambil data');
-        };
+        //     toastr.error( 'Gagal mengambil data');
+        // };
 
 		
         let dtOverrideGlobals = {
