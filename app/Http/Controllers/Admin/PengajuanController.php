@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Pengajuan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\PullRiph;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
@@ -111,10 +112,23 @@ class PengajuanController extends Controller
 
         $module_name = 'Proses RIPH' ;
         $page_title = 'Detail Pengajuan';
-        $page_heading = 'Detail Pengajuan' ;
-        $heading_class = 'fal fa-ballot-check';
+        $page_heading = 'Data Pengajuan' ;
+        $heading_class = 'fal fa-file-invoice';
+
+        $pull_riph = PullRiph::where('npwp', $pengajuan->npwp)
+        ->where('no_ijin', $pengajuan->no_riph)
+        ->where('no_doc', $pengajuan->no_doc)->first();
+
+        $total_luastanam = $pull_riph->pksmitra->flatMap(function ($pm) {
+			return $pm->anggotamitras;
+		})->sum('luas_tanam');
+
+		$total_volume = $pull_riph->pksmitra->flatMap(function ($pm) {
+			return $pm->anggotamitras;
+		})->sum('volume');
+
         
-        return view('admin.pengajuan.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pengajuan'));    
+        return view('admin.pengajuan.show', compact('module_name', 'page_title', 'page_heading', 'heading_class', 'pengajuan', 'pull_riph', 'total_luastanam', 'total_volume'));    
     }
 
     /**

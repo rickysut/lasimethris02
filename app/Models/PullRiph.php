@@ -12,6 +12,7 @@ class PullRiph extends Model
     use HasFactory;
     use SoftDeletes;
     use Auditable;
+    use \Awobaz\Compoships\Compoships;
 
     public $table = 'pull_riphs';
 
@@ -44,5 +45,10 @@ class PullRiph extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function pksmitra()
+	{
+		return $this->hasMany(Pks::class, ['npwp', 'no_riph'], ['npwp', 'no_ijin']);
+	}
 
 }

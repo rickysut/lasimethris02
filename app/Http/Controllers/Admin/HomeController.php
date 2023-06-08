@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Inspiring;
+use App\Http\Controllers\Traits\Inspiring;
 use App\Models\Post;
 use App\Models\User;
 

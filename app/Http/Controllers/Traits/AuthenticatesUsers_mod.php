@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Traits;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,46 +9,23 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\DataUser;
-use App\Http\Controllers\Traits\AuthenticatesUsers_mod;
 use Illuminate\Support\Facades\Hash;
 
-class LoginController extends Controller
+
+trait AuthenticatesUsers_mod
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
+    use RedirectsUsers, ThrottlesLogins;
 
-    use AuthenticatesUsers_mod;  
+   
 
     /**
-     * Where to redirect users after login.
+     * Show the application's login form.
      *
-     * @var string
+     * @return \Illuminate\View\View
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function showLoginForm()
     {
-        if (config('panel.primary_language')) {
-            $language = config('panel.primary_language');
-        }
-
-        if (isset($language)) {
-            app()->setLocale($language);
-        }
-        $this->middleware('guest')->except('logout');
+        return view('auth.login');
     }
 
     /**
@@ -323,6 +298,4 @@ class LoginController extends Controller
     {
         return Auth::guard();
     }
-
-
 }

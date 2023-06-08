@@ -10,6 +10,7 @@ class Pks extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use \Awobaz\Compoships\Compoships;
 
     public $table = 'pks';
 
