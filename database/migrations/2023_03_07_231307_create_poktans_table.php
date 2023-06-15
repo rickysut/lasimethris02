@@ -24,6 +24,11 @@ return new class extends Migration
             $table->string('ktp_petani')->nullable();
             $table->double('luas_lahan')->nullable();
             $table->string('periode_tanam')->nullable();
+            $table->string('nama_lokasi')->nullable();
+            $table->double('volume')->nullable();
+            $table->double('latitude')->nullable();
+            $table->double('longitude')->nullable();
+            $table->double('polygon')->nullable();
             $table->timestamps();
             $table->foreign('no_riph')
                 ->references('no_ijin')

@@ -187,13 +187,36 @@
             orderCellsTop: true,
             order: [[ 0, 'desc' ]],
             pageLength: 10,
+            initComplete: function() {
+                // Access the column data after the data has been loaded
+                var years = table.column(1).data().unique().sort();
+                // console.log(years);
+
+                var select = $('<select>')
+                    .addClass('custom-select custom-select-sm col-3 mr-2')
+                    .on('change', function() {
+                        var year = $.fn.dataTable.util.escapeRegex($(this).val());
+                        table.column(1).search(year ? '^' + year + '$' : '', true, false).draw();
+                    });
+                
+                $('<option>').val('').text('Semua Tahun').appendTo(select);
+                $.each(years, function(i, year) {
+                    $('<option>').val(year).text(year).appendTo(select);
+                });
+
+                // Add the select element before the first datatable button
+                $('.dt-buttons').before(select);
+                
+            }
         };
         let table = $('.datatable-Riph').DataTable(dtOverrideGlobals);
+
         $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
             $($.fn.dataTable.tables(true)).DataTable()
                 .columns.adjust();
         });
         
+
         
         
     });

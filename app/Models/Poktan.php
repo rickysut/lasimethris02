@@ -10,6 +10,8 @@ class Poktan extends Model
 {
     use HasFactory;
     use Auditable;
+    use \Awobaz\Compoships\Compoships;
+
     
     public $table = 'poktans';
 
@@ -21,6 +23,11 @@ class Poktan extends Model
         'nama_petani',
         'ktp_petani',
         'luas_lahan',
-        'periode_tanam'
+        'periode_tanam',
+        'nama_lokasi',
+        'volume',
+        'latitude',
+        'longitude',
+        'polygon'
     ];
 }

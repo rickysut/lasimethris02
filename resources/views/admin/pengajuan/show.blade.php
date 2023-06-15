@@ -387,14 +387,14 @@
 							</tr>
 						</thead>
 						<tbody>
-							{{-- @foreach ($commitment->pksmitra as $pksmitra)
-								@foreach ($pksmitra->anggotamitras as $anggotamitra)
+							@foreach ($pull_riph->pksmitra as $pksmitra)
+								@foreach ($pksmitra->petani as $anggotamitra)
 								<tr>
-									<td hidden>{{$anggotamitra->pksmitra->masterkelompok->nama_kelompok}}</td>
+									<td hidden>{{$pksmitra->nama_kelompok}}</td>
 									<td>{{$anggotamitra->nama_lokasi}}</td>
-									<td>{{$anggotamitra->masteranggota->nama_petani}}</td>
-									<td>{{$anggotamitra->masteranggota->nik_petani}}</td>
-									<td class="text-right">{{$anggotamitra->luas_tanam}} ha</td>
+									<td>{{$anggotamitra->nama_petani}}</td>
+									<td>{{$anggotamitra->ktp_petani}}</td>
+									<td class="text-right">{{$anggotamitra->luas_lahan}} ha</td>
 									<td class="text-right">{{$anggotamitra->volume}} ton</td>
 									<td class="text-center">
 										@if ($anggotamitra->latitude || $anggotamitra->longitude || $anggotamitra->polygon)
@@ -405,7 +405,7 @@
 									</td>
 								</tr>
 								@endforeach
-							@endforeach --}}
+							@endforeach
 						</tbody>
 					</table>
 				</div>

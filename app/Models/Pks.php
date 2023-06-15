@@ -36,4 +36,8 @@ class Pks extends Model
     public function groupTani(){
         return $this->hasMany(GroupTani::class, ['npwp', 'no_riph', 'id_poktan'], ['npwp', 'no_riph', 'id_poktan']);
     }
+
+    public function petani(){
+        return $this->hasMany(Poktan::class, ['npwp', 'no_riph', 'id_poktan'], ['npwp', 'no_riph', 'id_poktan']);
+    }
 }

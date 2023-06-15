@@ -418,7 +418,7 @@ class PksController extends Controller
     {
         $pks = Pks::find($id);
         if($pks){
-
+            
         }
 
         return back();
