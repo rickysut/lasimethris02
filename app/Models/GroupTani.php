@@ -10,6 +10,7 @@ class GroupTani extends Model
 {
     use HasFactory;
     use Auditable;
+    use \Awobaz\Compoships\Compoships;
 
     public $table = 'group_tanis';
 

@@ -340,25 +340,26 @@
 							</tr>
 						</thead>
 						<tbody>
-							{{-- @foreach ($commitment->pksmitra as $pksmitra)
+							@foreach ($pull_riph->pksmitra as $pksmitra)
 							<tr>
 								<td>{{$pksmitra->no_perjanjian}}</td>
-								<td>{{$pksmitra->masterkelompok->nama_kelompok}}</td>
+								<td>{{$pksmitra->groupTani[0]->nama_kelompok}}</td>
 								<td>{{$pksmitra->tgl_perjanjian_start}}</td>
 								<td>{{$pksmitra->tgl_perjanjian_end}}</td>
 								<td>
-									@if($pksmitra->berkas_pks)
-										<a href="#" data-toggle="modal" data-target="#viewDocs"
-											data-doc="{{ url('storage/docs/' . $commitment->periodetahun . '/commitment_'.$commitment->id.'/pks/'.$pksmitra->berkas_pks) }}">
+									@if ($pksmitra->berkas_pks && Storage::disk('public')->exists($pksmitra->berkas_pks))
+										<a href="#" data-toggle="modal" data-target="#viewDocs" 
+                                            data-doc="{{ Storage::disk('public')->url($pksmitra->berkas_pks) }}">
 											<i class="fas fa-check text-success mr-1"></i>
 											Lihat Dokumen
 										</a>
 									@else
 										<span class="text-danger"><i class="fas fa-times-circle mr-1"></i>Tidak Ada</span>
 									@endif
+									
 								</td>
 							</tr>
-							@endforeach --}}
+							@endforeach
 						</tbody>
 					</table>
 				</div>
