@@ -26,9 +26,10 @@ return new class extends Migration
             $table->string('periode_tanam')->nullable();
             $table->string('nama_lokasi')->nullable();
             $table->double('volume')->nullable();
-            $table->double('latitude')->nullable();
-            $table->double('longitude')->nullable();
-            $table->double('polygon')->nullable();
+            $table->decimal('latitude', 9, 6)->nullable();
+            $table->decimal('longitude', 9 ,6)->nullable();
+            $table->float('altitude')->nullable();
+            $table->polygon('polygon')->nullable();
             $table->timestamps();
             $table->foreign('no_riph')
                 ->references('no_ijin')
